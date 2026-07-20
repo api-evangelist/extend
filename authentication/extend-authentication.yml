@@ -1,0 +1,41 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.extend.com/reference/authentication
+docs: https://docs.extend.com/reference/authentication
+discovery: https://api.helloextend.com/.well-known/openid-configuration
+summary:
+  types: [oauth2]
+  oauth2_flows: [clientCredentials]
+  access_token_header: X-Extend-Access-Token
+schemes:
+- name: OAuth2ClientCredentials
+  type: oauth2
+  flow: clientCredentials
+  description: >-
+    An Admin or API Manager creates an API Integration in the Extend Merchant Portal, which
+    issues an OAuth Client ID and Client Secret. These are exchanged for a short-lived access
+    token via the token endpoint using grant_type=client_credentials.
+  token_url: https://api.helloextend.com/auth/oauth/token
+  authorization_url: https://api.helloextend.com/auth/oauth/authorize
+  introspection_url: https://api.helloextend.com/auth/oauth/introspect
+  jwks_uri: https://api.helloextend.com/auth/oauth/keys
+  id_token_signing_alg: [ES256, RS256]
+  grant_types: [client_credentials, iam_client_credentials]
+- name: AccessTokenHeader
+  type: apiKey
+  in: header
+  name: X-Extend-Access-Token
+  description: >-
+    The access token obtained from the client-credentials exchange is passed on most requests in
+    the X-Extend-Access-Token request header (not a standard Authorization: Bearer header).
+environments:
+- name: production
+  base_url: https://api.helloextend.com
+- name: demo
+  base_url: https://api-demo.helloextend.com
+  note: Separate credentials must be created in the demo Merchant Portal (merchants.demo.extend.com).
+notes: >-
+  Extend uses OAuth2 client-credentials to mint short-lived access tokens, then passes the token
+  in the custom X-Extend-Access-Token header rather than Authorization. No user-facing OAuth
+  scopes are documented (machine-to-machine client credentials), so no scopes/ artifact is
+  emitted.
