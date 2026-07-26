@@ -1,0 +1,20 @@
+generated: '2026-07-19'
+method: searched
+source: https://api.helloextend.com/.well-known/openid-configuration
+host: https://api.helloextend.com
+documents:
+- path: /.well-known/openid-configuration
+  status: 200
+  file: extend-openid-configuration.json
+- path: /.well-known/security.txt
+  status: 403
+- path: /.well-known/oauth-authorization-server
+  status: 403
+- path: /.well-known/api-catalog
+  status: 403
+notes: >-
+  The openid-configuration document advertises the OAuth2 endpoints used by the Extend API
+  (authorization, token, iam-token, introspection, jwks) and grant types client_credentials and
+  iam_client_credentials. The other well-known paths return 403 (Missing Authentication Token)
+  from the API gateway rather than a published document. No security.txt is published on the
+  extend.com or www.extend.com apex (both 404).

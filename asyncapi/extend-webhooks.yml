@@ -1,0 +1,29 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.extend.com/reference
+spec_type: Webhooks
+note: >-
+  Extend documents outbound webhooks but does not publish an AsyncAPI document, so this artifact
+  captures the webhook catalog (type: Webhooks) rather than an AsyncAPI spec.
+delivery:
+  style: HTTP POST to a merchant-configured webhook URL
+webhooks:
+- name: Claim Status Webhook
+  event: claim status change
+  docs: https://docs.extend.com/reference/claimwebhooknotification
+  description: >-
+    Sent to your configured webhook URL when a claim's status changes. The payload structure
+    represents claim status change notifications, including claim approval events used by
+    merchants with deferred claim servicing.
+- name: Service Order Servicer Webhook
+  event: service order servicing
+  docs: https://docs.extend.com/reference/service-order-servicer-webhook
+  description: >-
+    Notifies servicers of service-order lifecycle events for fulfillment, repair, and payment
+    processing.
+related_operations:
+- name: Submit logistics decisions to continue processing an approved claim
+  docs: https://docs.extend.com/reference/post_service-orders-service-claim
+  description: >-
+    For merchants with deferred claim servicing, submit field-destroy or return decisions after
+    receiving a claim approval webhook.

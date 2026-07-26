@@ -1,0 +1,30 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.extend.com/docs/getting-started-with-extends-api
+environments:
+  live:
+    name: Production
+    base_url: https://api.helloextend.com
+    merchant_portal: https://merchants.extend.com
+  test:
+    name: Demo (Sandbox)
+    base_url: https://api-demo.helloextend.com
+    merchant_portal: https://merchants.demo.extend.com/login
+    purpose: development, integration testing, and QA
+separation:
+  detail: >-
+    Extend provides fully separate Demo (Sandbox) and Production environments with independent
+    credentials. API Integrations (OAuth Client ID/Secret) must be created separately in each
+    environment's Merchant Portal; a demo store and/or production store is required.
+  key_model: >-
+    Each environment issues its own OAuth Client ID / Client Secret via the Merchant Portal
+    Integrations tab, exchanged for short-lived access tokens against that environment's token
+    endpoint.
+test_values:
+  detail: >-
+    No published magic test card/identifier values were found; sandbox testing is done end-to-end
+    against the demo environment with demo stores and demo credentials. New demo stores return
+    200 OK with empty lists until products/orders are created.
+guidance: >-
+  Use demo for all development and QA, and switch to production only after the integration has
+  been tested end-to-end.

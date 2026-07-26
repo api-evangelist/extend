@@ -1,0 +1,64 @@
+generated: '2026-07-19'
+method: derived
+status: candidate
+source: https://docs.extend.com/reference
+note: >-
+  No official hosted/remote Extend MCP server was found. This is a candidate tool list derived
+  from Extend's documented REST API operations so an MCP server could be forged. Each tool maps
+  to a real documented endpoint.
+server:
+  name: extend
+  transport: http
+  url: null
+auth:
+  scheme: oauth2-client-credentials
+  token_header: X-Extend-Access-Token
+tools:
+- name: get_offer
+  description: Return warranty plans and pricing for a specific product.
+  source_operation: https://docs.extend.com/reference/getoffer
+- name: get_lead_offers
+  description: Return protection plan offers for all leads associated with a store and transaction.
+  source_operation: https://docs.extend.com/reference/contractleadsoffersbatchget
+- name: get_lead_offer
+  description: Fetch product info and offers for a single lead token.
+  source_operation: https://docs.extend.com/reference/contractleadsofferget
+- name: create_shipping_quote
+  description: Calculate a shipping-protection premium and quote id for eligible cart products.
+  source_operation: https://docs.extend.com/reference/shippingoffersquotecreate
+- name: search_contracts
+  description: Search protection contracts by seller, customer, product, or transaction filters.
+  source_operation: https://docs.extend.com/reference/contractssearch
+- name: get_contract
+  description: Retrieve a contract by ID (coverage, customer, plan, product, shipment details).
+  source_operation: https://docs.extend.com/reference/contractsget
+- name: update_contract
+  description: Update a contract by ID.
+  source_operation: https://docs.extend.com/reference/contractsupdate
+- name: create_order
+  description: Create an order representation with line items in Extend's system.
+  source_operation: https://docs.extend.com/reference/orderscreate
+- name: upsert_order
+  description: Create or update an order keyed on the merchant transaction id.
+  source_operation: https://docs.extend.com/reference/ordersupsert-1
+- name: get_order
+  description: Retrieve an order by Extend Order ID.
+  source_operation: https://docs.extend.com/reference/ordersget
+- name: search_orders
+  description: Retrieve orders by store id or merchant transaction id.
+  source_operation: https://docs.extend.com/reference/orderssearch
+- name: cancel_order
+  description: Cancel an order and its associated line items.
+  source_operation: https://docs.extend.com/reference/orderscancel
+- name: fulfill_line_item
+  description: Update a line item to fulfilled, triggering contract creation.
+  source_operation: https://docs.extend.com/reference/lineitemsfulfill
+- name: report_refund_paid
+  description: Report a contract refund as paid to the customer (or request a refund quote).
+  source_operation: https://docs.extend.com/reference/refundscreate
+- name: get_service_order
+  description: Retrieve a service order by ID.
+  source_operation: https://docs.extend.com/reference/get_service-orders-serviceorderid
+- name: get_claim_photos
+  description: Return current photos required or uploaded for a claim (presigned URLs).
+  source_operation: https://docs.extend.com/reference/claimphotoslist

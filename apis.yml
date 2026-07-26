@@ -1,8 +1,14 @@
 aid: extend
 name: Extend
-description: 'Extend is a company surfaced as a portfolio company of softbank-vision-fund and added to
-  the API Evangelist network as a stub for enrichment. Sector: consumer. This profile is a lead awaiting
-  the enrichment pipeline.'
+description: 'Extend is a product and shipping protection platform for merchants and ecommerce
+  brands. Its API lets merchants surface extended-warranty and shipping-protection offers at
+  checkout and post-purchase, create and manage protection contracts, process orders and line
+  items, file and track claims, and manage service orders, refunds, and leads. Extend provides
+  separate demo (sandbox) and production environments, header-based date versioning, OAuth2
+  client-credentials authentication with short-lived access tokens, idempotency keys on writes,
+  and webhooks for claim and service-order status changes, alongside client-side SDKs and
+  prebuilt commerce-platform integrations for Shopify, BigCommerce, Magento, WooCommerce, and
+  Salesforce Commerce Cloud.'
 url: https://raw.githubusercontent.com/api-evangelist/extend/refs/heads/main/apis.yml
 x-type: company
 x-source: vc-portfolio
@@ -10,15 +16,114 @@ x-backed-by:
 - softbank-vision-fund
 x-tier: stub
 x-tier-reason: portfolio-lead
+accessModel:
+  pricing: unknown
+  onboarding: self-serve
+  trial: false
+  try_now: false
+  public: false
+  label: Self-serve signup
+  confidence: medium
+  source:
+  - authentication
+  generated: '2026-07-22'
+  method: derived
 specificationVersion: '0.20'
 created: '2026-07-17'
-modified: '2026-07-17'
+modified: '2026-07-19'
+image: https://avatars.githubusercontent.com/u/46018312?v=4
 tags:
 - Company
 - Consumer
-apis: []
+- Product Protection
+- Extended Warranty
+- Shipping Protection
+- Ecommerce
+- Warranty
+- Claims
+- Contracts
+- Retail
+- Insurance
+apis:
+- name: Extend API
+  description: 'Extend''s REST API for product and shipping protection: manage offers, contracts,
+    orders and line items, refunds, claims, service orders, and leads. Header-based date
+    versioning; OAuth2 client-credentials auth via the X-Extend-Access-Token header; idempotent
+    writes via X-Idempotency-Key.'
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Product Protection
+  - Shipping Protection
+  - Warranty
+  - Ecommerce
+  properties:
+  - type: APIReference
+    url: https://docs.extend.com/reference
+  - type: Sandbox
+    url: https://api-demo.helloextend.com
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+common:
+- type: DomainSecurity
+  url: security/extend-domain-security.yml
+- type: DeveloperPortal
+  url: https://docs.extend.com
+- type: Documentation
+  url: https://docs.extend.com/docs
+- type: APIReference
+  url: https://docs.extend.com/reference
+- type: GettingStarted
+  url: https://docs.extend.com/docs/getting-started-with-extends-api
+- type: Support
+  url: https://www.extend.com/contact-us
+- type: Blog
+  url: https://www.extend.com/articles
+- type: GitHubOrganization
+  url: https://github.com/helloextend
+- type: Login
+  url: https://merchants.extend.com
+- type: TermsOfService
+  url: https://www.extend.com/terms
+- type: PrivacyPolicy
+  url: https://www.extend.com/privacy
+- type: StatusPage
+  url: https://status.extend.com
+- type: ChangeLog
+  url: https://docs.extend.com/changelog
+- type: Authentication
+  url: authentication/extend-authentication.yml
+- type: Conventions
+  url: conventions/extend-conventions.yml
+- type: Idempotency
+  url: conventions/extend-conventions.yml
+- type: LLMsTxt
+  url: llms/extend-llms.txt
+- type: WellKnown
+  url: well-known/extend-well-known.yml
+- type: MCPServer
+  url: mcp/extend-mcp.yml
+- type: Conformance
+  url: conformance/extend-conformance.yml
+- type: Lifecycle
+  url: lifecycle/extend-lifecycle.yml
+- type: Sandbox
+  url: sandbox/extend-sandbox.yml
+- type: Webhooks
+  url: asyncapi/extend-webhooks.yml
+- type: DataModel
+  url: data-model/extend-data-model.yml
+- type: Components
+  url: components/extend-components.yml
+- type: Packages
+  url: packages/extend-packages.yml
+- type: SDKs
+  url: packages/extend-packages.yml
+x-enrichment:
+  date: '2026-07-19'
+  status: backfilled
+  pass: local-v1
+  note: backfilled from .gitignore signal + verified work evidence

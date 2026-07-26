@@ -1,0 +1,40 @@
+generated: '2026-07-19'
+method: searched
+source: https://github.com/helloextend
+note: >-
+  Extend distributes a first-party client-side JavaScript SDK plus commerce-platform integration
+  extensions via its GitHub org (helloextend). No general-purpose server SDK is published to npm,
+  PyPI, Packagist, or other package registries under the helloextend scope (the @helloextend npm
+  scope holds internal infra tooling only).
+packages:
+- language: javascript
+  registry: github
+  name: extend-sdk-client
+  url: https://github.com/helloextend/extend-sdk-client
+  docs: https://helloextend.github.io/extend-sdk-client/
+  description: Client-side JavaScript SDK for rendering protection offers and analytics.
+  official: true
+- language: php
+  registry: github
+  name: magento-extension
+  url: https://github.com/helloextend/magento-extension
+  description: Magento extension for the Extend API.
+  official: true
+- language: php
+  registry: github
+  name: extend-for-woocommerce
+  url: https://github.com/helloextend/extend-for-woocommerce
+  description: Extend Warranty extension for WooCommerce.
+  official: true
+- language: javascript
+  registry: github
+  name: salesforce-commerce-cloud
+  url: https://github.com/helloextend/salesforce-commerce-cloud
+  description: Salesforce Commerce Cloud integration cartridge.
+  official: true
+- language: php
+  registry: github
+  name: magento-extend-integration
+  url: https://github.com/helloextend/magento-extend-integration
+  description: Magento Extend integration module.
+  official: true

@@ -1,0 +1,70 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.extend.com/reference
+note: >-
+  Entity graph derived from Extend's documented API resources (no OpenAPI published). Cardinalities
+  reflect the relationships described in the Orders, Contracts, Claims, and Service Orders
+  references.
+entities:
+- name: Order
+  id_field: id
+  description: A representation of a merchant order in Extend, keyed on the merchant transaction id.
+- name: LineItem
+  id_field: id
+  description: >-
+    An order line item. Categorized by type: contract, category_contract, category_product,
+    lead, shipments, or non_warrantable.
+- name: Contract
+  id_field: contractId
+  description: >-
+    A product-protection or shipping-protection contract created from a fulfilled line item.
+- name: Lead
+  id_field: leadToken
+  description: A lead token created from a warrantable product with no plan id, for post-purchase offers.
+- name: Claim
+  id_field: claimId
+  description: A claim filed against a contract; has status webhooks and photos.
+- name: ServiceOrder
+  id_field: serviceOrderId
+  description: A servicing order created to fulfill an approved claim (repair/replace/expenses/payment).
+- name: Refund
+  id_field: refundId
+  description: A contract refund quote/record reported as paid to the customer.
+- name: Product
+  id_field: id
+  description: A merchant catalog product, mapped to protection plans (warrantable or non-warrantable).
+- name: Plan
+  id_field: planId
+  description: A protection plan / offer applied to a product to create a contract.
+relationships:
+- from: Order
+  to: LineItem
+  type: has_many
+  via: lineItems
+- from: LineItem
+  to: Contract
+  type: has_one
+  via: contractId
+  note: contract line items trigger contract creation on fulfillment
+- from: LineItem
+  to: Lead
+  type: has_one
+  via: leadToken
+  note: warrantable line items without a plan id create a lead
+- from: Contract
+  to: Claim
+  type: has_many
+  via: contractId
+- from: Claim
+  to: ServiceOrder
+  type: has_many
+  via: claimId
+- from: Contract
+  to: Refund
+  type: has_many
+  via: contractId
+- from: Product
+  to: Plan
+  type: has_many
+  via: offers
+  note: products are mapped to protection plans to display offers

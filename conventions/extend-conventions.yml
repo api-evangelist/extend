@@ -1,0 +1,56 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.extend.com/docs/getting-started-with-extends-api
+docs:
+- https://docs.extend.com/docs/getting-started-with-extends-api
+- https://docs.extend.com/reference/authentication
+- https://docs.extend.com/docs/integrating-with-extends-order-api
+authentication:
+  style: oauth2-client-credentials
+  token_header: X-Extend-Access-Token
+  detail: authentication/extend-authentication.yml
+idempotency:
+  supported: true
+  header: X-Idempotency-Key
+  scope: per logical create/update operation (e.g. creating orders)
+  value: unique key per operation (UUID example published)
+  behavior: >-
+    Prevents duplicate processing when a request is retried. Required by Extend on idempotent
+    create/update calls such as order creation.
+  source: https://docs.extend.com/docs/getting-started-with-extends-api
+pagination:
+  style: page-based
+  default_page_size: 25
+  detail: >-
+    List/search endpoints (e.g. Get Lead Offers, Search Line Items) return paginated results with
+    a default page size of 25.
+versioning:
+  style: header-based-date
+  header: Accept
+  format: application/json;version=YYYY-MM-DD
+  current: '2022-02-01'
+  legacy: ['2021-04-01']
+  note: >-
+    The API version is negotiated via the Accept header. Some legacy endpoints (e.g. Products)
+    still require version 2021-04-01; the required version is shown per endpoint in the API
+    Reference.
+  detail: lifecycle/extend-lifecycle.yml
+required_headers:
+- name: Accept
+  example: application/json;version=2022-02-01
+- name: Content-Type
+  example: application/json
+- name: X-Extend-Access-Token
+  example: YOUR_ACCESS_TOKEN
+- name: X-Idempotency-Key
+  example: 550e8400-e29b-41d4-a716-446655440000
+  applies_to: idempotent create/update calls
+transport:
+  https_required: true
+error_semantics:
+  detail: >-
+    Endpoints use standard HTTP status codes (e.g. 200 with empty arrays for no-content cases,
+    403 Forbidden for cross-merchant access). See errors/ if/when an error reference is captured.
+webhooks:
+  supported: true
+  detail: asyncapi/extend-webhooks.yml

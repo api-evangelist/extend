@@ -1,0 +1,21 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.extend.com/docs/sdk-reference
+note: >-
+  Extend ships first-party client-side SDKs that render embeddable protection-offer surfaces
+  (offer modals, display units, shipping-protection offers) and analytics on merchant storefronts.
+  Distinct from server-side integration; see packages/ for the source repos.
+families:
+- name: Extend SDK (client)
+  description: >-
+    Core client-side JavaScript SDK for rendering product-protection offer modals/display units
+    and capturing analytics on the storefront. Extend Analytics SDK methods are now folded into
+    the Extend SDK.
+  docs: https://helloextend.github.io/extend-sdk-client/
+  repo: https://github.com/helloextend/extend-sdk-client
+- name: Extend Shopify SDK add-on
+  description: Shopify-specific client SDK add-on for offer rendering in Shopify themes.
+  docs: https://helloextend.github.io/extend-sdk-client-shopify-addon/
+- name: Extend BigCommerce SDK
+  description: BigCommerce sandbox store / client SDK for offer rendering.
+  docs: https://helloextend.github.io/big-commerce-sandbox-store/

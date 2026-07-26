@@ -1,0 +1,26 @@
+generated: '2026-07-19'
+method: searched
+source: https://docs.extend.com/docs/getting-started-with-extends-api
+versioning:
+  scheme: header-based-date
+  header: Accept
+  format: application/json;version=YYYY-MM-DD
+  current: '2022-02-01'
+  legacy: ['2021-04-01']
+  docs: https://docs.extend.com/docs/getting-started-with-extends-api
+deprecation:
+  policy_url: null
+  detail: >-
+    Extend maintains legacy API versions (e.g. 2021-04-01 for Products) alongside the current
+    2022-02-01 version. No formal dated sunset/deprecation policy page was found, so no
+    Deprecation pointer is emitted.
+status_page: https://status.extend.com
+changelog: https://docs.extend.com/changelog
+environments:
+- name: production
+  base_url: https://api.helloextend.com
+- name: demo
+  base_url: https://api-demo.helloextend.com
+sla:
+  url: null
+deprecated_operations: []
