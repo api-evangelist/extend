@@ -2,10 +2,9 @@ generated: '2026-07-19'
 method: derived
 status: candidate
 source: https://docs.extend.com/reference
-note: >-
-  No official hosted/remote Extend MCP server was found. This is a candidate tool list derived
-  from Extend's documented REST API operations so an MCP server could be forged. Each tool maps
-  to a real documented endpoint.
+note: No official hosted/remote Extend MCP server was found. This is a candidate tool list derived from
+  Extend's documented REST API operations so an MCP server could be forged. Each tool maps to a real documented
+  endpoint.
 server:
   name: extend
   transport: http
@@ -62,3 +61,9 @@ tools:
 - name: get_claim_photos
   description: Return current photos required or uploaded for a claim (presigned URLs).
   source_operation: https://docs.extend.com/reference/claimphotoslist
+deployment:
+  mode: none
+  verified: derived
+  tools: 16
+  checked: '2026-08-12'
+  source: catalog MCP census
