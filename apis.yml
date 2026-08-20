@@ -38,6 +38,18 @@ tags:
 - Product Protection
 - Extended Warranty
 - Shipping Protection
+- E-Commerce
+- Warranty
+- Claims
+- Contracts
+- Retail
+- Insurance
+tags_raw:
+- Company
+- Consumer
+- Product Protection
+- Extended Warranty
+- Shipping Protection
 - Ecommerce
 - Warranty
 - Claims
@@ -53,6 +65,11 @@ apis:
   humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
   baseURL: https://api.helloextend.com
   tags:
+  - Product Protection
+  - Shipping Protection
+  - Warranty
+  - E-Commerce
+  tags_raw:
   - Product Protection
   - Shipping Protection
   - Warranty
