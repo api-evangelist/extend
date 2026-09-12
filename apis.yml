@@ -96,6 +96,8 @@ maintainers:
 - FN: APIs.json
   email: info@apis.io
 common:
+- type: Website
+  url: https://www.extend.com/
 - type: DomainSecurity
   url: security/extend-domain-security.yml
 - type: DeveloperPortal
