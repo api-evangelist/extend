@@ -1,0 +1,1614 @@
+[
+ {
+  "page": "https://docs.extend.com/reference/shippingoffersconfigget.md",
+  "definition": {
+   "openapi": "3.0.1",
+   "info": {
+    "title": "Shipping Offers",
+    "version": "2022-02-01"
+   },
+   "servers": [
+    {
+     "url": "https://api.helloextend.com"
+    }
+   ],
+   "paths": {
+    "/shipping-offers/config": {
+     "get": {
+      "summary": "Get shipping offer config",
+      "description": "This endpoint dictates how the shipping protection offer modal should display marketing and compliance text, and includes styling configuration based on attach behavior (i.e. opt in vs. opt out)",
+      "operationId": "shippingOffersConfigGet",
+      "tags": [
+       "ShippingOffers"
+      ],
+      "parameters": [
+       {
+        "name": "Content-Type",
+        "in": "header",
+        "required": true,
+        "description": "Used to indicate the original media type of the resource (prior to any content encoding applied for sending).",
+        "schema": {
+         "type": "string",
+         "example": "application/json"
+        }
+       },
+       {
+        "name": "Accept",
+        "in": "header",
+        "required": true,
+        "description": "Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.",
+        "schema": {
+         "type": "string",
+         "example": "application/json; version=2022-02-01"
+        }
+       },
+       {
+        "name": "storeId",
+        "in": "query",
+        "required": true,
+        "description": "Unique identifier for a store on Extend",
+        "schema": {
+         "type": "string",
+         "format": "uuid",
+         "example": "c57ed096-24ef-49a4-a20a-d1b8bf770980"
+        }
+       },
+       {
+        "name": "locale",
+        "in": "query",
+        "description": "The locale of the customer. Locale is used to determine the language for display and communication. Locale is formatted as xx-XX: the first two letters denote language (ISO 639-1 standards), and the last two letters denote region (ISO 3166 standards).",
+        "schema": {
+         "type": "string",
+         "example": "en-US"
+        }
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Successfully returns config for shipping offers.",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "required": [
+            "marketing",
+            "config"
+           ],
+           "properties": {
+            "surfaceVersion": {
+             "type": "object",
+             "description": "Suggested shipping-protection surface throughout customer purchase journey",
+             "properties": {
+              "cartOffer": {
+               "type": "object",
+               "required": [
+                "version",
+                "content"
+               ],
+               "description": "Cart offer version",
+               "properties": {
+                "version": {
+                 "type": "string",
+                 "description": "Version of the cart offer surface to be display"
+                },
+                "content": {
+                 "type": "string",
+                 "description": "Content to be displayed on the cart offer surface"
+                }
+               }
+              },
+              "learnMoreModal": {
+               "type": "object",
+               "required": [
+                "version",
+                "content"
+               ],
+               "description": "Learn more modal version",
+               "properties": {
+                "version": {
+                 "type": "string",
+                 "description": "Version of the learn more modal surface to be display"
+                },
+                "content": {
+                 "type": "string",
+                 "description": "Content to be displayed on the learn more modal surface"
+                }
+               }
+              }
+             }
+            },
+            "marketing": {
+             "type": "object",
+             "description": "Marketing text to show for various offer types",
+             "required": [
+              "locale",
+              "cartOffer",
+              "learnMoreModal"
+             ],
+             "properties": {
+              "locale": {
+               "type": "string"
+              },
+              "cartOffer": {
+               "type": "object",
+               "required": [
+                "header",
+                "subheader",
+                "learnMoreLinkText",
+                "extendIconLink"
+               ],
+               "description": "Text to display on the cart or checkout page offer UI component",
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "subheader": {
+                 "type": "string"
+                },
+                "learnMoreLinkText": {
+                 "type": "string"
+                },
+                "extendIconLink": {
+                 "type": "string"
+                },
+                "headerWithExtendIconLink": {
+                 "type": "string"
+                }
+               }
+              },
+              "learnMoreModal": {
+               "type": "object",
+               "description": "Text to display in a modal that provides a quick summary about the shipping protection",
+               "required": [
+                "header",
+                "subheader",
+                "bulletHeader",
+                "bullets",
+                "extendIconLink",
+                "planDetailLinkText",
+                "planDetailLink",
+                "coverageHeader",
+                "coverageItems",
+                "disclaimerHeader",
+                "disclaimerText"
+               ],
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "subheader": {
+                 "type": "string"
+                },
+                "extendIconLink": {
+                 "type": "string"
+                },
+                "bulletHeader": {
+                 "type": "string"
+                },
+                "bullets": {
+                 "type": "array",
+                 "description": "Array of bullet points of text describing what shipping protection does.",
+                 "items": {
+                  "type": "string"
+                 }
+                },
+                "coverageHeader": {
+                 "type": "string"
+                },
+                "coverageItems": {
+                 "type": "array",
+                 "description": "Array of text and images describing what shipping protection covers (i.e. lost, stolen, and damaged shipments)",
+                 "items": {
+                  "type": "object",
+                  "required": [
+                   "text",
+                   "description",
+                   "icon"
+                  ],
+                  "properties": {
+                   "text": {
+                    "type": "string"
+                   },
+                   "description": {
+                    "type": "string"
+                   },
+                   "icon": {
+                    "type": "string"
+                   }
+                  }
+                 }
+                },
+                "planDetailLinkText": {
+                 "type": "string",
+                 "description": "Display text to use for the planDetailsLink hyperlink"
+                },
+                "planDetailLink": {
+                 "type": "string",
+                 "description": "Web link to see details of the shipping protection plan"
+                },
+                "disclaimerHeader": {
+                 "type": "string",
+                 "description": "Disclaimer header to be displayed as part of learn more UI component"
+                },
+                "disclaimerText": {
+                 "type": "string",
+                 "description": "Disclaimer text to be displayed as part of learn more UI component"
+                }
+               }
+              },
+              "learnMoreModalV2": {
+               "type": "object",
+               "description": "Text to display in a modal that provides a quick summary about the shipping protection for charitiable donations.",
+               "required": [
+                "header",
+                "coverageHeader",
+                "coverageItems",
+                "planDetailLinkText",
+                "planDetailLink",
+                "whyExtend1Icon",
+                "modalImage",
+                "disclaimerText"
+               ],
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "coverageHeader": {
+                 "type": "string"
+                },
+                "coverageItems": {
+                 "type": "array",
+                 "description": "Array of text and images describing what shipping protection covers (i.e. lost, stolen, and damaged shipments)",
+                 "items": {
+                  "type": "object",
+                  "required": [
+                   "description",
+                   "icon"
+                  ],
+                  "properties": {
+                   "description": {
+                    "type": "string"
+                   },
+                   "icon": {
+                    "type": "string"
+                   }
+                  }
+                 }
+                },
+                "planDetailLinkText": {
+                 "type": "string",
+                 "description": "Display text to use for the planDetailsLink hyperlink"
+                },
+                "planDetailLink": {
+                 "type": "string",
+                 "description": "Web link to see details of the shipping protection plan"
+                },
+                "whyExtend1Icon": {
+                 "type": "string"
+                },
+                "modalImage": {
+                 "type": "string",
+                 "description": "Relevant image to the right of modal"
+                },
+                "disclaimerText": {
+                 "type": "string",
+                 "description": "Disclaimer text to be displayed as part of learn more UI component"
+                }
+               }
+              },
+              "charityDetails": {
+               "type": "array",
+               "description": "Charity details.",
+               "items": {
+                "type": "object",
+                "required": [
+                 "charityModalHeadline",
+                 "charityModalSubheadline",
+                 "charityModalImage",
+                 "charityPlanDetailLinkText",
+                 "charityModalDisclosureText",
+                 "charityPlanDetailsLogoImage",
+                 "charityPlanDetailsImage",
+                 "charityPlanDetailsHeadline",
+                 "charityPlanDetailsSubheadline",
+                 "charityPlanDetailsDisclosureText",
+                 "charityCartIcon",
+                 "charityCartSubheader"
+                ],
+                "properties": {
+                 "charityModalHeadline": {
+                  "type": "string"
+                 },
+                 "charityModalSubheadline": {
+                  "type": "string"
+                 },
+                 "charityModalImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailLinkText": {
+                  "type": "string"
+                 },
+                 "charityModalDisclosureText": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsLogoImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsHeadline": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsSubheadline": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsDisclosureText": {
+                  "type": "string"
+                 },
+                 "charityCartIcon": {
+                  "type": "string"
+                 },
+                 "charityCartSubheader": {
+                  "type": "string"
+                 }
+                }
+               }
+              }
+             }
+            },
+            "config": {
+             "type": "object",
+             "required": [
+              "attachBehavior"
+             ],
+             "description": "Default offer type configuration for attach behavior <p> <uil><li>OPT_IN - UI widget is expected to have consumer turn on shipping protection</li><li>OPT_OUT - UI widget is expected to have shipping protection turned on by default</li><li>OPT_MERCHANT - Shipping protection automatically included by the merchant</li></uil>",
+             "properties": {
+              "attachBehavior": {
+               "type": "string",
+               "enum": [
+                "OPT_IN",
+                "OPT_OUT",
+                "OPT_MERCHANT"
+               ]
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       },
+       "404": {
+        "description": "The specified resource was not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "message"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true
+   }
+  }
+ },
+ {
+  "page": "https://docs.extend.com/reference/shippingoffersmarketingget.md",
+  "definition": {
+   "openapi": "3.0.1",
+   "info": {
+    "title": "Shipping Offers",
+    "version": "2022-02-01"
+   },
+   "servers": [
+    {
+     "url": "https://api.helloextend.com"
+    }
+   ],
+   "paths": {
+    "/shipping-offers/config/marketing": {
+     "get": {
+      "summary": "Get shipping offer marketing text",
+      "description": "This endpoint dictates how shipping protection offer display units should display marketing and compliance text, and includes styling configuration based on the attach behavior, or offer type.  There are three main offer types: Extend Choice Opt-Out, where shipping protection is selected by default until the customer de-selects it, Extend Choice Opt-In, where the customer must select shipping protection to include it in the order, and Extend Complete, where shipping protection is automatically included by the merchant in every order.",
+      "operationId": "shippingOffersMarketingGet",
+      "tags": [
+       "ShippingOffers"
+      ],
+      "parameters": [
+       {
+        "name": "Content-Type",
+        "in": "header",
+        "required": true,
+        "description": "Used to indicate the original media type of the resource (prior to any content encoding applied for sending).",
+        "schema": {
+         "type": "string",
+         "example": "application/json"
+        }
+       },
+       {
+        "name": "Accept",
+        "in": "header",
+        "required": true,
+        "description": "Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.",
+        "schema": {
+         "type": "string",
+         "example": "application/json; version=2022-02-01"
+        }
+       },
+       {
+        "name": "storeId",
+        "in": "query",
+        "required": true,
+        "description": "Unique identifier for a store on Extend",
+        "schema": {
+         "type": "string",
+         "format": "uuid",
+         "example": "c57ed096-24ef-49a4-a20a-d1b8bf770980"
+        }
+       },
+       {
+        "name": "locale",
+        "in": "query",
+        "description": "The locale of the customer. Locale is used to determine the language for display and communication. Locale is formatted as xx-XX: the first two letters denote language (ISO 639-1 standards), and the last two letters denote region (ISO 3166 standards).",
+        "schema": {
+         "type": "string",
+         "example": "en-US"
+        }
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Successfully returns config for shipping offers.",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "required": [
+            "offerType",
+            "OPT_IN",
+            "OPT_OUT",
+            "OPT_MERCHANT"
+           ],
+           "properties": {
+            "offerType": {
+             "type": "string"
+            },
+            "surfaceVersion": {
+             "type": "object",
+             "description": "Suggested shipping-protection surface throughout customer purchase journey",
+             "properties": {
+              "cartOffer": {
+               "type": "object",
+               "required": [
+                "version",
+                "content"
+               ],
+               "description": "Cart offer version",
+               "properties": {
+                "version": {
+                 "type": "string",
+                 "description": "Version of the cart offer surface to be display"
+                },
+                "content": {
+                 "type": "string",
+                 "description": "Content to be displayed on the cart offer surface"
+                }
+               }
+              },
+              "learnMoreModal": {
+               "type": "object",
+               "required": [
+                "version",
+                "content"
+               ],
+               "description": "Learn more modal version",
+               "properties": {
+                "version": {
+                 "type": "string",
+                 "description": "Version of the learn more modal surface to be display"
+                },
+                "content": {
+                 "type": "string",
+                 "description": "Content to be displayed on the learn more modal surface"
+                }
+               }
+              }
+             }
+            },
+            "OPT_IN": {
+             "type": "object",
+             "description": "Marketing text to show for various offer types",
+             "required": [
+              "locale",
+              "cartOffer",
+              "learnMoreModal"
+             ],
+             "properties": {
+              "locale": {
+               "type": "string"
+              },
+              "cartOffer": {
+               "type": "object",
+               "required": [
+                "header",
+                "subheader",
+                "learnMoreLinkText",
+                "extendIconLink"
+               ],
+               "description": "Text to display on the cart or checkout page offer UI component",
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "subheader": {
+                 "type": "string"
+                },
+                "learnMoreLinkText": {
+                 "type": "string"
+                },
+                "extendIconLink": {
+                 "type": "string"
+                },
+                "headerWithExtendIconLink": {
+                 "type": "string"
+                }
+               }
+              },
+              "learnMoreModal": {
+               "type": "object",
+               "description": "Text to display in a modal that provides a quick summary about the shipping protection",
+               "required": [
+                "header",
+                "subheader",
+                "bulletHeader",
+                "bullets",
+                "extendIconLink",
+                "planDetailLinkText",
+                "planDetailLink",
+                "coverageHeader",
+                "coverageItems",
+                "disclaimerHeader",
+                "disclaimerText"
+               ],
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "subheader": {
+                 "type": "string"
+                },
+                "extendIconLink": {
+                 "type": "string"
+                },
+                "bulletHeader": {
+                 "type": "string"
+                },
+                "bullets": {
+                 "type": "array",
+                 "description": "Array of bullet points of text describing what shipping protection does.",
+                 "items": {
+                  "type": "string"
+                 }
+                },
+                "coverageHeader": {
+                 "type": "string"
+                },
+                "coverageItems": {
+                 "type": "array",
+                 "description": "Array of text and images describing what shipping protection covers (i.e. lost, stolen, and damaged shipments)",
+                 "items": {
+                  "type": "object",
+                  "required": [
+                   "text",
+                   "description",
+                   "icon"
+                  ],
+                  "properties": {
+                   "text": {
+                    "type": "string"
+                   },
+                   "description": {
+                    "type": "string"
+                   },
+                   "icon": {
+                    "type": "string"
+                   }
+                  }
+                 }
+                },
+                "planDetailLinkText": {
+                 "type": "string",
+                 "description": "Display text to use for the planDetailsLink hyperlink"
+                },
+                "planDetailLink": {
+                 "type": "string",
+                 "description": "Web link to see details of the shipping protection plan"
+                },
+                "disclaimerHeader": {
+                 "type": "string",
+                 "description": "Disclaimer header to be displayed as part of learn more UI component"
+                },
+                "disclaimerText": {
+                 "type": "string",
+                 "description": "Disclaimer text to be displayed as part of learn more UI component"
+                }
+               }
+              },
+              "learnMoreModalV2": {
+               "type": "object",
+               "description": "Text to display in a modal that provides a quick summary about the shipping protection for charitiable donations.",
+               "required": [
+                "header",
+                "coverageHeader",
+                "coverageItems",
+                "planDetailLinkText",
+                "planDetailLink",
+                "whyExtend1Icon",
+                "modalImage",
+                "disclaimerText"
+               ],
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "coverageHeader": {
+                 "type": "string"
+                },
+                "coverageItems": {
+                 "type": "array",
+                 "description": "Array of text and images describing what shipping protection covers (i.e. lost, stolen, and damaged shipments)",
+                 "items": {
+                  "type": "object",
+                  "required": [
+                   "description",
+                   "icon"
+                  ],
+                  "properties": {
+                   "description": {
+                    "type": "string"
+                   },
+                   "icon": {
+                    "type": "string"
+                   }
+                  }
+                 }
+                },
+                "planDetailLinkText": {
+                 "type": "string",
+                 "description": "Display text to use for the planDetailsLink hyperlink"
+                },
+                "planDetailLink": {
+                 "type": "string",
+                 "description": "Web link to see details of the shipping protection plan"
+                },
+                "whyExtend1Icon": {
+                 "type": "string"
+                },
+                "modalImage": {
+                 "type": "string",
+                 "description": "Relevant image to the right of modal"
+                },
+                "disclaimerText": {
+                 "type": "string",
+                 "description": "Disclaimer text to be displayed as part of learn more UI component"
+                }
+               }
+              },
+              "charityDetails": {
+               "type": "array",
+               "description": "Charity details.",
+               "items": {
+                "type": "object",
+                "required": [
+                 "charityModalHeadline",
+                 "charityModalSubheadline",
+                 "charityModalImage",
+                 "charityPlanDetailLinkText",
+                 "charityModalDisclosureText",
+                 "charityPlanDetailsLogoImage",
+                 "charityPlanDetailsImage",
+                 "charityPlanDetailsHeadline",
+                 "charityPlanDetailsSubheadline",
+                 "charityPlanDetailsDisclosureText",
+                 "charityCartIcon",
+                 "charityCartSubheader"
+                ],
+                "properties": {
+                 "charityModalHeadline": {
+                  "type": "string"
+                 },
+                 "charityModalSubheadline": {
+                  "type": "string"
+                 },
+                 "charityModalImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailLinkText": {
+                  "type": "string"
+                 },
+                 "charityModalDisclosureText": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsLogoImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsHeadline": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsSubheadline": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsDisclosureText": {
+                  "type": "string"
+                 },
+                 "charityCartIcon": {
+                  "type": "string"
+                 },
+                 "charityCartSubheader": {
+                  "type": "string"
+                 }
+                }
+               }
+              }
+             }
+            },
+            "OPT_OUT": {
+             "type": "object",
+             "description": "Marketing text to show for various offer types",
+             "required": [
+              "locale",
+              "cartOffer",
+              "learnMoreModal"
+             ],
+             "properties": {
+              "locale": {
+               "type": "string"
+              },
+              "cartOffer": {
+               "type": "object",
+               "required": [
+                "header",
+                "subheader",
+                "learnMoreLinkText",
+                "extendIconLink"
+               ],
+               "description": "Text to display on the cart or checkout page offer UI component",
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "subheader": {
+                 "type": "string"
+                },
+                "learnMoreLinkText": {
+                 "type": "string"
+                },
+                "extendIconLink": {
+                 "type": "string"
+                },
+                "headerWithExtendIconLink": {
+                 "type": "string"
+                }
+               }
+              },
+              "learnMoreModal": {
+               "type": "object",
+               "description": "Text to display in a modal that provides a quick summary about the shipping protection",
+               "required": [
+                "header",
+                "subheader",
+                "bulletHeader",
+                "bullets",
+                "extendIconLink",
+                "planDetailLinkText",
+                "planDetailLink",
+                "coverageHeader",
+                "coverageItems",
+                "disclaimerHeader",
+                "disclaimerText"
+               ],
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "subheader": {
+                 "type": "string"
+                },
+                "extendIconLink": {
+                 "type": "string"
+                },
+                "bulletHeader": {
+                 "type": "string"
+                },
+                "bullets": {
+                 "type": "array",
+                 "description": "Array of bullet points of text describing what shipping protection does.",
+                 "items": {
+                  "type": "string"
+                 }
+                },
+                "coverageHeader": {
+                 "type": "string"
+                },
+                "coverageItems": {
+                 "type": "array",
+                 "description": "Array of text and images describing what shipping protection covers (i.e. lost, stolen, and damaged shipments)",
+                 "items": {
+                  "type": "object",
+                  "required": [
+                   "text",
+                   "description",
+                   "icon"
+                  ],
+                  "properties": {
+                   "text": {
+                    "type": "string"
+                   },
+                   "description": {
+                    "type": "string"
+                   },
+                   "icon": {
+                    "type": "string"
+                   }
+                  }
+                 }
+                },
+                "planDetailLinkText": {
+                 "type": "string",
+                 "description": "Display text to use for the planDetailsLink hyperlink"
+                },
+                "planDetailLink": {
+                 "type": "string",
+                 "description": "Web link to see details of the shipping protection plan"
+                },
+                "disclaimerHeader": {
+                 "type": "string",
+                 "description": "Disclaimer header to be displayed as part of learn more UI component"
+                },
+                "disclaimerText": {
+                 "type": "string",
+                 "description": "Disclaimer text to be displayed as part of learn more UI component"
+                }
+               }
+              },
+              "learnMoreModalV2": {
+               "type": "object",
+               "description": "Text to display in a modal that provides a quick summary about the shipping protection for charitiable donations.",
+               "required": [
+                "header",
+                "coverageHeader",
+                "coverageItems",
+                "planDetailLinkText",
+                "planDetailLink",
+                "whyExtend1Icon",
+                "modalImage",
+                "disclaimerText"
+               ],
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "coverageHeader": {
+                 "type": "string"
+                },
+                "coverageItems": {
+                 "type": "array",
+                 "description": "Array of text and images describing what shipping protection covers (i.e. lost, stolen, and damaged shipments)",
+                 "items": {
+                  "type": "object",
+                  "required": [
+                   "description",
+                   "icon"
+                  ],
+                  "properties": {
+                   "description": {
+                    "type": "string"
+                   },
+                   "icon": {
+                    "type": "string"
+                   }
+                  }
+                 }
+                },
+                "planDetailLinkText": {
+                 "type": "string",
+                 "description": "Display text to use for the planDetailsLink hyperlink"
+                },
+                "planDetailLink": {
+                 "type": "string",
+                 "description": "Web link to see details of the shipping protection plan"
+                },
+                "whyExtend1Icon": {
+                 "type": "string"
+                },
+                "modalImage": {
+                 "type": "string",
+                 "description": "Relevant image to the right of modal"
+                },
+                "disclaimerText": {
+                 "type": "string",
+                 "description": "Disclaimer text to be displayed as part of learn more UI component"
+                }
+               }
+              },
+              "charityDetails": {
+               "type": "array",
+               "description": "Charity details.",
+               "items": {
+                "type": "object",
+                "required": [
+                 "charityModalHeadline",
+                 "charityModalSubheadline",
+                 "charityModalImage",
+                 "charityPlanDetailLinkText",
+                 "charityModalDisclosureText",
+                 "charityPlanDetailsLogoImage",
+                 "charityPlanDetailsImage",
+                 "charityPlanDetailsHeadline",
+                 "charityPlanDetailsSubheadline",
+                 "charityPlanDetailsDisclosureText",
+                 "charityCartIcon",
+                 "charityCartSubheader"
+                ],
+                "properties": {
+                 "charityModalHeadline": {
+                  "type": "string"
+                 },
+                 "charityModalSubheadline": {
+                  "type": "string"
+                 },
+                 "charityModalImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailLinkText": {
+                  "type": "string"
+                 },
+                 "charityModalDisclosureText": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsLogoImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsHeadline": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsSubheadline": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsDisclosureText": {
+                  "type": "string"
+                 },
+                 "charityCartIcon": {
+                  "type": "string"
+                 },
+                 "charityCartSubheader": {
+                  "type": "string"
+                 }
+                }
+               }
+              }
+             }
+            },
+            "OPT_MERCHANT": {
+             "type": "object",
+             "description": "Marketing text to show for various offer types",
+             "required": [
+              "locale",
+              "cartOffer",
+              "learnMoreModal"
+             ],
+             "properties": {
+              "locale": {
+               "type": "string"
+              },
+              "cartOffer": {
+               "type": "object",
+               "required": [
+                "header",
+                "subheader",
+                "learnMoreLinkText",
+                "extendIconLink"
+               ],
+               "description": "Text to display on the cart or checkout page offer UI component",
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "subheader": {
+                 "type": "string"
+                },
+                "learnMoreLinkText": {
+                 "type": "string"
+                },
+                "extendIconLink": {
+                 "type": "string"
+                },
+                "headerWithExtendIconLink": {
+                 "type": "string"
+                }
+               }
+              },
+              "learnMoreModal": {
+               "type": "object",
+               "description": "Text to display in a modal that provides a quick summary about the shipping protection",
+               "required": [
+                "header",
+                "subheader",
+                "bulletHeader",
+                "bullets",
+                "extendIconLink",
+                "planDetailLinkText",
+                "planDetailLink",
+                "coverageHeader",
+                "coverageItems",
+                "disclaimerHeader",
+                "disclaimerText"
+               ],
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "subheader": {
+                 "type": "string"
+                },
+                "extendIconLink": {
+                 "type": "string"
+                },
+                "bulletHeader": {
+                 "type": "string"
+                },
+                "bullets": {
+                 "type": "array",
+                 "description": "Array of bullet points of text describing what shipping protection does.",
+                 "items": {
+                  "type": "string"
+                 }
+                },
+                "coverageHeader": {
+                 "type": "string"
+                },
+                "coverageItems": {
+                 "type": "array",
+                 "description": "Array of text and images describing what shipping protection covers (i.e. lost, stolen, and damaged shipments)",
+                 "items": {
+                  "type": "object",
+                  "required": [
+                   "text",
+                   "description",
+                   "icon"
+                  ],
+                  "properties": {
+                   "text": {
+                    "type": "string"
+                   },
+                   "description": {
+                    "type": "string"
+                   },
+                   "icon": {
+                    "type": "string"
+                   }
+                  }
+                 }
+                },
+                "planDetailLinkText": {
+                 "type": "string",
+                 "description": "Display text to use for the planDetailsLink hyperlink"
+                },
+                "planDetailLink": {
+                 "type": "string",
+                 "description": "Web link to see details of the shipping protection plan"
+                },
+                "disclaimerHeader": {
+                 "type": "string",
+                 "description": "Disclaimer header to be displayed as part of learn more UI component"
+                },
+                "disclaimerText": {
+                 "type": "string",
+                 "description": "Disclaimer text to be displayed as part of learn more UI component"
+                }
+               }
+              },
+              "learnMoreModalV2": {
+               "type": "object",
+               "description": "Text to display in a modal that provides a quick summary about the shipping protection for charitiable donations.",
+               "required": [
+                "header",
+                "coverageHeader",
+                "coverageItems",
+                "planDetailLinkText",
+                "planDetailLink",
+                "whyExtend1Icon",
+                "modalImage",
+                "disclaimerText"
+               ],
+               "properties": {
+                "header": {
+                 "type": "string"
+                },
+                "coverageHeader": {
+                 "type": "string"
+                },
+                "coverageItems": {
+                 "type": "array",
+                 "description": "Array of text and images describing what shipping protection covers (i.e. lost, stolen, and damaged shipments)",
+                 "items": {
+                  "type": "object",
+                  "required": [
+                   "description",
+                   "icon"
+                  ],
+                  "properties": {
+                   "description": {
+                    "type": "string"
+                   },
+                   "icon": {
+                    "type": "string"
+                   }
+                  }
+                 }
+                },
+                "planDetailLinkText": {
+                 "type": "string",
+                 "description": "Display text to use for the planDetailsLink hyperlink"
+                },
+                "planDetailLink": {
+                 "type": "string",
+                 "description": "Web link to see details of the shipping protection plan"
+                },
+                "whyExtend1Icon": {
+                 "type": "string"
+                },
+                "modalImage": {
+                 "type": "string",
+                 "description": "Relevant image to the right of modal"
+                },
+                "disclaimerText": {
+                 "type": "string",
+                 "description": "Disclaimer text to be displayed as part of learn more UI component"
+                }
+               }
+              },
+              "charityDetails": {
+               "type": "array",
+               "description": "Charity details.",
+               "items": {
+                "type": "object",
+                "required": [
+                 "charityModalHeadline",
+                 "charityModalSubheadline",
+                 "charityModalImage",
+                 "charityPlanDetailLinkText",
+                 "charityModalDisclosureText",
+                 "charityPlanDetailsLogoImage",
+                 "charityPlanDetailsImage",
+                 "charityPlanDetailsHeadline",
+                 "charityPlanDetailsSubheadline",
+                 "charityPlanDetailsDisclosureText",
+                 "charityCartIcon",
+                 "charityCartSubheader"
+                ],
+                "properties": {
+                 "charityModalHeadline": {
+                  "type": "string"
+                 },
+                 "charityModalSubheadline": {
+                  "type": "string"
+                 },
+                 "charityModalImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailLinkText": {
+                  "type": "string"
+                 },
+                 "charityModalDisclosureText": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsLogoImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsImage": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsHeadline": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsSubheadline": {
+                  "type": "string"
+                 },
+                 "charityPlanDetailsDisclosureText": {
+                  "type": "string"
+                 },
+                 "charityCartIcon": {
+                  "type": "string"
+                 },
+                 "charityCartSubheader": {
+                  "type": "string"
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       },
+       "404": {
+        "description": "The specified resource was not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "message"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true
+   }
+  }
+ },
+ {
+  "page": "https://docs.extend.com/reference/shippingoffersquotecreate.md",
+  "definition": {
+   "openapi": "3.0.1",
+   "info": {
+    "title": "Shipping Offers",
+    "version": "2022-02-01"
+   },
+   "servers": [
+    {
+     "url": "https://api.helloextend.com"
+    }
+   ],
+   "paths": {
+    "/shipping-offers/quotes": {
+     "post": {
+      "summary": "Create a shipping protection quote",
+      "description": "This endpoint calculates the shipping protection premium, i.e. the price you will charge the customer for shipping protection, for eligible products in the specified cart.<p>The response will include the premium and a quote id which must be used to create a valid Order with Extend including shipping protection. An optional array \"excluded_products\" may contain a list of products that were excluded from the premium calculation if the cart contained products that are not eligible for shipping protection.",
+      "operationId": "shippingOffersQuoteCreate",
+      "tags": [
+       "ShippingOffers"
+      ],
+      "parameters": [
+       {
+        "name": "Content-Type",
+        "in": "header",
+        "required": true,
+        "description": "Used to indicate the original media type of the resource (prior to any content encoding applied for sending).",
+        "schema": {
+         "type": "string",
+         "example": "application/json"
+        }
+       },
+       {
+        "name": "Accept",
+        "in": "header",
+        "required": true,
+        "description": "Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.",
+        "schema": {
+         "type": "string",
+         "example": "application/json; version=2022-02-01"
+        }
+       }
+      ],
+      "requestBody": {
+       "required": true,
+       "content": {
+        "application/json": {
+         "schema": {
+          "type": "object",
+          "required": [
+           "storeId",
+           "currency",
+           "items"
+          ],
+          "properties": {
+           "storeId": {
+            "type": "string",
+            "description": "Unique identifier for a store on Extend"
+           },
+           "region": {
+            "type": "string",
+            "description": "Region is used to filter quotes by the region where the customer is located (an ISO 3166-2 region code). <p> If no region is passed, \"US\" will be used as default region",
+            "pattern": "^([A-Z]{2})(-([A-Za-z0-9]){0,3})*$"
+           },
+           "currency": {
+            "description": "Currency code used when contract was purchased. NOTE - This is an ISO-4217 currency code.",
+            "type": "string",
+            "enum": [
+             "AUD",
+             "CAD",
+             "EUR",
+             "GBP",
+             "NZD",
+             "USD"
+            ]
+           },
+           "customer": {
+            "type": "object",
+            "description": "Customer information",
+            "properties": {
+             "loyaltyStatus": {
+              "type": "string",
+              "description": "The loyalty status of the customer which must be set to create quotes for loyalty customers. Confirmed loyalty customers should have a loyaltyStatus of `member`.",
+              "example": "member"
+             }
+            }
+           },
+           "items": {
+            "type": "array",
+            "description": "Array of products in the cart for shipping protection quote",
+            "items": {
+             "allOf": [
+              {
+               "type": "object",
+               "required": [
+                "referenceId",
+                "quantity",
+                "purchasePrice"
+               ],
+               "properties": {
+                "referenceId": {
+                 "type": "string",
+                 "description": "Unique identifier representing the product provided during product (catalog) creation with Extend"
+                },
+                "quantity": {
+                 "type": "number",
+                 "multipleOf": 1,
+                 "minimum": 1
+                },
+                "purchasePrice": {
+                 "type": "number",
+                 "multipleOf": 1,
+                 "description": "Unit purchase price of the product, expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul> <p> Please note that the purchase price should not reflect the quantity as total price"
+                },
+                "productName": {
+                 "type": "string"
+                }
+               }
+              },
+              {
+               "type": "object",
+               "properties": {
+                "category": {
+                 "type": "string",
+                 "description": "Category of the product in Merchant's catalog"
+                },
+                "shippable": {
+                 "type": "boolean",
+                 "description": "Value provided by merchant that determines if product can be shipped"
+                }
+               }
+              }
+             ]
+            }
+           },
+           "locale": {
+            "type": "string",
+            "description": "The locale of the customer. Locale is used to determine the language for display and communication. Locale is formatted as xx-XX: the first two letters denote language, (ISO 639-1 standards) and the last two letters denote region (ISO 3166 standards)."
+           }
+          }
+         }
+        }
+       }
+      },
+      "responses": {
+       "200": {
+        "description": "When all request parameters are valid and the request is processed successfully. If the request is not eligible for shipping protection coverage, the, premium on the response will be zero and there will be no quote ID in the response, so you will not be able to create a shipping protection order. Additionally, an optional note response attribute may contain additional context when no quote id is returned.<ul> <li>exceeds_coverage_max - total eligible cart value is higher than maximum allowed value for shipping protection </li> <li>below_coverage_min - otal eligible cart value is lower than minimum allowed value </li><li>not_eligible - none of the products in the request are eligible for shipping protection</li></ul>",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "required": [
+            "premium",
+            "currency"
+           ],
+           "properties": {
+            "id": {
+             "type": "string",
+             "description": "Quote id when a valid shipping protection quote is created."
+            },
+            "premium": {
+             "type": "number",
+             "multipleOf": 1,
+             "description": "Price, expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>",
+             "minimum": 0
+            },
+            "currency": {
+             "description": "Currency code used when contract was purchased. NOTE - This is an ISO-4217 currency code.",
+             "type": "string",
+             "enum": [
+              "AUD",
+              "CAD",
+              "EUR",
+              "GBP",
+              "NZD",
+              "USD"
+             ]
+            },
+            "offerType": {
+             "type": "string",
+             "description": "Offer type to display to customer, from enum OPT_IN, OPT_OUT, OPT_MERCHANT",
+             "enum": [
+              "OPT_IN",
+              "OPT_OUT",
+              "OPT_MERCHANT"
+             ]
+            },
+            "excludedProducts": {
+             "type": "array",
+             "description": "Array of product referenceId from the original request that are not covered as part of this quote for shipping protection",
+             "items": {
+              "type": "string"
+             }
+            },
+            "note": {
+             "type": "string",
+             "description": "Optional note to provide additional context for some responses. Example: When total cart value of shipping protection covered products exceeds maximum coverage, premium will be zero and note will say exceeds_coverage_max <p> note values: <ul> <li>exceeded_coverage_max - total eligible cart value is higher than maximum allowed value for shipping protection </li> <li>below_coverage_min - total eligible cart value is lower than minimum allowed value </li><li>not_eligible - none of the products in the request are eligible for shipping protection </li></ul>",
+             "enum": [
+              "exceeds_coverage_max",
+              "below_coverage_min",
+              "not_eligible",
+              "location_not_compliant"
+             ]
+            },
+            "charityDonations": {
+             "description": "The charity donations that were applied to the quote for enabled donation merchants",
+             "type": "object",
+             "required": [
+              "amount",
+              "charities"
+             ],
+             "properties": {
+              "amount": {
+               "type": "number",
+               "description": "The amount in smallest currency unit of the donation that was used to incldue with the quote premium.<p> <ul><li>$9.99 would be 999</li><li>1.999,99 € would be 199999</li><li>£ 1,999.99 would be 199999</li></ul>"
+              },
+              "charities": {
+               "type": "array",
+               "items": {
+                "type": "object",
+                "required": [
+                 "charityId",
+                 "charityName"
+                ],
+                "properties": {
+                 "charityId": {
+                  "type": "string",
+                  "description": "The charity identifier"
+                 },
+                 "charityName": {
+                  "type": "string",
+                  "description": "The charity name"
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "The request to the endpoint was invalid",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "message"
+           ]
+          }
+         }
+        }
+       },
+       "404": {
+        "description": "The specified resource was not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "message"
+           ]
+          }
+         }
+        }
+       },
+       "500": {
+        "description": "Internal server error",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "message"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true
+   }
+  }
+ }
+]

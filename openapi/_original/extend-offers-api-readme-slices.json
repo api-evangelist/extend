@@ -1,0 +1,1257 @@
+[
+ {
+  "page": "https://docs.extend.com/reference/getoffer.md",
+  "definition": {
+   "openapi": "3.0.1",
+   "info": {
+    "version": "2022-02-01",
+    "title": "Offers Api",
+    "description": "The Offers API is a real-time method to know which warranty offers, if any, to display when a customer is viewing a product in your store.  If you are using the Offers SDK, you do not need to use Offers API, as the SDK will retrieve and help display the offers directly.  If, however, you are managing the display of the offers yourself in your store’s front end, you should use the Offers API to make sure you are displaying the correct offers with the correct prices.\n\nThe Offers API will return which plan offers to display for a particular product (usually between one and three plan options), the price of each option, and some details and marketing text about the extended warranty contract that you can use to provide more information to the customer."
+   },
+   "servers": [
+    {
+     "url": "https://api.helloextend.com"
+    }
+   ],
+   "paths": {
+    "/offers": {
+     "get": {
+      "summary": "Get Offer information",
+      "description": "Returns warranty plans and pricing for a specific product. ",
+      "operationId": "getOffer",
+      "tags": [
+       "Offers"
+      ],
+      "parameters": [
+       {
+        "name": "Content-Type",
+        "in": "header",
+        "required": true,
+        "description": "Used to indicate the original media type of the resource (prior to any content encoding applied for sending).",
+        "schema": {
+         "type": "string",
+         "example": "application/json"
+        }
+       },
+       {
+        "name": "Accept",
+        "in": "header",
+        "required": true,
+        "description": "Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.",
+        "schema": {
+         "type": "string",
+         "example": "application/json; version=2022-02-01"
+        }
+       },
+       {
+        "name": "X-Extend-Client-IP",
+        "in": "header",
+        "required": false,
+        "description": "If your server performs Server Side Rendering, please provide the X-Extend-Client-IP header of the customer requesting your content. We use this optional header to determine more granular offer eligibility. If this header is not passed in, then we leverage the caller’s IP address to determine this information.",
+        "schema": {
+         "type": "string"
+        }
+       },
+       {
+        "name": "storeId",
+        "in": "query",
+        "required": true,
+        "description": "Unique identifier for a store on Extend",
+        "schema": {
+         "type": "string",
+         "format": "uuid",
+         "example": "c57ed096-24ef-49a4-a20a-d1b8bf770980"
+        }
+       },
+       {
+        "name": "productId",
+        "in": "query",
+        "required": true,
+        "description": "This is the unique identifier that identifies the product. This can be a product SKU, or variant id. A referenceId may contain special characters except for the following: `%,\\,\"`. Special characters should not be at the end of a referenceId. It must be url encoded if it contains special characters.",
+        "schema": {
+         "type": "string",
+         "format": "uuid"
+        }
+       },
+       {
+        "name": "region",
+        "in": "query",
+        "description": "Your customer’s location is used to determine what offer is presented to the customer in your store. Customers in some locations may not be qualified to purchase contracts. Region is used to filter offers by the region where the customer is located (an <a href='https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2'>ISO 3166-1</a> region code). If this value is not passed in, then we leverage the caller’s IP address to determine the customer’s region.",
+        "schema": {
+         "type": "string",
+         "format": "ISO 3166-1",
+         "example": "US"
+        }
+       },
+       {
+        "name": "locale",
+        "in": "query",
+        "description": "The locale of the customer. Locale is used to determine the language for display and communication. Locale is formatted as xx-XX: the first two letters denote language (ISO 639-1 standards), and the last two letters denote region (ISO 3166 standards).",
+        "schema": {
+         "type": "string",
+         "format": "IETF Language Tag",
+         "example": "en-US"
+        }
+       },
+       {
+        "name": "dynamicPricing",
+        "in": "query",
+        "description": "A flag to enable dynamic pricing when retrieving an offer. Merchant must be configured for Purchase Price as the Offer Price Type",
+        "schema": {
+         "type": "string",
+         "example": "true"
+        }
+       },
+       {
+        "name": "price",
+        "in": "query",
+        "description": "Override price in terms of the smallest currency unit to retrieve a dynamic offer. Dynamic pricing must be set to true and merchant must be configured for Purchase Price as the Offer Price Type. Note - This field must contain a value when attempting to generate Offer if Store has Offers By Category feature enabled.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>",
+        "schema": {
+         "type": "string",
+         "example": "2400"
+        }
+       },
+       {
+        "name": "category",
+        "in": "query",
+        "description": "Category of the product in Merchant's catalog. Note - This field must contain a value when attempting to generate Offer if Store has Offers By Category feature enabled. Special characters should not be at the end of a category. It must be url encoded if it contains special characters.",
+        "schema": {
+         "type": "string",
+         "example": "electronics"
+        }
+       },
+       {
+        "name": "removeMarketing",
+        "in": "query",
+        "description": "This flag is used to remove marketing offers from the response. If this flag is set to true, then marketing offers will not be included in the response.",
+        "schema": {
+         "type": "string",
+         "format": "boolean",
+         "example": "true"
+        }
+       }
+      ],
+      "responses": {
+       "200": {
+        "description": "Returns the information about an offer",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "plans": {
+             "type": "object",
+             "properties": {
+              "recommended": {
+               "type": "string",
+               "enum": [
+                "adh",
+                "base",
+                "roadhazard"
+               ],
+               "example": "adh",
+               "description": "The protection plan type that Extend recommends the merchant displays to the user. Possible values include `base` (for mechanical and electrical failures/defects), or `adh` (for accidents such as drop or liquid damage). The recommended protection plan type will be accessible in this response as a key on this plans object."
+              },
+              "adh": {
+               "type": "array",
+               "items": {
+                "type": "object",
+                "properties": {
+                 "id": {
+                  "type": "string",
+                  "description": "Unique identifier for a warranty Plan",
+                  "example": "AmazingAppliancePlan"
+                 },
+                 "price": {
+                  "type": "number",
+                  "example": 199,
+                  "description": "The plan price expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>"
+                 },
+                 "currencyCode": {
+                  "description": "Currency code for the plan price. NOTE - This is an ISO-4217 currency code.",
+                  "type": "string",
+                  "enum": [
+                   "AUD",
+                   "CAD",
+                   "EUR",
+                   "GBP",
+                   "NZD",
+                   "USD"
+                  ]
+                 },
+                 "contract": {
+                  "type": "object",
+                  "description": "Additional information about this extended warranty contract",
+                  "properties": {
+                   "coverage_starts": {
+                    "type": "string",
+                    "example": "immediate",
+                    "description": "Describes when the contract term begins, relative to the manufacturer’s warranty length.  For example, “immediate” means coverage starts immediately on the purchase date, and “after” means coverage starts after the manufacturer’s warranty has expired"
+                   },
+                   "coverage_includes": {
+                    "type": "string",
+                    "example": "adh",
+                    "description": "Possible values include “base”, which means the extended warranty is a base plan covering mechanical and electrical failures through normal use, or “adh”, which means the plan includes coverage for accidental damage (i.e. “Accidental Damage in Handling”)"
+                   },
+                   "service_type": {
+                    "type": "string",
+                    "example": "replace",
+                    "description": "This is the claims resolution service the plan includes.  Responses include “replacement” (the damaged item is replaced by a new or refurbished equivalent), “repair_depot” (the customer mails the damaged item to a repair facility), or “repair_onsite” (a repair technician goes out to the customer’s home to repair the item)"
+                   },
+                   "replacement_type": {
+                    "type": "string",
+                    "example": "new",
+                    "description": "Indicates whether the damaged item will be replaced by a “new” or “refurbished” item"
+                   },
+                   "deductible": {
+                    "type": "number",
+                    "example": 0,
+                    "description": "The amount of the deductible charged to the customer during a claim, if there is one.  For most Extend protection plans, there is no deductible. The amount is expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>"
+                   },
+                   "term_length": {
+                    "type": "number",
+                    "example": 36,
+                    "description": "The length of the extended warranty coverage, in months"
+                   },
+                   "category": {
+                    "type": "string",
+                    "example": "consumer_electronics",
+                    "description": "The extend category that the plan is associated to, such as, consumer_electronics, misc, computer, tire, etc"
+                   }
+                  }
+                 },
+                 "imageUrl": {
+                  "type": "string",
+                  "format": "uri",
+                  "example": "https://sdk.helloextend.com/extend_icon.png",
+                  "description": "The imageUrl for the warranty plan. Use this as the product image for the warranty plan SKU(s) in your store"
+                 },
+                 "title": {
+                  "type": "string",
+                  "example": "Extend Protection Plan - AV Receiver",
+                  "description": "The name of the warranty plan"
+                 },
+                 "url": {
+                  "type": "string",
+                  "description": "A link to the extended warranty plan terms and information.  Any offer display must include a “Learn More” or “See Plan Details” call-to-action that enables the customer to see exactly what the warranty plan covers"
+                 }
+                }
+               }
+              },
+              "base": {
+               "type": "array",
+               "items": {
+                "type": "object",
+                "properties": {
+                 "id": {
+                  "type": "string",
+                  "description": "Unique identifier for a warranty Plan",
+                  "example": "AmazingAppliancePlan"
+                 },
+                 "price": {
+                  "type": "number",
+                  "example": 199,
+                  "description": "The plan price expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>"
+                 },
+                 "currencyCode": {
+                  "description": "Currency code for the plan price. NOTE - This is an ISO-4217 currency code.",
+                  "type": "string",
+                  "enum": [
+                   "AUD",
+                   "CAD",
+                   "EUR",
+                   "GBP",
+                   "NZD",
+                   "USD"
+                  ]
+                 },
+                 "contract": {
+                  "type": "object",
+                  "description": "Additional information about this extended warranty contract",
+                  "properties": {
+                   "coverage_starts": {
+                    "type": "string",
+                    "example": "immediate",
+                    "description": "Describes when the contract term begins, relative to the manufacturer’s warranty length.  For example, “immediate” means coverage starts immediately on the purchase date, and “after” means coverage starts after the manufacturer’s warranty has expired"
+                   },
+                   "coverage_includes": {
+                    "type": "string",
+                    "example": "adh",
+                    "description": "Possible values include “base”, which means the extended warranty is a base plan covering mechanical and electrical failures through normal use, or “adh”, which means the plan includes coverage for accidental damage (i.e. “Accidental Damage in Handling”)"
+                   },
+                   "service_type": {
+                    "type": "string",
+                    "example": "replace",
+                    "description": "This is the claims resolution service the plan includes.  Responses include “replacement” (the damaged item is replaced by a new or refurbished equivalent), “repair_depot” (the customer mails the damaged item to a repair facility), or “repair_onsite” (a repair technician goes out to the customer’s home to repair the item)"
+                   },
+                   "replacement_type": {
+                    "type": "string",
+                    "example": "new",
+                    "description": "Indicates whether the damaged item will be replaced by a “new” or “refurbished” item"
+                   },
+                   "deductible": {
+                    "type": "number",
+                    "example": 0,
+                    "description": "The amount of the deductible charged to the customer during a claim, if there is one.  For most Extend protection plans, there is no deductible. The amount is expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>"
+                   },
+                   "term_length": {
+                    "type": "number",
+                    "example": 36,
+                    "description": "The length of the extended warranty coverage, in months"
+                   },
+                   "category": {
+                    "type": "string",
+                    "example": "consumer_electronics",
+                    "description": "The extend category that the plan is associated to, such as, consumer_electronics, misc, computer, tire, etc"
+                   }
+                  }
+                 },
+                 "imageUrl": {
+                  "type": "string",
+                  "format": "uri",
+                  "example": "https://sdk.helloextend.com/extend_icon.png",
+                  "description": "The imageUrl for the warranty plan. Use this as the product image for the warranty plan SKU(s) in your store"
+                 },
+                 "title": {
+                  "type": "string",
+                  "example": "Extend Protection Plan - AV Receiver",
+                  "description": "The name of the warranty plan"
+                 },
+                 "url": {
+                  "type": "string",
+                  "description": "A link to the extended warranty plan terms and information.  Any offer display must include a “Learn More” or “See Plan Details” call-to-action that enables the customer to see exactly what the warranty plan covers"
+                 }
+                }
+               }
+              },
+              "roadhazard": {
+               "type": "array",
+               "items": {
+                "type": "object",
+                "properties": {
+                 "id": {
+                  "type": "string",
+                  "description": "Unique identifier for a warranty Plan",
+                  "example": "AmazingAppliancePlan"
+                 },
+                 "price": {
+                  "type": "number",
+                  "example": 199,
+                  "description": "The plan price expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>"
+                 },
+                 "currencyCode": {
+                  "description": "Currency code for the plan price. NOTE - This is an ISO-4217 currency code.",
+                  "type": "string",
+                  "enum": [
+                   "AUD",
+                   "CAD",
+                   "EUR",
+                   "GBP",
+                   "NZD",
+                   "USD"
+                  ]
+                 },
+                 "contract": {
+                  "type": "object",
+                  "description": "Additional information about this extended warranty contract",
+                  "properties": {
+                   "coverage_starts": {
+                    "type": "string",
+                    "example": "immediate",
+                    "description": "Describes when the contract term begins, relative to the manufacturer’s warranty length.  For example, “immediate” means coverage starts immediately on the purchase date, and “after” means coverage starts after the manufacturer’s warranty has expired"
+                   },
+                   "coverage_includes": {
+                    "type": "string",
+                    "example": "adh",
+                    "description": "Possible values include “base”, which means the extended warranty is a base plan covering mechanical and electrical failures through normal use, or “adh”, which means the plan includes coverage for accidental damage (i.e. “Accidental Damage in Handling”)"
+                   },
+                   "service_type": {
+                    "type": "string",
+                    "example": "replace",
+                    "description": "This is the claims resolution service the plan includes.  Responses include “replacement” (the damaged item is replaced by a new or refurbished equivalent), “repair_depot” (the customer mails the damaged item to a repair facility), or “repair_onsite” (a repair technician goes out to the customer’s home to repair the item)"
+                   },
+                   "replacement_type": {
+                    "type": "string",
+                    "example": "new",
+                    "description": "Indicates whether the damaged item will be replaced by a “new” or “refurbished” item"
+                   },
+                   "deductible": {
+                    "type": "number",
+                    "example": 0,
+                    "description": "The amount of the deductible charged to the customer during a claim, if there is one.  For most Extend protection plans, there is no deductible. The amount is expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>"
+                   },
+                   "term_length": {
+                    "type": "number",
+                    "example": 36,
+                    "description": "The length of the extended warranty coverage, in months"
+                   },
+                   "category": {
+                    "type": "string",
+                    "example": "consumer_electronics",
+                    "description": "The extend category that the plan is associated to, such as, consumer_electronics, misc, computer, tire, etc"
+                   }
+                  }
+                 },
+                 "imageUrl": {
+                  "type": "string",
+                  "format": "uri",
+                  "example": "https://sdk.helloextend.com/extend_icon.png",
+                  "description": "The imageUrl for the warranty plan. Use this as the product image for the warranty plan SKU(s) in your store"
+                 },
+                 "title": {
+                  "type": "string",
+                  "example": "Extend Protection Plan - AV Receiver",
+                  "description": "The name of the warranty plan"
+                 },
+                 "url": {
+                  "type": "string",
+                  "description": "A link to the extended warranty plan terms and information.  Any offer display must include a “Learn More” or “See Plan Details” call-to-action that enables the customer to see exactly what the warranty plan covers"
+                 }
+                }
+               }
+              }
+             }
+            },
+            "product": {
+             "type": "object",
+             "required": [
+              "listPrice"
+             ],
+             "properties": {
+              "listPrice": {
+               "type": "number",
+               "description": "The base retail price of the product expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>",
+               "example": 1999
+              },
+              "title": {
+               "type": "string",
+               "description": "Product name",
+               "example": "Explosive Tennis Balls"
+              },
+              "imageUrl": {
+               "type": "string",
+               "format": "uri",
+               "description": "A url pointing to the primary image for the product",
+               "example": "https://bit.ly/2VN88Jf"
+              }
+             }
+            },
+            "marketing": {
+             "type": "object",
+             "description": "Marketing text to show for various plans",
+             "properties": {
+              "adh": {
+               "type": "object",
+               "properties": {
+                "planId": {
+                 "type": "string",
+                 "description": "",
+                 "example": "10001-misc-elec-adh-replace-1y"
+                },
+                "locale": {
+                 "type": "string",
+                 "description": "",
+                 "example": "en"
+                },
+                "offerTypeButtons": {
+                 "type": "object",
+                 "properties": {
+                  "buttonTermLengthYears": {
+                   "type": "string",
+                   "description": "",
+                   "example": "1"
+                  },
+                  "headlineCTA": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "learnMoreButtonText": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "offerTypeModal": {
+                 "type": "object",
+                 "properties": {
+                  "learnMoreButtonText": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "acceptButton": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit1Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit2Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit3": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit3Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "buttonLiteralProtectionPlan": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "buttonTermLengthYears": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "declineButton": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "footerLegal": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headlineMobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planBannerBestSeller": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planBannerBestValue": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planDetailsLinkText": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "offerTypeCTA": {
+                 "type": "object",
+                 "properties": {
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "learnMoreModal": {
+                 "type": "object",
+                 "properties": {
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "backgroundImageUrl": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet2Mobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet3": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet3Mobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBulletsHeading": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headlineMobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planDetailsLinkText": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend1Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend2Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtendHeading": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "aftermarketModal": {
+                 "type": "object",
+                 "properties": {
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo3": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo4": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "aftermarketModalConsumed": {
+                 "type": "object",
+                 "properties": {
+                  "bullet1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "bullet2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "aftermarketModalExpired": {
+                 "type": "object",
+                 "properties": {
+                  "bullet1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "bullet2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                }
+               }
+              },
+              "base": {
+               "type": "object",
+               "properties": {
+                "planId": {
+                 "type": "string",
+                 "description": "",
+                 "example": "10001-misc-elec-adh-replace-1y"
+                },
+                "locale": {
+                 "type": "string",
+                 "description": "",
+                 "example": "en"
+                },
+                "offerTypeButtons": {
+                 "type": "object",
+                 "properties": {
+                  "buttonTermLengthYears": {
+                   "type": "string",
+                   "description": "",
+                   "example": "1"
+                  },
+                  "headlineCTA": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "learnMoreButtonText": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "offerTypeModal": {
+                 "type": "object",
+                 "properties": {
+                  "learnMoreButtonText": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "acceptButton": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit1Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit2Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit3": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit3Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "buttonLiteralProtectionPlan": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "buttonTermLengthYears": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "declineButton": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "footerLegal": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headlineMobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planBannerBestSeller": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planBannerBestValue": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planDetailsLinkText": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "offerTypeCTA": {
+                 "type": "object",
+                 "properties": {
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "learnMoreModal": {
+                 "type": "object",
+                 "properties": {
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "backgroundImageUrl": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet2Mobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet3": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet3Mobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBulletsHeading": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headlineMobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planDetailsLinkText": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend1Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend2Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtendHeading": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "aftermarketModal": {
+                 "type": "object",
+                 "properties": {
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo3": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo4": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "aftermarketModalConsumed": {
+                 "type": "object",
+                 "properties": {
+                  "bullet1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "bullet2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "aftermarketModalExpired": {
+                 "type": "object",
+                 "properties": {
+                  "bullet1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "bullet2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                }
+               }
+              },
+              "roadhazard": {
+               "type": "object",
+               "properties": {
+                "planId": {
+                 "type": "string",
+                 "description": "",
+                 "example": "10001-misc-elec-adh-replace-1y"
+                },
+                "locale": {
+                 "type": "string",
+                 "description": "",
+                 "example": "en"
+                },
+                "offerTypeButtons": {
+                 "type": "object",
+                 "properties": {
+                  "buttonTermLengthYears": {
+                   "type": "string",
+                   "description": "",
+                   "example": "1"
+                  },
+                  "headlineCTA": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "learnMoreButtonText": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "offerTypeModal": {
+                 "type": "object",
+                 "properties": {
+                  "learnMoreButtonText": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "acceptButton": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit1Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit2Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit3": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "benefit3Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "buttonLiteralProtectionPlan": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "buttonTermLengthYears": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "declineButton": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "footerLegal": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headlineMobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planBannerBestSeller": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planBannerBestValue": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planDetailsLinkText": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "offerTypeCTA": {
+                 "type": "object",
+                 "properties": {
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "learnMoreModal": {
+                 "type": "object",
+                 "properties": {
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "backgroundImageUrl": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet2Mobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet3": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBullet3Mobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "coverageBulletsHeading": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headlineMobile": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "planDetailsLinkText": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend1Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtend2Icon": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "whyExtendHeading": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "aftermarketModal": {
+                 "type": "object",
+                 "properties": {
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo3": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "purchaseInfo4": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "aftermarketModalConsumed": {
+                 "type": "object",
+                 "properties": {
+                  "bullet1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "bullet2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                },
+                "aftermarketModalExpired": {
+                 "type": "object",
+                 "properties": {
+                  "bullet1": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "bullet2": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "button": {
+                   "type": "string",
+                   "description": ""
+                  },
+                  "headline": {
+                   "type": "string",
+                   "description": ""
+                  }
+                 }
+                }
+               }
+              }
+             }
+            }
+           }
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "The request to the endpoint was invalid",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "message"
+           ]
+          }
+         }
+        }
+       },
+       "404": {
+        "description": "The specified resource was not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "message"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   },
+   "x-readme": {
+    "explorer-enabled": true,
+    "proxy-enabled": true
+   }
+  }
+ }
+]

@@ -1,0 +1,629 @@
+[
+ {
+  "page": "https://docs.extend.com/reference/fetchdynamicreturnpolicycontent.md",
+  "definition": {
+   "openapi": "3.1.0",
+   "info": {
+    "version": "2022-02-01",
+    "title": "Entitlements Api",
+    "description": "<p>When a customer buys product(s) that directly associates to an internal product protection or shipping protection plan and indirectly associates to an external Extend provided services, they are issued an entitlement.</p>"
+   },
+   "servers": [
+    {
+     "url": "https://api.helloextend.com"
+    }
+   ],
+   "paths": {
+    "/entitlements-management/dynamic-return-policy-content": {
+     "post": {
+      "summary": "Retrieve dynamic return policy content",
+      "description": "This endpoint retrieves dynamic return policy content and provides personalized and accurate return information that can be displayed on an e-commerce checkout page.",
+      "tags": [
+       "Dynamic Return Policy"
+      ],
+      "operationId": "fetchDynamicReturnPolicyContent",
+      "parameters": [
+       {
+        "name": "Content-Type",
+        "in": "header",
+        "required": true,
+        "description": "Used to indicate the original media type of the resource (prior to any content encoding applied for sending).",
+        "schema": {
+         "type": "string",
+         "example": "application/json"
+        }
+       },
+       {
+        "name": "Accept",
+        "in": "header",
+        "required": true,
+        "description": "Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.",
+        "schema": {
+         "type": "string",
+         "example": "application/json; version=latest"
+        }
+       }
+      ],
+      "requestBody": {
+       "required": true,
+       "content": {
+        "application/json": {
+         "schema": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+           "storeId",
+           "locale",
+           "currency"
+          ],
+          "properties": {
+           "storeId": {
+            "type": "string",
+            "description": "Unique identifier for the merchant store",
+            "example": "c57ed096-24ef-49a4-a20a-d1b8bf770980"
+           },
+           "locale": {
+            "type": "string",
+            "enum": [
+             "en-US",
+             "en-CA",
+             "fr-CA",
+             "es-US"
+            ],
+            "description": "Locale for the content retrieval. Supported values: en-US, en-CA, fr-CA, es-US",
+            "example": "en-US"
+           },
+           "cartId": {
+            "type": "string",
+            "description": "Unique identifier for the customer's cart",
+            "example": "c57ed096-24ef-49a4-a20a-d1b8bf770980"
+           },
+           "currency": {
+            "description": "Currency code for the cart and pricing information",
+            "example": "USD",
+            "type": "string"
+           },
+           "region": {
+            "type": "string",
+            "description": "Region is used to filter return policy content by the region where the customer is located (an ISO 3166-2 region code). <p> If no region is passed, \"US\" will be used as default region",
+            "pattern": "^[A-Z]{2}(-[A-Za-z0-9]{1,3})?$",
+            "example": "US"
+           },
+           "customerInfo": {
+            "description": "Customer information including",
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+             "name": {
+              "type": "string",
+              "description": "Customer's full name",
+              "example": "John Smith"
+             },
+             "email": {
+              "type": "string",
+              "format": "email",
+              "description": "Customer's email address",
+              "example": "customer@gmail.com"
+             },
+             "phone": {
+              "type": "string",
+              "description": "Customer's phone number",
+              "example": "123-456-7890"
+             },
+             "shippingAddress": {
+              "description": "Customer's shipping address",
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+               "address1": {
+                "type": "string",
+                "description": "Primary address line",
+                "example": "535 Mission Street"
+               },
+               "address2": {
+                "type": "string",
+                "description": "Secondary address line (apartment, suite, etc.)",
+                "example": "11th Floor"
+               },
+               "city": {
+                "type": "string",
+                "description": "City name",
+                "example": "San Francisco"
+               },
+               "provinceCode": {
+                "type": "string",
+                "description": "Province or state",
+                "example": "CA"
+               },
+               "postalCode": {
+                "type": "string",
+                "description": "Postal or ZIP code",
+                "example": "94526"
+               },
+               "countryCode": {
+                "type": "string",
+                "description": "Two-letter ISO country code (e.g., US, CA)",
+                "example": "US"
+               }
+              }
+             },
+             "billingAddress": {
+              "description": "Customer's billing address",
+              "type": "object",
+              "additionalProperties": false,
+              "properties": {
+               "address1": {
+                "type": "string",
+                "description": "Primary address line",
+                "example": "535 Mission Street"
+               },
+               "address2": {
+                "type": "string",
+                "description": "Secondary address line (apartment, suite, etc.)",
+                "example": "11th Floor"
+               },
+               "city": {
+                "type": "string",
+                "description": "City name",
+                "example": "San Francisco"
+               },
+               "provinceCode": {
+                "type": "string",
+                "description": "Province or state",
+                "example": "CA"
+               },
+               "postalCode": {
+                "type": "string",
+                "description": "Postal or ZIP code",
+                "example": "94526"
+               },
+               "countryCode": {
+                "type": "string",
+                "description": "Two-letter ISO country code (e.g., US, CA)",
+                "example": "US"
+               }
+              }
+             },
+             "loyaltyStatus": {
+              "type": "string",
+              "description": "Customer's loyalty status",
+              "example": "member"
+             }
+            }
+           },
+           "cartItems": {
+            "type": "array",
+            "items": {
+             "type": "object",
+             "additionalProperties": false,
+             "properties": {
+              "productId": {
+               "type": "string",
+               "description": "Unique identifier for the product",
+               "example": "SKU-123-456"
+              },
+              "quantity": {
+               "type": "integer",
+               "minimum": 1,
+               "description": "Quantity of the product in cart (defaults to 1)",
+               "example": 1
+              },
+              "parentProductId": {
+               "type": "string",
+               "description": "Parent product identifier for variants or bundles",
+               "example": "SKU-123"
+              },
+              "productName": {
+               "type": "string",
+               "description": "Name of the product",
+               "example": "Shiny Hat 2"
+              },
+              "category": {
+               "type": "string",
+               "description": "Product category",
+               "example": "clothing"
+              },
+              "listPrice": {
+               "type": "number",
+               "description": "List price of the product in smallest currency unit (ie: cents)",
+               "example": 5900
+              },
+              "purchasePrice": {
+               "type": "number",
+               "description": "Purchase price of the product in smallest currency unit (cents)",
+               "example": 5900
+              },
+              "discountAmount": {
+               "type": "number",
+               "description": "Discount amount applied to this item in smallest currency unit (cents)",
+               "example": 0
+              },
+              "finalPrice": {
+               "type": "number",
+               "description": "Final price after discounts in smallest currency unit (cents)",
+               "example": 5900
+              }
+             }
+            },
+            "description": "Array of cart items with product details"
+           },
+           "discounts": {
+            "type": "array",
+            "items": {
+             "type": "object",
+             "additionalProperties": false,
+             "properties": {
+              "discountCode": {
+               "type": "string",
+               "description": "Discount/coupon code",
+               "example": "SUMMER20"
+              },
+              "discountType": {
+               "type": "string",
+               "enum": [
+                "percentage",
+                "flat_amount",
+                "free_shipping",
+                "buy_one_get_one"
+               ],
+               "description": "Type of discount applied",
+               "example": "percentage"
+              },
+              "amountValue": {
+               "type": "number",
+               "description": "Discount amount value (percentage or fixed amount)",
+               "example": 20
+              },
+              "amountUnit": {
+               "type": "string",
+               "enum": [
+                "percentage",
+                "flat_amount"
+               ],
+               "description": "Unit for the discount amount",
+               "example": "percentage"
+              },
+              "description": {
+               "type": "string",
+               "description": "Human-readable description of the discount",
+               "example": "20% off summer sale"
+              }
+             }
+            },
+            "description": "Array of discounts applied at cart level"
+           }
+          }
+         }
+        }
+       }
+      },
+      "responses": {
+       "200": {
+        "description": "Successfully retrieved dynamic return policy content",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "required": [
+            "customerReturnPolicyId"
+           ],
+           "additionalProperties": false,
+           "properties": {
+            "customerReturnPolicyId": {
+             "type": "string",
+             "format": "uuid",
+             "description": "UUID identifier for the customer return policy",
+             "example": "550e8400-e29b-41d4-a716-446655440000"
+            },
+            "content": {
+             "oneOf": [
+              {
+               "type": "object",
+               "additionalProperties": false,
+               "properties": {
+                "largeBlock": {
+                 "type": "object",
+                 "additionalProperties": false,
+                 "description": "Primary three-line dynamic policy display component",
+                 "properties": {
+                  "headlineIcon": {
+                   "type": "string",
+                   "description": "Icon for the large block headline",
+                   "example": "https://example.com/icons/reset.svg"
+                  },
+                  "header": {
+                   "type": "string",
+                   "description": "Header text for the large block",
+                   "example": "Returns & Exchanges"
+                  },
+                  "body": {
+                   "type": "string",
+                   "description": "Body text for the large block",
+                   "example": "Fees may apply to returns and exchanges."
+                  },
+                  "returnPolicyLinkText": {
+                   "type": "string",
+                   "description": "Display text for the return policy link",
+                   "example": "See Return Policy for details"
+                  },
+                  "returnPolicyLinkUrl": {
+                   "type": "string",
+                   "format": "uri",
+                   "description": "URL link to the full return policy",
+                   "example": "https://example.com/return-policy"
+                  }
+                 },
+                 "required": [
+                  "headlineIcon",
+                  "header",
+                  "body",
+                  "returnPolicyLinkText",
+                  "returnPolicyLinkUrl"
+                 ]
+                },
+                "smallBlock": {
+                 "type": "object",
+                 "additionalProperties": false,
+                 "description": "Secondary one-line dynamic policy display component",
+                 "properties": {
+                  "icon": {
+                   "type": "string",
+                   "description": "Icon for the small block",
+                   "example": "https://example.com/icons/reset.svg"
+                  },
+                  "header": {
+                   "type": "string",
+                   "description": "Header text for the small block",
+                   "example": "Free 45-Day Returns & Exchanges"
+                  },
+                  "returnPolicyLinkText": {
+                   "type": "string",
+                   "description": "Display text for the return policy link",
+                   "example": "See Return Policy for details"
+                  },
+                  "returnPolicyLinkUrl": {
+                   "type": "string",
+                   "format": "uri",
+                   "description": "URL link to the full return policy",
+                   "example": "https://example.com/return-policy"
+                  }
+                 },
+                 "required": [
+                  "icon",
+                  "header",
+                  "returnPolicyLinkText",
+                  "returnPolicyLinkUrl"
+                 ]
+                },
+                "modal": {
+                 "type": "object",
+                 "additionalProperties": false,
+                 "description": "Summary modal displaying return policy details with bullet points",
+                 "properties": {
+                  "header": {
+                   "type": "string",
+                   "description": "Header text for the modal",
+                   "example": "Return Policy"
+                  },
+                  "bullet1": {
+                   "type": "string",
+                   "description": "First bullet point text",
+                   "example": "Free 30-day in-store returns from when item is delivered. (US only)"
+                  },
+                  "icon1": {
+                   "type": "string",
+                   "description": "Icon for the first bullet point",
+                   "example": "https://example.com/icons/reset.svg"
+                  },
+                  "bullet2": {
+                   "type": "string",
+                   "description": "Second bullet point text",
+                   "example": "Free 30-day mail-in returns for Platinum Rewards members from when item is delivered. (US only)"
+                  },
+                  "icon2": {
+                   "type": "string",
+                   "description": "Icon for the second bullet point",
+                   "example": "https://example.com/icons/package.svg"
+                  },
+                  "bullet3": {
+                   "type": "string",
+                   "description": "Third bullet point text",
+                   "example": "Fees may apply for standard mail-in returns, depending on rewards status or item."
+                  },
+                  "icon3": {
+                   "type": "string",
+                   "description": "Icon for the third bullet point",
+                   "example": "https://example.com/icons/cash-dollar.svg"
+                  },
+                  "returnPolicyLinkText": {
+                   "type": "string",
+                   "description": "Display text for the return policy link",
+                   "example": "See Refund Policy for details."
+                  },
+                  "returnPolicyLinkUrl": {
+                   "type": "string",
+                   "format": "uri",
+                   "description": "URL link to the full return policy",
+                   "example": "https://example.com/refund-policy"
+                  }
+                 },
+                 "required": [
+                  "header",
+                  "bullet1",
+                  "icon1",
+                  "bullet2",
+                  "icon2",
+                  "bullet3",
+                  "icon3",
+                  "returnPolicyLinkText",
+                  "returnPolicyLinkUrl"
+                 ]
+                }
+               }
+              },
+              {
+               "type": "null"
+              }
+             ]
+            },
+            "surfacesConfig": {
+             "description": "Controls which surfaces are enabled for displaying dynamic return policy content",
+             "oneOf": [
+              {
+               "type": "object",
+               "required": [
+                "largeBlock",
+                "smallBlock",
+                "modal"
+               ],
+               "additionalProperties": false,
+               "properties": {
+                "largeBlock": {
+                 "description": "Configuration for large block surface",
+                 "type": "object",
+                 "required": [
+                  "isEnabled"
+                 ],
+                 "additionalProperties": false,
+                 "properties": {
+                  "isEnabled": {
+                   "type": "boolean",
+                   "description": "Whether this surface config is enabled"
+                  }
+                 }
+                },
+                "smallBlock": {
+                 "description": "Configuration for small block surface",
+                 "type": "object",
+                 "required": [
+                  "isEnabled"
+                 ],
+                 "additionalProperties": false,
+                 "properties": {
+                  "isEnabled": {
+                   "type": "boolean",
+                   "description": "Whether this surface config is enabled"
+                  }
+                 }
+                },
+                "modal": {
+                 "description": "Configuration for modal surface",
+                 "type": "object",
+                 "required": [
+                  "isEnabled"
+                 ],
+                 "additionalProperties": false,
+                 "properties": {
+                  "isEnabled": {
+                   "type": "boolean",
+                   "description": "Whether this surface config is enabled"
+                  }
+                 }
+                }
+               }
+              },
+              {
+               "type": "null"
+              }
+             ]
+            }
+           }
+          }
+         }
+        }
+       },
+       "400": {
+        "description": "The request to the endpoint was invalid",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "message"
+           ]
+          }
+         }
+        }
+       },
+       "404": {
+        "description": "The specified resource was not found",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "message"
+           ]
+          }
+         }
+        }
+       },
+       "422": {
+        "description": "Unprocessable entity",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "message"
+           ]
+          }
+         }
+        }
+       },
+       "500": {
+        "description": "Internal server error",
+        "content": {
+         "application/json": {
+          "schema": {
+           "type": "object",
+           "properties": {
+            "code": {
+             "type": "string"
+            },
+            "message": {
+             "type": "string"
+            }
+           },
+           "required": [
+            "code",
+            "message"
+           ]
+          }
+         }
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ }
+]

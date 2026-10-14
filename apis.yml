@@ -1,21 +1,27 @@
 aid: extend
+
 name: Extend
-description: 'Extend is a product and shipping protection platform for merchants and ecommerce
-  brands. Its API lets merchants surface extended-warranty and shipping-protection offers at
-  checkout and post-purchase, create and manage protection contracts, process orders and line
-  items, file and track claims, and manage service orders, refunds, and leads. Extend provides
-  separate demo (sandbox) and production environments, header-based date versioning, OAuth2
-  client-credentials authentication with short-lived access tokens, idempotency keys on writes,
-  and webhooks for claim and service-order status changes, alongside client-side SDKs and
-  prebuilt commerce-platform integrations for Shopify, BigCommerce, Magento, WooCommerce, and
-  Salesforce Commerce Cloud.'
+
+description: Extend is a product and shipping protection platform for merchants and ecommerce brands. Its API lets merchants surface extended-warranty
+  and shipping-protection offers at checkout and post-purchase, create and manage protection contracts, process orders and line items, file and
+  track claims, and manage service orders, refunds, and leads. Extend provides separate demo (sandbox) and production environments, header-based
+  date versioning, OAuth2 client-credentials authentication with short-lived access tokens, idempotency keys on writes, and webhooks for claim
+  and service-order status changes, alongside client-side SDKs and prebuilt commerce-platform integrations for Shopify, BigCommerce, Magento,
+  WooCommerce, and Salesforce Commerce Cloud.
+
 url: https://raw.githubusercontent.com/api-evangelist/extend/refs/heads/main/apis.yml
+
 x-type: company
+
 x-source: vc-portfolio
+
 x-backed-by:
 - softbank-vision-fund
+
 x-tier: stub
+
 x-tier-reason: portfolio-lead
+
 deliveryModel:
   model: saas
   open_source: false
@@ -27,6 +33,7 @@ deliveryModel:
   - pricing
   generated: '2026-08-28'
   method: derived
+
 accessModel:
   pricing: unknown
   onboarding: self-serve
@@ -39,13 +46,21 @@ accessModel:
   - authentication
   generated: '2026-07-22'
   method: derived
+
 specificationVersion: '0.23'
+
 created: '2026-07-17'
+
 modified: '2026-07-19'
+
 image: https://avatars.githubusercontent.com/u/46018312?v=4
+
 x-docs-platform: readme
+
 x-docs-platform-confidence: high
+
 x-docs-platform-checked: 2026-10-03
+
 tags:
 - Company
 - Consumer
@@ -58,6 +73,7 @@ tags:
 - Contracts
 - Retail
 - Insurance
+
 tags_raw:
 - Company
 - Consumer
@@ -70,35 +86,30 @@ tags_raw:
 - Contracts
 - Retail
 - Insurance
-apis:
-- name: Extend API
-  description: 'Extend''s REST API for product and shipping protection: manage offers, contracts,
-    orders and line items, refunds, claims, service orders, and leads. Header-based date
-    versioning; OAuth2 client-credentials auth via the X-Extend-Access-Token header; idempotent
-    writes via X-Idempotency-Key.'
-  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
-  baseURL: https://api.helloextend.com
-  tags:
-  - Product Protection
-  - Shipping Protection
-  - Warranty
-  - E-Commerce
-  tags_raw:
-  - Product Protection
-  - Shipping Protection
-  - Warranty
-  - Ecommerce
-  properties:
-  - type: APIReference
-    url: https://docs.extend.com/reference
-  - type: Sandbox
-    url: https://api-demo.helloextend.com
+
 maintainers:
 - FN: Kin Lane
   email: kin@apievangelist.com
 - FN: APIs.json
   email: info@apis.io
+
 common:
+- type: AgenticAccess
+  url: agentic-access/extend-agentic-access.yml
+- type: Spectral
+  url: rules/extend-rules.yml
+- type: Vocabulary
+  url: vocabulary/extend-vocabulary.yml
+- type: Deprecation
+  url: lifecycle/extend-lifecycle.yml
+- type: ErrorCatalog
+  url: errors/extend-problem-types.yml
+- type: Hosts
+  url: hosts/extend-hosts.yml
+- type: Vendors
+  url: vendors/extend-vendors.yml
+- type: Newsroom
+  url: https://www.extend.com/press
 - type: Website
   url: https://www.extend.com/
 - type: DomainSecurity
@@ -139,7 +150,9 @@ common:
   url: well-known/extend-well-known.yml
 - type: X-MCPServerCandidate
   url: mcp/extend-mcp.yml
-  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate — a tool list derived from the published API contracts, not an existing server. The scorer already read the manifest and reported mcp_server correctly; the MCPServer type was crediting the artifact-type surfaces with a server that does not exist.'
+  note: 'Renamed from MCPServer 2026-09-03 (roadmap#247): the manifest self-describes as status: candidate — a tool list derived from the published
+    API contracts, not an existing server. The scorer already read the manifest and reported mcp_server correctly; the MCPServer type was crediting
+    the artifact-type surfaces with a server that does not exist.'
 - type: Conformance
   url: conformance/extend-conformance.yml
 - type: Lifecycle
@@ -156,8 +169,139 @@ common:
   url: packages/extend-packages.yml
 - type: SDKs
   url: packages/extend-packages.yml
+
+apis:
+- name: Extend API
+  description: 'Extend''s REST API for product and shipping protection: manage offers, contracts, orders and line items, refunds, claims, service
+    orders, and leads. Header-based date versioning; OAuth2 client-credentials auth via the X-Extend-Access-Token header; idempotent writes via
+    X-Idempotency-Key.'
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Product Protection
+  - Shipping Protection
+  - Warranty
+  - E-Commerce
+  tags_raw:
+  - Product Protection
+  - Shipping Protection
+  - Warranty
+  - Ecommerce
+  properties:
+  - type: APIReference
+    url: https://docs.extend.com/reference
+  - type: Sandbox
+    url: https://api-demo.helloextend.com
+  aid: extend:extend-api
+- aid: extend:extend-claims-management-api
+  name: Extend Claims Management API
+  description: The Claims Management API from Extend — 2 operation(s) for claims management.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Claims Management
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-claims-management-api-openapi.yml
+- aid: extend:extend-contracts-api
+  name: Extend Contracts API
+  description: The Contracts API from Extend — 2 operation(s) for contracts.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Contracts
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-contracts-api-openapi.yml
+- aid: extend:extend-entitlements-api
+  name: Extend Entitlements API
+  description: The Entitlements API from Extend — 1 operation(s) for entitlements.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Entitlements
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-entitlements-api-openapi.yml
+- aid: extend:extend-leads-api
+  name: Extend Leads API
+  description: The Leads API from Extend — 3 operation(s) for leads.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Leads
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-leads-api-openapi.yml
+- aid: extend:extend-offers-api
+  name: Extend Offers API
+  description: The Offers API from Extend — 1 operation(s) for offers.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Offers
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-offers-api-openapi.yml
+- aid: extend:extend-orders-api
+  name: Extend Orders API
+  description: The Orders API from Extend — 13 operation(s) for orders.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-orders-api-openapi.yml
+- aid: extend:extend-products-api
+  name: Extend Products API
+  description: The Products API from Extend — 2 operation(s) for products.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Products
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-products-api-openapi.yml
+- aid: extend:extend-refunds-api
+  name: Extend Refunds API
+  description: The Refunds API from Extend — 1 operation(s) for refunds.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Refunds
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-refunds-api-openapi.yml
+- aid: extend:extend-service-orders-api
+  name: Extend Service Orders API
+  description: The Service Orders API from Extend — 10 operation(s) for service orders.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Service Orders
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-service-orders-api-openapi.yml
+- aid: extend:extend-shipping-offers
+  name: Extend Shipping Offers Openapi.Yml API
+  description: The Shipping Offers Openapi.Yml API from Extend — 3 operation(s) for shipping offers openapi.yml.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Shipping Offers Openapi.Yml
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-shipping-offers-openapi.yml
+
 x-enrichment:
   date: '2026-07-19'
   status: backfilled
   pass: local-v1
   note: backfilled from .gitignore signal + verified work evidence
+
+x-readme-harvest:
+  date: '2026-10-14'
+  ops: 43
+  tool: harvest-readme-openapi.py
+  portal: https://docs.extend.com

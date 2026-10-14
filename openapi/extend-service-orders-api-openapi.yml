@@ -1,0 +1,4283 @@
+openapi: 3.0.1
+info:
+  title: Service Orders Api
+  version: 1.0.0
+servers:
+- url: https://api.helloextend.com
+paths:
+  /service-orders/search:
+    get:
+      summary: Find service orders associated with a given claim ID or Service Order Id. Must include claimId or serviceOrderId for searching. Cannot search by both claimId and serviceOrderId
+      tags:
+      - service-orders
+      parameters:
+      - name: claimId
+        in: query
+        description: Unique identifier for a claim
+        schema:
+          type: string
+          format: uuid
+          example: c57ed096-24ef-49a4-a20a-d1b8bf770980
+      - name: includeShippingLabels
+        in: query
+        schema:
+          type: string
+          example: 'true'
+          enum:
+          - 'true'
+          - 'false'
+      - name: serviceOrderId
+        in: query
+        description: Unique identifier for a service order
+        schema:
+          type: string
+          format: uuid
+          example: c57ed096-24ef-49a4-a20a-d1b8bf770980
+      - name: limit
+        in: query
+        description: Amount of results to return
+        schema:
+          type: number
+      - name: cursor
+        in: query
+        description: Amount of results to skip
+        schema:
+          type: number
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=latest
+      responses:
+        '200':
+          description: Returns an array of service orders associated with a given claim Id or service order Id
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  required:
+                  - body
+                  properties:
+                    body:
+                      allOf:
+                      - type: object
+                        required:
+                        - id
+                        - claimId
+                        - contractId
+                        - sellerId
+                        - status
+                        - serviceType
+                        - product
+                        - createdAt
+                        - updatedAt
+                        - totalItemsValue
+                        properties:
+                          id:
+                            type: string
+                          claimId:
+                            type: string
+                          contractId:
+                            type: string
+                          sellerId:
+                            type: string
+                          customerEmail:
+                            type: string
+                          assignedServicer:
+                            type: object
+                            required:
+                            - servicerId
+                            - authOrganizationId
+                            - businessName
+                            - servicingLocation
+                            - servicerType
+                            properties:
+                              servicerId:
+                                type: string
+                              authOrganizationId:
+                                type: string
+                              businessName:
+                                type: string
+                              contact:
+                                type: object
+                                properties:
+                                  email:
+                                    type: string
+                                  phone:
+                                    type: string
+                                  name:
+                                    type: string
+                              servicingLocation:
+                                type: object
+                                required:
+                                - id
+                                - businessName
+                                - contact
+                                - address
+                                - createdAt
+                                - updatedAt
+                                properties:
+                                  id:
+                                    type: string
+                                  businessName:
+                                    type: string
+                                  contact:
+                                    type: object
+                                    required:
+                                    - email
+                                    - phone
+                                    - name
+                                    properties:
+                                      email:
+                                        type: string
+                                      phone:
+                                        type: string
+                                      name:
+                                        type: string
+                                  address:
+                                    type: object
+                                    required:
+                                    - address1
+                                    - city
+                                    - countryCode
+                                    - postalCode
+                                    - provinceCode
+                                    properties:
+                                      address1:
+                                        type: string
+                                      address2:
+                                        type: string
+                                      city:
+                                        type: string
+                                      countryCode:
+                                        type: string
+                                      postalCode:
+                                        type: string
+                                      provinceCode:
+                                        type: string
+                                  createdAt:
+                                    type: number
+                                  updatedAt:
+                                    type: number
+                              servicerType:
+                                type: string
+                                enum:
+                                - third-party
+                                - merchant
+                                - extend
+                          attachments:
+                            type: object
+                            properties:
+                              packingSlip:
+                                type: object
+                                properties:
+                                  instructions:
+                                    type: string
+                                  packingSlipUrl:
+                                    type: string
+                          status:
+                            type: string
+                            enum:
+                            - created
+                            - accepted
+                            - assigned
+                            - fulfilled
+                            - payment_approved
+                            - payment_requested
+                          serviceType:
+                            type: string
+                            enum:
+                            - product_replacement
+                            - gift_card
+                            - virtual_card
+                            - direct_payment
+                            - carry_in
+                            - cleaning_kit
+                            - self_repair
+                            - replace
+                            - repair
+                            - repair_depot
+                            - repair_onsite
+                            - repair_irobot
+                            - automated_replacement
+                          product:
+                            type: object
+                            required:
+                            - value
+                            - title
+                            properties:
+                              id:
+                                type: string
+                              value:
+                                type: object
+                                required:
+                                - amount
+                                properties:
+                                  amount:
+                                    description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                    type: number
+                                    multipleOf: 1
+                                    minimum: 1
+                                  currencyCode:
+                                    type: string
+                                    enum:
+                                    - AUD
+                                    - CAD
+                                    - EUR
+                                    - GBP
+                                    - NZD
+                                    - USD
+                                  formattedAmount:
+                                    type: string
+                              title:
+                                type: string
+                          overrides:
+                            type: object
+                            properties:
+                              shipping:
+                                type: object
+                                required:
+                                - labelUrl
+                                - trackingNumber
+                                - carrier
+                                properties:
+                                  labelUrl:
+                                    type: string
+                                  trackingNumber:
+                                    type: string
+                                  carrier:
+                                    type: string
+                          fulfillmentMetaData:
+                            oneOf:
+                            - type: object
+                              required:
+                              - method
+                              - productReferenceId
+                              - productName
+                              - productValue
+                              properties:
+                                method:
+                                  type: string
+                                  enum:
+                                  - product_replacement
+                                productReferenceId:
+                                  type: string
+                                productName:
+                                  type: string
+                                productValue:
+                                  type: object
+                                  required:
+                                  - amount
+                                  properties:
+                                    amount:
+                                      description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                      type: number
+                                      multipleOf: 1
+                                      minimum: 1
+                                    currencyCode:
+                                      type: string
+                                      enum:
+                                      - AUD
+                                      - CAD
+                                      - EUR
+                                      - GBP
+                                      - NZD
+                                      - USD
+                                    formattedAmount:
+                                      type: string
+                                productReimbursementAmount:
+                                  type: object
+                                  required:
+                                  - amount
+                                  properties:
+                                    amount:
+                                      description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                      type: number
+                                      multipleOf: 1
+                                      minimum: 1
+                                    currencyCode:
+                                      type: string
+                                      enum:
+                                      - AUD
+                                      - CAD
+                                      - EUR
+                                      - GBP
+                                      - NZD
+                                      - USD
+                                    formattedAmount:
+                                      type: string
+                                trackingNumber:
+                                  type: string
+                                carrier:
+                                  type: string
+                                  enum:
+                                  - usps
+                                  - ups
+                                  - fedex_ground
+                                  - dhl_express
+                                  - ontrac
+                                  - newgistics
+                                expenseDescription:
+                                  type: string
+                                orderNumber:
+                                  type: string
+                            - type: object
+                              required:
+                              - method
+                              properties:
+                                method:
+                                  type: string
+                                  enum:
+                                  - repair_depot
+                          createdAt:
+                            type: number
+                          updatedAt:
+                            type: number
+                          repairMetaData:
+                            type: object
+                            properties:
+                              acceptedAt:
+                                type: number
+                              assignedAt:
+                                type: number
+                              diagnosticExplanation:
+                                type: string
+                              diagnosticCompletedAt:
+                                type: number
+                              estimatedRepairCompletionAt:
+                                type: number
+                              repairStartedAt:
+                                type: number
+                              repairCompletedAt:
+                                type: number
+                              repairShippedAt:
+                                type: number
+                          paymentMetaData:
+                            type: object
+                            properties:
+                              paymentRequestedAt:
+                                type: number
+                              paymentApprovedAt:
+                                type: number
+                              paidAt:
+                                type: number
+                              paymentId:
+                                type: string
+                          errorCode:
+                            oneOf:
+                            - type: string
+                              enum:
+                              - missing_tracking_info
+                            - enum:
+                              - null
+                          configurations:
+                            type: object
+                            required:
+                            - productReturnRequired
+                            properties:
+                              productReturnRequired:
+                                type: boolean
+                              isPartialReplacement:
+                                type: boolean
+                              hasCustomReturnLabel:
+                                type: boolean
+                              hasCustomDefectiveLabel:
+                                type: boolean
+                              rmaNumberRequired:
+                                type: boolean
+                              packingSlipRequired:
+                                type: boolean
+                              useTotalValueForAutomatedPayout:
+                                type: boolean
+                              isPaymentAutoApprovalEnabled:
+                                type: boolean
+                              autoAccept:
+                                type: boolean
+                              packingSlipConfiguration:
+                                type: object
+                                required:
+                                - contractId
+                                - claimId
+                                - serviceOrderId
+                                - orderNumber
+                                - customerName
+                                - productName
+                                - productReferenceId
+                                - productListPrice
+                                - productPurchasePrice
+                                - failureType
+                                - failureDescription
+                                properties:
+                                  contractId:
+                                    type: boolean
+                                  claimId:
+                                    type: boolean
+                                  serviceOrderId:
+                                    type: boolean
+                                  orderNumber:
+                                    type: boolean
+                                  customerName:
+                                    type: boolean
+                                  productName:
+                                    type: boolean
+                                  productReferenceId:
+                                    type: boolean
+                                  productListPrice:
+                                    description: Unit list price of the product, expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                    type: boolean
+                                  productPurchasePrice:
+                                    description: Unit purchase price of the product, expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul> <p> Please note that the purchase price should not reflect the quantity as total price
+                                    type: boolean
+                                  failureType:
+                                    type: boolean
+                                  failureDescription:
+                                    type: boolean
+                              replacementFulfillmentMethod:
+                                type: string
+                                enum:
+                                - manual
+                                - virtual_card
+                                - direct_payment
+                                - automated_replacement
+                              fulfillmentMethod:
+                                type: string
+                                enum:
+                                - product_replacement
+                                - gift_card
+                                - virtual_card
+                                - direct_payment
+                                - carry_in
+                                - cleaning_kit
+                                - self_repair
+                                - replace
+                                - repair
+                                - repair_depot
+                                - repair_onsite
+                                - repair_irobot
+                                - automated_replacement
+                                - store_credit
+                                - original_tender
+                              shippingAccountOverride:
+                                type: object
+                                required:
+                                - accountId
+                                - postalCode
+                                - carrier
+                                properties:
+                                  accountId:
+                                    type: string
+                                  postalCode:
+                                    type: string
+                                  carrier:
+                                    type: string
+                                    enum:
+                                    - fedex_ground
+                                    - ups_ground
+                          rmaNumber:
+                            type: string
+                          claimType:
+                            type: string
+                            enum:
+                            - shipping_protection
+                            - extended_warranty
+                          totalItemsValue:
+                            type: object
+                            required:
+                            - amount
+                            properties:
+                              amount:
+                                description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                type: number
+                                multipleOf: 1
+                                minimum: 1
+                              currencyCode:
+                                type: string
+                                enum:
+                                - AUD
+                                - CAD
+                                - EUR
+                                - GBP
+                                - NZD
+                                - USD
+                              formattedAmount:
+                                type: string
+                          costDetails:
+                            type: object
+                            required:
+                            - currencyCode
+                            - productCosts
+                            properties:
+                              currencyCode:
+                                type: string
+                                enum:
+                                - AUD
+                                - CAD
+                                - EUR
+                                - GBP
+                                - NZD
+                                - USD
+                              productCosts:
+                                type: array
+                                items:
+                                  type: object
+                                  required:
+                                  - productId
+                                  - title
+                                  - itemValue
+                                  - quantity
+                                  properties:
+                                    productId:
+                                      type: string
+                                    lineItemId:
+                                      type: string
+                                    lineItemTransactionId:
+                                      type: string
+                                    title:
+                                      type: string
+                                    itemValue:
+                                      type: number
+                                    contractValue:
+                                      type: number
+                                    quantity:
+                                      type: number
+                                    perUnitDiscountAmount:
+                                      type: number
+                              tax:
+                                type: number
+                              returnCost:
+                                type: number
+                              shippingCost:
+                                type: number
+                          failureType:
+                            type: string
+                            enum:
+                            - road_hazard
+                            - electricalFailure
+                            - mechanicalFailure
+                            - waterDamage
+                            - dropped
+                            - unanswered
+                            - aluminum_finish_scratch
+                            - animal_damage
+                            - ballpoint_ink_stain
+                            - bleach_stain
+                            - box_spring_handle_damage
+                            - broken_zipper_button
+                            - burn
+                            - burn_heat_mark
+                            - burning_mech_component_damage
+                            - color_fade_loss
+                            - color_fade_loss_change
+                            - electrical_component_damage
+                            - electrical_component_failure
+                            - fabric_gazebo_cover_sling_frame_damage
+                            - finish_check_crack_bubble_peel
+                            - fire
+                            - foam_loss
+                            - food_beverage_stain
+                            - frame_damage
+                            - frame_spring_mech_motor_lever_damage
+                            - human_pet_body_fluid_waste_stain
+                            - incline_recline_heat_vibrate_mech_damage
+                            - liquid_mark_ring
+                            - loose_joint
+                            - material_scuffing_scrapes_fraying_pilling
+                            - mirror_glass_chip_scratch_break
+                            - mirror_silvering_loss
+                            - mold_mildew
+                            - nail_polish_and_remover_stain_damage
+                            - non_damage_breakage
+                            - non_fire_burn
+                            - odor
+                            - other_puncture_tear_rip
+                            - other_water_damage
+                            - perspiration_hair_body_oils
+                            - pet_damage
+                            - puncture_cut_tear_rip
+                            - rocker_swivel_glide_recline_mech_breakage
+                            - rug_fringe
+                            - rug_pilling_fraying
+                            - scratch_gouge_chip
+                            - seam_separation
+                            - six_inch_border_tear
+                            - spring_coil_puncture_tear_rip
+                            - table_arc_umbrella_mech_damage
+                            - table_top_breakage
+                            - umbrella_rib_damage
+                            - vermin
+                            - weld_breakage
+                      - properties:
+                          shippingLabels:
+                            type: array
+                            items:
+                              type: object
+                              required:
+                              - destinationType
+                              - imageData
+                              properties:
+                                destinationType:
+                                  type: array
+                                  items:
+                                    type: string
+                                    enum:
+                                    - customer
+                                    - servicer
+                                imageData:
+                                  type: string
+                                pdfDownloadUrl:
+                                  type: string
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /service-orders/service-claim:
+    post:
+      summary: Submit logistics decisions to continue processing an approved claim
+      description: Endpoint for merchants with deferred claim servicing enabled to submit their logistics decisions (field destroy or return) after receiving a claim approval webhook.
+      tags:
+      - service-orders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              required:
+              - claimId
+              - logistics
+              properties:
+                claimId:
+                  type: string
+                logistics:
+                  type: array
+                  items:
+                    oneOf:
+                    - type: object
+                      additionalProperties: false
+                      required:
+                      - type
+                      - products
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - field_destroy
+                        products:
+                          type: array
+                          minItems: 1
+                          items:
+                            type: object
+                            additionalProperties: false
+                            required:
+                            - merchantLineItemTransactionId
+                            properties:
+                              productId:
+                                type: string
+                              extendLineItemId:
+                                type: string
+                              merchantLineItemTransactionId:
+                                type: string
+                        rma:
+                          type: string
+                        returnCost:
+                          type: integer
+                        shippingCost:
+                          type: integer
+                        shipping:
+                          type: object
+                          additionalProperties: false
+                          required:
+                          - labelUrl
+                          - trackingNumber
+                          - carrier
+                          properties:
+                            labelUrl:
+                              type: string
+                              format: uri
+                            trackingNumber:
+                              type: string
+                            carrier:
+                              type: string
+                    - type: object
+                      additionalProperties: false
+                      required:
+                      - type
+                      - products
+                      - shipping
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - return
+                        products:
+                          type: array
+                          minItems: 1
+                          items:
+                            type: object
+                            additionalProperties: false
+                            required:
+                            - merchantLineItemTransactionId
+                            properties:
+                              productId:
+                                type: string
+                              extendLineItemId:
+                                type: string
+                              merchantLineItemTransactionId:
+                                type: string
+                        rma:
+                          type: string
+                        returnCost:
+                          type: integer
+                        shippingCost:
+                          type: integer
+                        shipping:
+                          type: object
+                          additionalProperties: false
+                          required:
+                          - labelUrl
+                          - trackingNumber
+                          - carrier
+                          properties:
+                            labelUrl:
+                              type: string
+                              format: uri
+                            trackingNumber:
+                              type: string
+                            carrier:
+                              type: string
+      parameters:
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=latest
+      responses:
+        '200':
+          description: Servicing request validated and processed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - serviceOrders
+                properties:
+                  serviceOrders:
+                    type: array
+                    description: Array of created service orders with their types
+                    items:
+                      type: object
+                      required:
+                      - type
+                      - serviceOrderId
+                      - products
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - field_destroy
+                          - return
+                        serviceOrderId:
+                          type: string
+                        rma:
+                          type: string
+                        products:
+                          type: array
+                          items:
+                            type: object
+                            required:
+                            - merchantLineItemTransactionId
+                            properties:
+                              productId:
+                                type: string
+                              extendLineItemId:
+                                type: string
+                              merchantLineItemTransactionId:
+                                type: string
+        '400':
+          description: The request to the endpoint was invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /service-orders/{serviceOrderId}:
+    get:
+      summary: Get a service order
+      tags:
+      - service-orders
+      parameters:
+      - name: serviceOrderId
+        required: true
+        in: path
+        description: Unique identifier for a service order
+        schema:
+          type: string
+          format: uuid
+          example: cc957cb3-3d5d-430b-90a2-9ec96ee4c3cf
+      - name: include_shipping_labels
+        in: query
+        schema:
+          type: string
+          example: 'true'
+          enum:
+          - 'true'
+          - 'false'
+      - name: include_events
+        in: query
+        schema:
+          type: string
+          example: 'true'
+          enum:
+          - 'true'
+          - 'false'
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=latest
+      responses:
+        '200':
+          description: Returns service order
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - body
+                properties:
+                  body:
+                    allOf:
+                    - type: object
+                      required:
+                      - id
+                      - claimId
+                      - contractId
+                      - sellerId
+                      - status
+                      - serviceType
+                      - product
+                      - createdAt
+                      - updatedAt
+                      - totalItemsValue
+                      properties:
+                        id:
+                          type: string
+                        claimId:
+                          type: string
+                        contractId:
+                          type: string
+                        sellerId:
+                          type: string
+                        customerEmail:
+                          type: string
+                        assignedServicer:
+                          type: object
+                          required:
+                          - servicerId
+                          - authOrganizationId
+                          - businessName
+                          - servicingLocation
+                          - servicerType
+                          properties:
+                            servicerId:
+                              type: string
+                            authOrganizationId:
+                              type: string
+                            businessName:
+                              type: string
+                            contact:
+                              type: object
+                              properties:
+                                email:
+                                  type: string
+                                phone:
+                                  type: string
+                                name:
+                                  type: string
+                            servicingLocation:
+                              type: object
+                              required:
+                              - id
+                              - businessName
+                              - contact
+                              - address
+                              - createdAt
+                              - updatedAt
+                              properties:
+                                id:
+                                  type: string
+                                businessName:
+                                  type: string
+                                contact:
+                                  type: object
+                                  required:
+                                  - email
+                                  - phone
+                                  - name
+                                  properties:
+                                    email:
+                                      type: string
+                                    phone:
+                                      type: string
+                                    name:
+                                      type: string
+                                address:
+                                  type: object
+                                  required:
+                                  - address1
+                                  - city
+                                  - countryCode
+                                  - postalCode
+                                  - provinceCode
+                                  properties:
+                                    address1:
+                                      type: string
+                                    address2:
+                                      type: string
+                                    city:
+                                      type: string
+                                    countryCode:
+                                      type: string
+                                    postalCode:
+                                      type: string
+                                    provinceCode:
+                                      type: string
+                                createdAt:
+                                  type: number
+                                updatedAt:
+                                  type: number
+                            servicerType:
+                              type: string
+                              enum:
+                              - third-party
+                              - merchant
+                              - extend
+                        attachments:
+                          type: object
+                          properties:
+                            packingSlip:
+                              type: object
+                              properties:
+                                instructions:
+                                  type: string
+                                packingSlipUrl:
+                                  type: string
+                        status:
+                          type: string
+                          enum:
+                          - created
+                          - accepted
+                          - assigned
+                          - fulfilled
+                          - payment_approved
+                          - payment_requested
+                        serviceType:
+                          type: string
+                          enum:
+                          - product_replacement
+                          - gift_card
+                          - virtual_card
+                          - direct_payment
+                          - carry_in
+                          - cleaning_kit
+                          - self_repair
+                          - replace
+                          - repair
+                          - repair_depot
+                          - repair_onsite
+                          - repair_irobot
+                          - automated_replacement
+                        product:
+                          type: object
+                          required:
+                          - value
+                          - title
+                          properties:
+                            id:
+                              type: string
+                            value:
+                              type: object
+                              required:
+                              - amount
+                              properties:
+                                amount:
+                                  description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                  type: number
+                                  multipleOf: 1
+                                  minimum: 1
+                                currencyCode:
+                                  type: string
+                                  enum:
+                                  - AUD
+                                  - CAD
+                                  - EUR
+                                  - GBP
+                                  - NZD
+                                  - USD
+                                formattedAmount:
+                                  type: string
+                            title:
+                              type: string
+                        overrides:
+                          type: object
+                          properties:
+                            shipping:
+                              type: object
+                              required:
+                              - labelUrl
+                              - trackingNumber
+                              - carrier
+                              properties:
+                                labelUrl:
+                                  type: string
+                                trackingNumber:
+                                  type: string
+                                carrier:
+                                  type: string
+                        fulfillmentMetaData:
+                          oneOf:
+                          - type: object
+                            required:
+                            - method
+                            - productReferenceId
+                            - productName
+                            - productValue
+                            properties:
+                              method:
+                                type: string
+                                enum:
+                                - product_replacement
+                              productReferenceId:
+                                type: string
+                              productName:
+                                type: string
+                              productValue:
+                                type: object
+                                required:
+                                - amount
+                                properties:
+                                  amount:
+                                    description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                    type: number
+                                    multipleOf: 1
+                                    minimum: 1
+                                  currencyCode:
+                                    type: string
+                                    enum:
+                                    - AUD
+                                    - CAD
+                                    - EUR
+                                    - GBP
+                                    - NZD
+                                    - USD
+                                  formattedAmount:
+                                    type: string
+                              productReimbursementAmount:
+                                type: object
+                                required:
+                                - amount
+                                properties:
+                                  amount:
+                                    description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                    type: number
+                                    multipleOf: 1
+                                    minimum: 1
+                                  currencyCode:
+                                    type: string
+                                    enum:
+                                    - AUD
+                                    - CAD
+                                    - EUR
+                                    - GBP
+                                    - NZD
+                                    - USD
+                                  formattedAmount:
+                                    type: string
+                              trackingNumber:
+                                type: string
+                              carrier:
+                                type: string
+                                enum:
+                                - usps
+                                - ups
+                                - fedex_ground
+                                - dhl_express
+                                - ontrac
+                                - newgistics
+                              expenseDescription:
+                                type: string
+                              orderNumber:
+                                type: string
+                          - type: object
+                            required:
+                            - method
+                            properties:
+                              method:
+                                type: string
+                                enum:
+                                - repair_depot
+                        createdAt:
+                          type: number
+                        updatedAt:
+                          type: number
+                        repairMetaData:
+                          type: object
+                          properties:
+                            acceptedAt:
+                              type: number
+                            assignedAt:
+                              type: number
+                            diagnosticExplanation:
+                              type: string
+                            diagnosticCompletedAt:
+                              type: number
+                            estimatedRepairCompletionAt:
+                              type: number
+                            repairStartedAt:
+                              type: number
+                            repairCompletedAt:
+                              type: number
+                            repairShippedAt:
+                              type: number
+                        paymentMetaData:
+                          type: object
+                          properties:
+                            paymentRequestedAt:
+                              type: number
+                            paymentApprovedAt:
+                              type: number
+                            paidAt:
+                              type: number
+                            paymentId:
+                              type: string
+                        errorCode:
+                          oneOf:
+                          - type: string
+                            enum:
+                            - missing_tracking_info
+                          - enum:
+                            - null
+                        configurations:
+                          type: object
+                          required:
+                          - productReturnRequired
+                          properties:
+                            productReturnRequired:
+                              type: boolean
+                            isPartialReplacement:
+                              type: boolean
+                            hasCustomReturnLabel:
+                              type: boolean
+                            hasCustomDefectiveLabel:
+                              type: boolean
+                            rmaNumberRequired:
+                              type: boolean
+                            packingSlipRequired:
+                              type: boolean
+                            useTotalValueForAutomatedPayout:
+                              type: boolean
+                            isPaymentAutoApprovalEnabled:
+                              type: boolean
+                            autoAccept:
+                              type: boolean
+                            packingSlipConfiguration:
+                              type: object
+                              required:
+                              - contractId
+                              - claimId
+                              - serviceOrderId
+                              - orderNumber
+                              - customerName
+                              - productName
+                              - productReferenceId
+                              - productListPrice
+                              - productPurchasePrice
+                              - failureType
+                              - failureDescription
+                              properties:
+                                contractId:
+                                  type: boolean
+                                claimId:
+                                  type: boolean
+                                serviceOrderId:
+                                  type: boolean
+                                orderNumber:
+                                  type: boolean
+                                customerName:
+                                  type: boolean
+                                productName:
+                                  type: boolean
+                                productReferenceId:
+                                  type: boolean
+                                productListPrice:
+                                  description: Unit list price of the product, expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                  type: boolean
+                                productPurchasePrice:
+                                  description: Unit purchase price of the product, expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul> <p> Please note that the purchase price should not reflect the quantity as total price
+                                  type: boolean
+                                failureType:
+                                  type: boolean
+                                failureDescription:
+                                  type: boolean
+                            replacementFulfillmentMethod:
+                              type: string
+                              enum:
+                              - manual
+                              - virtual_card
+                              - direct_payment
+                              - automated_replacement
+                            fulfillmentMethod:
+                              type: string
+                              enum:
+                              - product_replacement
+                              - gift_card
+                              - virtual_card
+                              - direct_payment
+                              - carry_in
+                              - cleaning_kit
+                              - self_repair
+                              - replace
+                              - repair
+                              - repair_depot
+                              - repair_onsite
+                              - repair_irobot
+                              - automated_replacement
+                              - store_credit
+                              - original_tender
+                            shippingAccountOverride:
+                              type: object
+                              required:
+                              - accountId
+                              - postalCode
+                              - carrier
+                              properties:
+                                accountId:
+                                  type: string
+                                postalCode:
+                                  type: string
+                                carrier:
+                                  type: string
+                                  enum:
+                                  - fedex_ground
+                                  - ups_ground
+                        rmaNumber:
+                          type: string
+                        claimType:
+                          type: string
+                          enum:
+                          - shipping_protection
+                          - extended_warranty
+                        totalItemsValue:
+                          type: object
+                          required:
+                          - amount
+                          properties:
+                            amount:
+                              description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                              type: number
+                              multipleOf: 1
+                              minimum: 1
+                            currencyCode:
+                              type: string
+                              enum:
+                              - AUD
+                              - CAD
+                              - EUR
+                              - GBP
+                              - NZD
+                              - USD
+                            formattedAmount:
+                              type: string
+                        costDetails:
+                          type: object
+                          required:
+                          - currencyCode
+                          - productCosts
+                          properties:
+                            currencyCode:
+                              type: string
+                              enum:
+                              - AUD
+                              - CAD
+                              - EUR
+                              - GBP
+                              - NZD
+                              - USD
+                            productCosts:
+                              type: array
+                              items:
+                                type: object
+                                required:
+                                - productId
+                                - title
+                                - itemValue
+                                - quantity
+                                properties:
+                                  productId:
+                                    type: string
+                                  lineItemId:
+                                    type: string
+                                  lineItemTransactionId:
+                                    type: string
+                                  title:
+                                    type: string
+                                  itemValue:
+                                    type: number
+                                  contractValue:
+                                    type: number
+                                  quantity:
+                                    type: number
+                                  perUnitDiscountAmount:
+                                    type: number
+                            tax:
+                              type: number
+                            returnCost:
+                              type: number
+                            shippingCost:
+                              type: number
+                        failureType:
+                          type: string
+                          enum:
+                          - road_hazard
+                          - electricalFailure
+                          - mechanicalFailure
+                          - waterDamage
+                          - dropped
+                          - unanswered
+                          - aluminum_finish_scratch
+                          - animal_damage
+                          - ballpoint_ink_stain
+                          - bleach_stain
+                          - box_spring_handle_damage
+                          - broken_zipper_button
+                          - burn
+                          - burn_heat_mark
+                          - burning_mech_component_damage
+                          - color_fade_loss
+                          - color_fade_loss_change
+                          - electrical_component_damage
+                          - electrical_component_failure
+                          - fabric_gazebo_cover_sling_frame_damage
+                          - finish_check_crack_bubble_peel
+                          - fire
+                          - foam_loss
+                          - food_beverage_stain
+                          - frame_damage
+                          - frame_spring_mech_motor_lever_damage
+                          - human_pet_body_fluid_waste_stain
+                          - incline_recline_heat_vibrate_mech_damage
+                          - liquid_mark_ring
+                          - loose_joint
+                          - material_scuffing_scrapes_fraying_pilling
+                          - mirror_glass_chip_scratch_break
+                          - mirror_silvering_loss
+                          - mold_mildew
+                          - nail_polish_and_remover_stain_damage
+                          - non_damage_breakage
+                          - non_fire_burn
+                          - odor
+                          - other_puncture_tear_rip
+                          - other_water_damage
+                          - perspiration_hair_body_oils
+                          - pet_damage
+                          - puncture_cut_tear_rip
+                          - rocker_swivel_glide_recline_mech_breakage
+                          - rug_fringe
+                          - rug_pilling_fraying
+                          - scratch_gouge_chip
+                          - seam_separation
+                          - six_inch_border_tear
+                          - spring_coil_puncture_tear_rip
+                          - table_arc_umbrella_mech_damage
+                          - table_top_breakage
+                          - umbrella_rib_damage
+                          - vermin
+                          - weld_breakage
+                    - properties:
+                        shippingLabels:
+                          type: array
+                          items:
+                            type: object
+                            required:
+                            - destinationType
+                            - imageData
+                            properties:
+                              destinationType:
+                                type: array
+                                items:
+                                  type: string
+                                  enum:
+                                  - customer
+                                  - servicer
+                              imageData:
+                                type: string
+                              pdfDownloadUrl:
+                                type: string
+                        events:
+                          type: array
+                          items:
+                            properties:
+                              data:
+                                type: object
+                                additionalProperties: false
+                                required:
+                                - serviceOrder
+                                - claim
+                                - product
+                                - customer
+                                properties:
+                                  serviceOrder:
+                                    type: object
+                                    required:
+                                    - id
+                                    properties:
+                                      id:
+                                        type: string
+                                  claim:
+                                    type: object
+                                    additionalProperties: false
+                                    required:
+                                    - id
+                                    - failureType
+                                    properties:
+                                      id:
+                                        type: string
+                                      failureType:
+                                        enum:
+                                        - road_hazard
+                                        - electricalFailure
+                                        - mechanicalFailure
+                                        - waterDamage
+                                        - dropped
+                                        - unanswered
+                                        - aluminum_finish_scratch
+                                        - animal_damage
+                                        - ballpoint_ink_stain
+                                        - bleach_stain
+                                        - box_spring_handle_damage
+                                        - broken_zipper_button
+                                        - burn
+                                        - burn_heat_mark
+                                        - burning_mech_component_damage
+                                        - color_fade_loss
+                                        - color_fade_loss_change
+                                        - electrical_component_damage
+                                        - electrical_component_failure
+                                        - fabric_gazebo_cover_sling_frame_damage
+                                        - finish_check_crack_bubble_peel
+                                        - fire
+                                        - foam_loss
+                                        - food_beverage_stain
+                                        - frame_damage
+                                        - frame_spring_mech_motor_lever_damage
+                                        - human_pet_body_fluid_waste_stain
+                                        - incline_recline_heat_vibrate_mech_damage
+                                        - liquid_mark_ring
+                                        - loose_joint
+                                        - material_scuffing_scrapes_fraying_pilling
+                                        - mirror_glass_chip_scratch_break
+                                        - mirror_silvering_loss
+                                        - mold_mildew
+                                        - nail_polish_and_remover_stain_damage
+                                        - non_damage_breakage
+                                        - non_fire_burn
+                                        - odor
+                                        - other_puncture_tear_rip
+                                        - other_water_damage
+                                        - perspiration_hair_body_oils
+                                        - pet_damage
+                                        - puncture_cut_tear_rip
+                                        - rocker_swivel_glide_recline_mech_breakage
+                                        - rug_fringe
+                                        - rug_pilling_fraying
+                                        - scratch_gouge_chip
+                                        - seam_separation
+                                        - six_inch_border_tear
+                                        - spring_coil_puncture_tear_rip
+                                        - table_arc_umbrella_mech_damage
+                                        - table_top_breakage
+                                        - umbrella_rib_damage
+                                        - vermin
+                                        - weld_breakage
+                                  product:
+                                    type: object
+                                    additionalProperties: false
+                                    required:
+                                    - name
+                                    - referenceId
+                                    - listPrice
+                                    properties:
+                                      name:
+                                        type: string
+                                      referenceId:
+                                        type: string
+                                      listPrice:
+                                        type: object
+                                        additionalProperties: false
+                                        required:
+                                        - amount
+                                        properties:
+                                          amount:
+                                            type: number
+                                          currencyCode:
+                                            type: string
+                                          formattedAmount:
+                                            type: string
+                                      serialNumber:
+                                        type: string
+                                  customer:
+                                    type: object
+                                    additionalProperties: false
+                                    required:
+                                    - name
+                                    - email
+                                    - phone
+                                    - shippingAddress
+                                    properties:
+                                      name:
+                                        type: string
+                                      email:
+                                        type: string
+                                      phone:
+                                        type: string
+                                      shippingAddress:
+                                        type: object
+                                        additionalProperties: false
+                                        required:
+                                        - address1
+                                        - city
+                                        - countryCode
+                                        - postalCode
+                                        - provinceCode
+                                        properties:
+                                          address1:
+                                            type: string
+                                          address2:
+                                            type: string
+                                          city:
+                                            type: string
+                                          countryCode:
+                                            type: string
+                                          postalCode:
+                                            type: string
+                                          provinceCode:
+                                            type: string
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /service-orders/{serviceOrderId}/accept-repair:
+    post:
+      summary: Accept/Decline a service order
+      tags:
+      - service-orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                decline:
+                  type: boolean
+                rmaNumber:
+                  type: string
+                instructions:
+                  type: string
+      parameters:
+      - name: serviceOrderId
+        required: true
+        in: path
+        description: Unique identifier for a service order
+        schema:
+          type: string
+          format: uuid
+          example: cc957cb3-3d5d-430b-90a2-9ec96ee4c3cf
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=latest
+      responses:
+        '200':
+          description: Accepts or rejects a service order
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - id
+                properties:
+                  id:
+                    type: string
+        '400':
+          description: The request to the endpoint was invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /service-orders/{serviceOrderId}/expenses:
+    get:
+      summary: Get expenses for a service order
+      tags:
+      - service-orders
+      parameters:
+      - name: serviceOrderId
+        required: true
+        in: path
+        description: Unique identifier for a service order
+        schema:
+          type: string
+          format: uuid
+          example: cc957cb3-3d5d-430b-90a2-9ec96ee4c3cf
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=latest
+      responses:
+        '200':
+          description: Returns an array of associated expenses
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  oneOf:
+                  - title: Replacement Expense
+                    type: object
+                    required:
+                    - type
+                    - cost
+                    - status
+                    - description
+                    - metaData
+                    additionalProperties: false
+                    properties:
+                      cost:
+                        type: object
+                        required:
+                        - amount
+                        properties:
+                          amount:
+                            description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                            type: number
+                            multipleOf: 1
+                            minimum: 1
+                          currencyCode:
+                            type: string
+                            enum:
+                            - AUD
+                            - CAD
+                            - EUR
+                            - GBP
+                            - NZD
+                            - USD
+                          formattedAmount:
+                            type: string
+                        description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                      quantity:
+                        type: number
+                      description:
+                        type: string
+                      status:
+                        description: expense status
+                        enum:
+                        - created
+                        - approved
+                        - void
+                      createdBy:
+                        type: string
+                      totalCost:
+                        description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                        type: number
+                      metaData:
+                        type: object
+                        required:
+                        - productName
+                        additionalProperties: false
+                        properties:
+                          productName:
+                            type: string
+                      goodwillMetaData:
+                        type: object
+                        required:
+                        - amount
+                        - description
+                        - type
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - lol_service_overage
+                            - customer_gesture
+                          description:
+                            type: string
+                          amount:
+                            type: object
+                            required:
+                            - amount
+                            properties:
+                              amount:
+                                description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                type: number
+                                multipleOf: 1
+                                minimum: 1
+                              currencyCode:
+                                type: string
+                                enum:
+                                - AUD
+                                - CAD
+                                - EUR
+                                - GBP
+                                - NZD
+                                - USD
+                              formattedAmount:
+                                type: string
+                      incurredBy:
+                        type: string
+                        enum:
+                        - extend
+                        - servicer
+                        - manufacturer
+                      type:
+                        enum:
+                        - replacement
+                        - refurbished_replacement
+                  - title: Parts Expense
+                    type: object
+                    required:
+                    - type
+                    - cost
+                    - status
+                    - description
+                    - metaData
+                    additionalProperties: false
+                    properties:
+                      cost:
+                        type: object
+                        required:
+                        - amount
+                        properties:
+                          amount:
+                            description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                            type: number
+                            multipleOf: 1
+                            minimum: 1
+                          currencyCode:
+                            type: string
+                            enum:
+                            - AUD
+                            - CAD
+                            - EUR
+                            - GBP
+                            - NZD
+                            - USD
+                          formattedAmount:
+                            type: string
+                        description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                      quantity:
+                        type: number
+                      description:
+                        type: string
+                      status:
+                        enum:
+                        - created
+                        - approved
+                        - void
+                      createdBy:
+                        type: string
+                      goodwillMetaData:
+                        type: object
+                        required:
+                        - amount
+                        - description
+                        - type
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - lol_service_overage
+                            - customer_gesture
+                          description:
+                            type: string
+                          amount:
+                            type: object
+                            required:
+                            - amount
+                            properties:
+                              amount:
+                                description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                type: number
+                                multipleOf: 1
+                                minimum: 1
+                              currencyCode:
+                                type: string
+                                enum:
+                                - AUD
+                                - CAD
+                                - EUR
+                                - GBP
+                                - NZD
+                                - USD
+                              formattedAmount:
+                                type: string
+                      totalCost:
+                        description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                        type: number
+                      incurredBy:
+                        type: string
+                        enum:
+                        - extend
+                        - servicer
+                        - manufacturer
+                      metaData:
+                        type: object
+                        required:
+                        - partNumber
+                        additionalProperties: false
+                        properties:
+                          partNumber:
+                            type: string
+                      type:
+                        enum:
+                        - parts
+                  - title: Misc Expense
+                    type: object
+                    required:
+                    - type
+                    - cost
+                    - status
+                    - description
+                    additionalProperties: false
+                    properties:
+                      cost:
+                        type: object
+                        required:
+                        - amount
+                        properties:
+                          amount:
+                            description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                            type: number
+                            multipleOf: 1
+                            minimum: 1
+                          currencyCode:
+                            type: string
+                            enum:
+                            - AUD
+                            - CAD
+                            - EUR
+                            - GBP
+                            - NZD
+                            - USD
+                          formattedAmount:
+                            type: string
+                        description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                      quantity:
+                        type: number
+                      description:
+                        type: string
+                      status:
+                        enum:
+                        - created
+                        - approved
+                        - void
+                      incurredBy:
+                        type: string
+                        enum:
+                        - extend
+                        - servicer
+                        - manufacturer
+                      createdBy:
+                        type: string
+                      goodwillMetaData:
+                        type: object
+                        required:
+                        - amount
+                        - description
+                        - type
+                        properties:
+                          type:
+                            type: string
+                            enum:
+                            - lol_service_overage
+                            - customer_gesture
+                          description:
+                            type: string
+                          amount:
+                            type: object
+                            required:
+                            - amount
+                            properties:
+                              amount:
+                                description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                type: number
+                                multipleOf: 1
+                                minimum: 1
+                              currencyCode:
+                                type: string
+                                enum:
+                                - AUD
+                                - CAD
+                                - EUR
+                                - GBP
+                                - NZD
+                                - USD
+                              formattedAmount:
+                                type: string
+                      totalCost:
+                        description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                        type: number
+                      type:
+                        enum:
+                        - store_credit
+                        - labor
+                        - shipping
+                        - taxes
+                        - diagnosis_fee
+                        - battery
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+    post:
+      summary: Add an expense to the service order
+      tags:
+      - service-orders
+      parameters:
+      - name: serviceOrderId
+        required: true
+        in: path
+        description: Unique identifier for a service order
+        schema:
+          type: string
+          format: uuid
+          example: cc957cb3-3d5d-430b-90a2-9ec96ee4c3cf
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=latest
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              oneOf:
+              - title: Replacement Expense
+                type: object
+                required:
+                - type
+                - cost
+                - status
+                - description
+                - metaData
+                additionalProperties: false
+                properties:
+                  cost:
+                    type: object
+                    required:
+                    - amount
+                    properties:
+                      amount:
+                        description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                        type: number
+                        multipleOf: 1
+                        minimum: 1
+                      currencyCode:
+                        type: string
+                        enum:
+                        - AUD
+                        - CAD
+                        - EUR
+                        - GBP
+                        - NZD
+                        - USD
+                      formattedAmount:
+                        type: string
+                    description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                  quantity:
+                    type: number
+                  description:
+                    type: string
+                  status:
+                    description: expense status
+                    enum:
+                    - created
+                    - approved
+                    - void
+                  createdBy:
+                    type: string
+                  totalCost:
+                    description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                    type: number
+                  metaData:
+                    type: object
+                    required:
+                    - productName
+                    additionalProperties: false
+                    properties:
+                      productName:
+                        type: string
+                  goodwillMetaData:
+                    type: object
+                    required:
+                    - amount
+                    - description
+                    - type
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - lol_service_overage
+                        - customer_gesture
+                      description:
+                        type: string
+                      amount:
+                        type: object
+                        required:
+                        - amount
+                        properties:
+                          amount:
+                            description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                            type: number
+                            multipleOf: 1
+                            minimum: 1
+                          currencyCode:
+                            type: string
+                            enum:
+                            - AUD
+                            - CAD
+                            - EUR
+                            - GBP
+                            - NZD
+                            - USD
+                          formattedAmount:
+                            type: string
+                  incurredBy:
+                    type: string
+                    enum:
+                    - extend
+                    - servicer
+                    - manufacturer
+                  type:
+                    enum:
+                    - replacement
+                    - refurbished_replacement
+              - title: Parts Expense
+                type: object
+                required:
+                - type
+                - cost
+                - status
+                - description
+                - metaData
+                additionalProperties: false
+                properties:
+                  cost:
+                    type: object
+                    required:
+                    - amount
+                    properties:
+                      amount:
+                        description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                        type: number
+                        multipleOf: 1
+                        minimum: 1
+                      currencyCode:
+                        type: string
+                        enum:
+                        - AUD
+                        - CAD
+                        - EUR
+                        - GBP
+                        - NZD
+                        - USD
+                      formattedAmount:
+                        type: string
+                    description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                  quantity:
+                    type: number
+                  description:
+                    type: string
+                  status:
+                    enum:
+                    - created
+                    - approved
+                    - void
+                  createdBy:
+                    type: string
+                  goodwillMetaData:
+                    type: object
+                    required:
+                    - amount
+                    - description
+                    - type
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - lol_service_overage
+                        - customer_gesture
+                      description:
+                        type: string
+                      amount:
+                        type: object
+                        required:
+                        - amount
+                        properties:
+                          amount:
+                            description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                            type: number
+                            multipleOf: 1
+                            minimum: 1
+                          currencyCode:
+                            type: string
+                            enum:
+                            - AUD
+                            - CAD
+                            - EUR
+                            - GBP
+                            - NZD
+                            - USD
+                          formattedAmount:
+                            type: string
+                  totalCost:
+                    description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                    type: number
+                  incurredBy:
+                    type: string
+                    enum:
+                    - extend
+                    - servicer
+                    - manufacturer
+                  metaData:
+                    type: object
+                    required:
+                    - partNumber
+                    additionalProperties: false
+                    properties:
+                      partNumber:
+                        type: string
+                  type:
+                    enum:
+                    - parts
+              - title: Misc Expense
+                type: object
+                required:
+                - type
+                - cost
+                - status
+                - description
+                additionalProperties: false
+                properties:
+                  cost:
+                    type: object
+                    required:
+                    - amount
+                    properties:
+                      amount:
+                        description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                        type: number
+                        multipleOf: 1
+                        minimum: 1
+                      currencyCode:
+                        type: string
+                        enum:
+                        - AUD
+                        - CAD
+                        - EUR
+                        - GBP
+                        - NZD
+                        - USD
+                      formattedAmount:
+                        type: string
+                    description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                  quantity:
+                    type: number
+                  description:
+                    type: string
+                  status:
+                    enum:
+                    - created
+                    - approved
+                    - void
+                  incurredBy:
+                    type: string
+                    enum:
+                    - extend
+                    - servicer
+                    - manufacturer
+                  createdBy:
+                    type: string
+                  goodwillMetaData:
+                    type: object
+                    required:
+                    - amount
+                    - description
+                    - type
+                    properties:
+                      type:
+                        type: string
+                        enum:
+                        - lol_service_overage
+                        - customer_gesture
+                      description:
+                        type: string
+                      amount:
+                        type: object
+                        required:
+                        - amount
+                        properties:
+                          amount:
+                            description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                            type: number
+                            multipleOf: 1
+                            minimum: 1
+                          currencyCode:
+                            type: string
+                            enum:
+                            - AUD
+                            - CAD
+                            - EUR
+                            - GBP
+                            - NZD
+                            - USD
+                          formattedAmount:
+                            type: string
+                  totalCost:
+                    description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                    type: number
+                  type:
+                    enum:
+                    - store_credit
+                    - labor
+                    - shipping
+                    - taxes
+                    - diagnosis_fee
+                    - battery
+      responses:
+        '200':
+          description: Returns the created expense
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - title: Replacement Expense
+                  type: object
+                  required:
+                  - type
+                  - cost
+                  - status
+                  - description
+                  - metaData
+                  additionalProperties: false
+                  properties:
+                    cost:
+                      type: object
+                      required:
+                      - amount
+                      properties:
+                        amount:
+                          description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                          type: number
+                          multipleOf: 1
+                          minimum: 1
+                        currencyCode:
+                          type: string
+                          enum:
+                          - AUD
+                          - CAD
+                          - EUR
+                          - GBP
+                          - NZD
+                          - USD
+                        formattedAmount:
+                          type: string
+                      description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                    quantity:
+                      type: number
+                    description:
+                      type: string
+                    status:
+                      description: expense status
+                      enum:
+                      - created
+                      - approved
+                      - void
+                    createdBy:
+                      type: string
+                    totalCost:
+                      description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                      type: number
+                    metaData:
+                      type: object
+                      required:
+                      - productName
+                      additionalProperties: false
+                      properties:
+                        productName:
+                          type: string
+                    goodwillMetaData:
+                      type: object
+                      required:
+                      - amount
+                      - description
+                      - type
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - lol_service_overage
+                          - customer_gesture
+                        description:
+                          type: string
+                        amount:
+                          type: object
+                          required:
+                          - amount
+                          properties:
+                            amount:
+                              description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                              type: number
+                              multipleOf: 1
+                              minimum: 1
+                            currencyCode:
+                              type: string
+                              enum:
+                              - AUD
+                              - CAD
+                              - EUR
+                              - GBP
+                              - NZD
+                              - USD
+                            formattedAmount:
+                              type: string
+                    incurredBy:
+                      type: string
+                      enum:
+                      - extend
+                      - servicer
+                      - manufacturer
+                    type:
+                      enum:
+                      - replacement
+                      - refurbished_replacement
+                - title: Parts Expense
+                  type: object
+                  required:
+                  - type
+                  - cost
+                  - status
+                  - description
+                  - metaData
+                  additionalProperties: false
+                  properties:
+                    cost:
+                      type: object
+                      required:
+                      - amount
+                      properties:
+                        amount:
+                          description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                          type: number
+                          multipleOf: 1
+                          minimum: 1
+                        currencyCode:
+                          type: string
+                          enum:
+                          - AUD
+                          - CAD
+                          - EUR
+                          - GBP
+                          - NZD
+                          - USD
+                        formattedAmount:
+                          type: string
+                      description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                    quantity:
+                      type: number
+                    description:
+                      type: string
+                    status:
+                      enum:
+                      - created
+                      - approved
+                      - void
+                    createdBy:
+                      type: string
+                    goodwillMetaData:
+                      type: object
+                      required:
+                      - amount
+                      - description
+                      - type
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - lol_service_overage
+                          - customer_gesture
+                        description:
+                          type: string
+                        amount:
+                          type: object
+                          required:
+                          - amount
+                          properties:
+                            amount:
+                              description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                              type: number
+                              multipleOf: 1
+                              minimum: 1
+                            currencyCode:
+                              type: string
+                              enum:
+                              - AUD
+                              - CAD
+                              - EUR
+                              - GBP
+                              - NZD
+                              - USD
+                            formattedAmount:
+                              type: string
+                    totalCost:
+                      description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                      type: number
+                    incurredBy:
+                      type: string
+                      enum:
+                      - extend
+                      - servicer
+                      - manufacturer
+                    metaData:
+                      type: object
+                      required:
+                      - partNumber
+                      additionalProperties: false
+                      properties:
+                        partNumber:
+                          type: string
+                    type:
+                      enum:
+                      - parts
+                - title: Misc Expense
+                  type: object
+                  required:
+                  - type
+                  - cost
+                  - status
+                  - description
+                  additionalProperties: false
+                  properties:
+                    cost:
+                      type: object
+                      required:
+                      - amount
+                      properties:
+                        amount:
+                          description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                          type: number
+                          multipleOf: 1
+                          minimum: 1
+                        currencyCode:
+                          type: string
+                          enum:
+                          - AUD
+                          - CAD
+                          - EUR
+                          - GBP
+                          - NZD
+                          - USD
+                        formattedAmount:
+                          type: string
+                      description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                    quantity:
+                      type: number
+                    description:
+                      type: string
+                    status:
+                      enum:
+                      - created
+                      - approved
+                      - void
+                    incurredBy:
+                      type: string
+                      enum:
+                      - extend
+                      - servicer
+                      - manufacturer
+                    createdBy:
+                      type: string
+                    goodwillMetaData:
+                      type: object
+                      required:
+                      - amount
+                      - description
+                      - type
+                      properties:
+                        type:
+                          type: string
+                          enum:
+                          - lol_service_overage
+                          - customer_gesture
+                        description:
+                          type: string
+                        amount:
+                          type: object
+                          required:
+                          - amount
+                          properties:
+                            amount:
+                              description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                              type: number
+                              multipleOf: 1
+                              minimum: 1
+                            currencyCode:
+                              type: string
+                              enum:
+                              - AUD
+                              - CAD
+                              - EUR
+                              - GBP
+                              - NZD
+                              - USD
+                            formattedAmount:
+                              type: string
+                    totalCost:
+                      description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                      type: number
+                    type:
+                      enum:
+                      - store_credit
+                      - labor
+                      - shipping
+                      - taxes
+                      - diagnosis_fee
+                      - battery
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /service-orders/{serviceOrderId}/expenses/{expenseId}/void:
+    post:
+      summary: Delete/Void an expense
+      tags:
+      - service-orders
+      parameters:
+      - name: serviceOrderId
+        required: true
+        in: path
+        description: Unique identifier for a service order
+        schema:
+          type: string
+          format: uuid
+          example: cc957cb3-3d5d-430b-90a2-9ec96ee4c3cf
+      - name: expenseId
+        required: true
+        in: path
+        description: Unique identifier for an expense
+        schema:
+          type: string
+          format: uuid
+          example: cc957cb3-3d5d-430b-90a2-9ec96ee4c3cf
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=latest
+      responses:
+        '204':
+          description: Voids/Deletes an expense
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /service-orders/{serviceOrderId}/fulfill:
+    post:
+      summary: Fulfill a service order
+      tags:
+      - service-orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              oneOf:
+              - title: Gift Card
+                required:
+                - provider
+                - amount
+                - method
+                properties:
+                  method:
+                    enum:
+                    - gift_card
+                  resolutionInitializedBy:
+                    type: string
+                  provider:
+                    type: string
+                  amount:
+                    type: object
+                    required:
+                    - amount
+                    properties:
+                      amount:
+                        description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                        type: number
+                        multipleOf: 1
+                        minimum: 1
+                      currencyCode:
+                        type: string
+                        enum:
+                        - AUD
+                        - CAD
+                        - EUR
+                        - GBP
+                        - NZD
+                        - USD
+                      formattedAmount:
+                        type: string
+                  miscFees:
+                    type: object
+                    required:
+                    - amount
+                    properties:
+                      amount:
+                        description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                        type: number
+                        multipleOf: 1
+                        minimum: 1
+                      currencyCode:
+                        type: string
+                        enum:
+                        - AUD
+                        - CAD
+                        - EUR
+                        - GBP
+                        - NZD
+                        - USD
+                      formattedAmount:
+                        type: string
+                  expenseDescription:
+                    type: string
+              - title: Product Replacement
+                required:
+                - product
+                - method
+                properties:
+                  method:
+                    enum:
+                    - product_replacement
+                  product:
+                    type: object
+                    required:
+                    - value
+                    - referenceId
+                    - name
+                    properties:
+                      value:
+                        type: object
+                        required:
+                        - amount
+                        properties:
+                          amount:
+                            description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                            type: number
+                            multipleOf: 1
+                            minimum: 1
+                          currencyCode:
+                            type: string
+                            enum:
+                            - AUD
+                            - CAD
+                            - EUR
+                            - GBP
+                            - NZD
+                            - USD
+                          formattedAmount:
+                            type: string
+                      reimbursementAmount:
+                        type: object
+                        required:
+                        - amount
+                        properties:
+                          amount:
+                            description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                            type: number
+                            multipleOf: 1
+                            minimum: 1
+                          currencyCode:
+                            type: string
+                            enum:
+                            - AUD
+                            - CAD
+                            - EUR
+                            - GBP
+                            - NZD
+                            - USD
+                          formattedAmount:
+                            type: string
+                      referenceId:
+                        description: replacement product id
+                        type: string
+                      name:
+                        type: string
+                  url:
+                    type: string
+                  trackingNumber:
+                    type: string
+                  carrier:
+                    type: string
+                  resolutionInitializedBy:
+                    description: system or a customer support agent
+                    type: string
+                  orderNumber:
+                    type: string
+                  expenseDescription:
+                    type: string
+              - title: Shipping Protection Product Replacement
+                required:
+                - products
+                - method
+                properties:
+                  method:
+                    enum:
+                    - shipping_protection
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                      - value
+                      - referenceId
+                      - name
+                      properties:
+                        value:
+                          type: object
+                          required:
+                          - amount
+                          properties:
+                            amount:
+                              description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                              type: number
+                              multipleOf: 1
+                              minimum: 1
+                            currencyCode:
+                              type: string
+                              enum:
+                              - AUD
+                              - CAD
+                              - EUR
+                              - GBP
+                              - NZD
+                              - USD
+                            formattedAmount:
+                              type: string
+                        referenceId:
+                          description: replacement product id
+                          type: string
+                        name:
+                          type: string
+              - title: Repair Depot
+                required:
+                - repairCompletedAt
+                - method
+                properties:
+                  method:
+                    enum:
+                    - repair_depot
+                  repairCompletedAt:
+                    type: number
+                  repairExplanation:
+                    type: string
+              - title: Repair Onsite
+                required:
+                - repairCompletedAt
+                - method
+                properties:
+                  method:
+                    enum:
+                    - repair_onsite
+                  repairCompletedAt:
+                    type: number
+                  repairExplanation:
+                    type: string
+              - title: Exchange Fulfillment
+                required:
+                - method
+                - products
+                properties:
+                  method:
+                    enum:
+                    - exchange
+                  products:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                      - originalReferenceId
+                      - referenceId
+                      - quantity
+                      properties:
+                        originalReferenceId:
+                          type: string
+                        referenceId:
+                          type: string
+                        quantity:
+                          type: number
+                        price:
+                          type: object
+                          required:
+                          - amount
+                          properties:
+                            amount:
+                              description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                              type: number
+                              multipleOf: 1
+                              minimum: 1
+                            currencyCode:
+                              type: string
+                              enum:
+                              - AUD
+                              - CAD
+                              - EUR
+                              - GBP
+                              - NZD
+                              - USD
+                            formattedAmount:
+                              type: string
+                    minItems: 1
+                    maxItems: 1
+                  replacementOrder:
+                    type: object
+                    properties:
+                      orderId:
+                        type: string
+                      transactionId:
+                        type: string
+                      trackingNumber:
+                        type: string
+                      status:
+                        type: string
+                  resolutionInitializedBy:
+                    type: string
+                  fulfilledAt:
+                    type: number
+                  status:
+                    type: string
+      parameters:
+      - name: serviceOrderId
+        required: true
+        in: path
+        description: Unique identifier for a service order
+        schema:
+          type: string
+          format: uuid
+          example: cc957cb3-3d5d-430b-90a2-9ec96ee4c3cf
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=latest
+      responses:
+        '200':
+          description: Fulfill a service order
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - id
+                - status
+                properties:
+                  id:
+                    type: string
+                  status:
+                    type: string
+                    enum:
+                    - created
+                    - accepted
+                    - assigned
+                    - fulfilled
+                    - payment_approved
+                    - payment_requested
+        '400':
+          description: The request to the endpoint was invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '422':
+          description: Unprocessable entity
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /service-orders/{serviceOrderId}/generate-repair-label:
+    post:
+      summary: Generate repair label for a service order
+      tags:
+      - service-orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                destinationType:
+                  type: string
+                  enum:
+                  - customer
+                  - servicer
+              required:
+              - destinationType
+      parameters:
+      - name: serviceOrderId
+        required: true
+        in: path
+        description: Unique identifier for a service order
+        schema:
+          type: string
+          format: uuid
+          example: cc957cb3-3d5d-430b-90a2-9ec96ee4c3cf
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=latest
+      responses:
+        '200':
+          description: Generates repair label for a service order
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - pdfDownloadUrl
+                properties:
+                  pdfDownloadUrl:
+                    type: string
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /service-orders/{serviceOrderId}/request-payment:
+    post:
+      summary: Request payment after a service order is fulfilled
+      tags:
+      - service-orders
+      parameters:
+      - name: serviceOrderId
+        required: true
+        in: path
+        description: Unique identifier for a service order
+        schema:
+          type: string
+          format: uuid
+          example: cc957cb3-3d5d-430b-90a2-9ec96ee4c3cf
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=latest
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                expenses:
+                  type: array
+                  items:
+                    oneOf:
+                    - title: Replacement Expense
+                      type: object
+                      required:
+                      - type
+                      - cost
+                      - status
+                      - description
+                      - metaData
+                      additionalProperties: false
+                      properties:
+                        cost:
+                          type: object
+                          required:
+                          - amount
+                          properties:
+                            amount:
+                              description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                              type: number
+                              multipleOf: 1
+                              minimum: 1
+                            currencyCode:
+                              type: string
+                              enum:
+                              - AUD
+                              - CAD
+                              - EUR
+                              - GBP
+                              - NZD
+                              - USD
+                            formattedAmount:
+                              type: string
+                          description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                        quantity:
+                          type: number
+                        description:
+                          type: string
+                        status:
+                          description: expense status
+                          enum:
+                          - created
+                          - approved
+                          - void
+                        createdBy:
+                          type: string
+                        totalCost:
+                          description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                          type: number
+                        metaData:
+                          type: object
+                          required:
+                          - productName
+                          additionalProperties: false
+                          properties:
+                            productName:
+                              type: string
+                        goodwillMetaData:
+                          type: object
+                          required:
+                          - amount
+                          - description
+                          - type
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - lol_service_overage
+                              - customer_gesture
+                            description:
+                              type: string
+                            amount:
+                              type: object
+                              required:
+                              - amount
+                              properties:
+                                amount:
+                                  description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                  type: number
+                                  multipleOf: 1
+                                  minimum: 1
+                                currencyCode:
+                                  type: string
+                                  enum:
+                                  - AUD
+                                  - CAD
+                                  - EUR
+                                  - GBP
+                                  - NZD
+                                  - USD
+                                formattedAmount:
+                                  type: string
+                        incurredBy:
+                          type: string
+                          enum:
+                          - extend
+                          - servicer
+                          - manufacturer
+                        type:
+                          enum:
+                          - replacement
+                          - refurbished_replacement
+                    - title: Parts Expense
+                      type: object
+                      required:
+                      - type
+                      - cost
+                      - status
+                      - description
+                      - metaData
+                      additionalProperties: false
+                      properties:
+                        cost:
+                          type: object
+                          required:
+                          - amount
+                          properties:
+                            amount:
+                              description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                              type: number
+                              multipleOf: 1
+                              minimum: 1
+                            currencyCode:
+                              type: string
+                              enum:
+                              - AUD
+                              - CAD
+                              - EUR
+                              - GBP
+                              - NZD
+                              - USD
+                            formattedAmount:
+                              type: string
+                          description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                        quantity:
+                          type: number
+                        description:
+                          type: string
+                        status:
+                          enum:
+                          - created
+                          - approved
+                          - void
+                        createdBy:
+                          type: string
+                        goodwillMetaData:
+                          type: object
+                          required:
+                          - amount
+                          - description
+                          - type
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - lol_service_overage
+                              - customer_gesture
+                            description:
+                              type: string
+                            amount:
+                              type: object
+                              required:
+                              - amount
+                              properties:
+                                amount:
+                                  description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                  type: number
+                                  multipleOf: 1
+                                  minimum: 1
+                                currencyCode:
+                                  type: string
+                                  enum:
+                                  - AUD
+                                  - CAD
+                                  - EUR
+                                  - GBP
+                                  - NZD
+                                  - USD
+                                formattedAmount:
+                                  type: string
+                        totalCost:
+                          description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                          type: number
+                        incurredBy:
+                          type: string
+                          enum:
+                          - extend
+                          - servicer
+                          - manufacturer
+                        metaData:
+                          type: object
+                          required:
+                          - partNumber
+                          additionalProperties: false
+                          properties:
+                            partNumber:
+                              type: string
+                        type:
+                          enum:
+                          - parts
+                    - title: Misc Expense
+                      type: object
+                      required:
+                      - type
+                      - cost
+                      - status
+                      - description
+                      additionalProperties: false
+                      properties:
+                        cost:
+                          type: object
+                          required:
+                          - amount
+                          properties:
+                            amount:
+                              description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                              type: number
+                              multipleOf: 1
+                              minimum: 1
+                            currencyCode:
+                              type: string
+                              enum:
+                              - AUD
+                              - CAD
+                              - EUR
+                              - GBP
+                              - NZD
+                              - USD
+                            formattedAmount:
+                              type: string
+                          description: Cost for single item. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                        quantity:
+                          type: number
+                        description:
+                          type: string
+                        status:
+                          enum:
+                          - created
+                          - approved
+                          - void
+                        incurredBy:
+                          type: string
+                          enum:
+                          - extend
+                          - servicer
+                          - manufacturer
+                        createdBy:
+                          type: string
+                        goodwillMetaData:
+                          type: object
+                          required:
+                          - amount
+                          - description
+                          - type
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                              - lol_service_overage
+                              - customer_gesture
+                            description:
+                              type: string
+                            amount:
+                              type: object
+                              required:
+                              - amount
+                              properties:
+                                amount:
+                                  description: Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                                  type: number
+                                  multipleOf: 1
+                                  minimum: 1
+                                currencyCode:
+                                  type: string
+                                  enum:
+                                  - AUD
+                                  - CAD
+                                  - EUR
+                                  - GBP
+                                  - NZD
+                                  - USD
+                                formattedAmount:
+                                  type: string
+                        totalCost:
+                          description: Total cost for all items. Expressed in terms of the smallest currency unit.<p> <ul><li>$19.99 would be 1999</li><li>1.234,56 € would be 123456</li><li>£ 1,999.99 would be 199999</li></ul>
+                          type: number
+                        type:
+                          enum:
+                          - store_credit
+                          - labor
+                          - shipping
+                          - taxes
+                          - diagnosis_fee
+                          - battery
+                incurredBy:
+                  type: string
+                  enum:
+                  - extend
+                  - servicer
+                  - manufacturer
+      responses:
+        '200':
+          description: Returns service order id
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - serviceOrderId
+                properties:
+                  serviceOrderId:
+                    type: string
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /service-orders/{serviceOrderId}/update-repair:
+    post:
+      summary: Update a service order
+      tags:
+      - service-orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              additionalProperties: false
+              properties:
+                event:
+                  type: string
+                  description: The name of the event
+                receivedBy:
+                  type: string
+                  description: Associated with 'product_received' event
+                receivedAt:
+                  type: number
+                  description: Associated with 'product_received' event
+                deliveredTo:
+                  type: string
+                  description: Associated with 'product_delivered' event
+                deliveredAt:
+                  type: number
+                  description: Associated with 'product_delivered' event
+                diagnosedBy:
+                  type: string
+                  description: Associated with 'product_diagnosed' event
+                diagnosticExplanation:
+                  type: string
+                  description: Associated with 'product_diagnosed' event
+                diagnosticCompletedAt:
+                  type: number
+                  description: Associated with 'product_diagnosed' event
+                isDelayed:
+                  type: boolean
+                  description: Associated with 'repair_eta' event
+                delayReason:
+                  type: string
+                  description: Associated with 'repair_eta' event
+                estimatedRepairCompletionAt:
+                  type: number
+                  description: Associated with 'repair_eta' event
+                repairStartedAt:
+                  type: number
+                  description: Associated with 'repair_started' event
+                repairCompletedAt:
+                  type: number
+                  description: Associated with 'repair_completed' event
+                repairShippedAt:
+                  type: number
+                  description: Associated with 'repair_shipped' event
+                repairExplanation:
+                  type: string
+                  description: Associated with 'repair_completed' event
+                partManagementEventType:
+                  type: string
+                  enum:
+                  - parts_needed
+                  - parts_ordered
+                  - parts_shipped
+                  - parts_delivered
+                  description: Associated with 'part_management' event
+                appointmentEventType:
+                  type: string
+                  enum:
+                  - scheduled
+                  - rescheduled
+                  - cancelled
+                  description: Associated with 'appointment_scheduling' event
+                appointmentDate:
+                  type: number
+                  description: Associated with 'appointment_scheduling' event
+                customerContactEventType:
+                  type: string
+                  enum:
+                  - appointment_reminder
+                  - schedule_attempt_failure
+                  - appointment_requested
+                  - appointment_request_confirmed
+                  description: Associated with 'customer_contact' event
+                method:
+                  type: string
+                  enum:
+                  - email
+                  - phone
+                  - email_and_phone
+                  description: Associated with 'customer_contact' event
+                contactTimestamp:
+                  type: number
+                  description: Associated with 'customer_contact' event
+                appointmentTimestamps:
+                  type: array
+                  items:
+                    type: number
+                  description: Associated with 'customer_contact' event
+                availabilityWindows:
+                  type: array
+                  items:
+                    type: number
+                  description: Associated with 'batched' event
+                resolutionType:
+                  type: string
+                  enum:
+                  - closed
+                  - fulfilled
+                  description: Associated with 'resolved' event
+                reason:
+                  type: string
+                  enum:
+                  - no_service_required
+                  - new_service_needed
+                  - additional_servicing_required
+                  - defective_product_not_shipped
+                  description: Associated with 'resolved' event
+                metadata:
+                  type: object
+                  description: JSON Object containing metadata for other events
+                eventDate:
+                  type: number
+                  description: Date associated with other events
+                notes:
+                  type: string
+                  description: Optional notes field for any event
+              required:
+              - event
+      parameters:
+      - name: serviceOrderId
+        required: true
+        in: path
+        description: Unique identifier for a service order
+        schema:
+          type: string
+          format: uuid
+          example: cc957cb3-3d5d-430b-90a2-9ec96ee4c3cf
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=latest
+      responses:
+        '200':
+          description: Updates a service order
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - id
+                properties:
+                  id:
+                    type: string
+        '400':
+          description: The request to the endpoint was invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+x-provenance:
+  method: searched
+  source: https://docs.extend.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.extend.com/reference/get_service-orders-search.md
+  - https://docs.extend.com/reference/get_service-orders-serviceorderid-expenses.md
+  - https://docs.extend.com/reference/get_service-orders-serviceorderid.md
+  - https://docs.extend.com/reference/post_service-orders-service-claim.md
+  - https://docs.extend.com/reference/post_service-orders-serviceorderid-accept-repair.md
+  - https://docs.extend.com/reference/post_service-orders-serviceorderid-expenses-expenseid-void.md
+  - https://docs.extend.com/reference/post_service-orders-serviceorderid-expenses.md
+  - https://docs.extend.com/reference/post_service-orders-serviceorderid-fulfill.md
+  - https://docs.extend.com/reference/post_service-orders-serviceorderid-generate-repair-label.md
+  - https://docs.extend.com/reference/post_service-orders-serviceorderid-request-payment.md
+  - https://docs.extend.com/reference/post_service-orders-serviceorderid-update-repair.md
+  merge:
+    pages: 11
+    deduped: 0
+    conflicts_kept_first: 0

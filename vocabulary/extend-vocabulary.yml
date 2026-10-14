@@ -1,0 +1,85 @@
+generated: '2026-10-14'
+method: derived
+generator: derive-vocabulary.py
+source:
+- openapi/extend-claims-management-api-openapi.yml
+- openapi/extend-contracts-api-openapi.yml
+- openapi/extend-entitlements-api-openapi.yml
+- openapi/extend-leads-api-openapi.yml
+- openapi/extend-offers-api-openapi.yml
+vocabulary:
+  name: Extend Domain Vocabulary
+  description: 'Terms declared by Extend''s own API contract: its resource groups, objects and enumerations, with the contract''s definitions.
+    Derived, not authored.'
+  version: '2026-10-14'
+  terms:
+  - term: Claims Management
+    definition: 'Resource group in the contract; its operation GET /claims-management/claims/{claimId}/photos: This endpoint returns the current
+      set of photos required or uploaded for a given claim.'
+    tags:
+    - Resource Group
+    source: openapi/extend-claims-management-api-openapi.yml
+  - term: Webhooks
+    definition: 'Resource group in the contract; its operation POST /webhooks/claims: Webhook endpoint documentation for claim status change notifications.'
+    tags:
+    - Resource Group
+    source: openapi/extend-claims-management-api-openapi.yml
+  - term: Contracts
+    definition: 'Resource group in the contract; its operation GET /contracts/search: This endpoint allows search via querystring params.'
+    tags:
+    - Resource Group
+    source: openapi/extend-contracts-api-openapi.yml
+  - term: Dynamic Return Policy
+    definition: 'Resource group in the contract; its operation POST /entitlements-management/dynamic-return-policy-content: This endpoint retrieves
+      dynamic return policy content and provides personalized and accurate return information that can be displayed on an e-commerce checkout
+      page.'
+    tags:
+    - Resource Group
+    source: openapi/extend-entitlements-api-openapi.yml
+  - term: Leads
+    definition: 'Resource group in the contract; its operation POST /leads: Creates a lead'
+    tags:
+    - Resource Group
+    source: openapi/extend-leads-api-openapi.yml
+  - term: Offers
+    definition: 'Resource group in the contract; its operation GET /offers: Returns warranty plans and pricing for a specific product.'
+    tags:
+    - Resource Group
+    source: openapi/extend-offers-api-openapi.yml
+  - term: Line Items
+    definition: 'Resource group in the contract; its operation POST /line-items/fulfill: Updates the status of a Line Item to ''fulfilled'', if
+      applicable creation of associated contracts is triggered using the product and plan information associated with the Line Item.Important:A
+      Line Item Fulfillment Status can only be updated from ''unfulfilled'' to ''fulfilled''.'
+    tags:
+    - Resource Group
+    source: openapi/extend-orders-api-openapi.yml
+  - term: Orders
+    definition: 'Resource group in the contract; its operation POST /orders: This endpoint creates a representation of an order in Extend’s system.'
+    tags:
+    - Resource Group
+    source: openapi/extend-orders-api-openapi.yml
+  - term: Products
+    definition: 'Resource group in the contract; its operation POST /stores/{storeId}/products: This will create a product if it doesn''t exist
+      or update a product that does.'
+    tags:
+    - Resource Group
+    source: openapi/extend-products-api-openapi.yml
+  - term: Refunds
+    definition: 'Resource group in the contract; its operation POST /refunds: This endpoint allows merchants to report a contract refund as paid
+      to the customer using the Extend Line Item ID, Extend Contract ID, Extend Refund ID, or Line Item Transaction ID (the merchant’s unique
+      identifier for the order line item).'
+    tags:
+    - Resource Group
+    source: openapi/extend-refunds-api-openapi.yml
+  - term: service-orders
+    definition: 'Resource group in the contract; its operation GET /service-orders/search: Find service orders associated with a given claim ID
+      or Service Order Id.'
+    tags:
+    - Resource Group
+    source: openapi/extend-service-orders-api-openapi.yml
+  - term: ShippingOffers
+    definition: 'Resource group in the contract; its operation GET /shipping-offers/config: This endpoint dictates how the shipping protection
+      offer modal should display marketing and compliance text, and includes styling configuration based on attach behavior (i.e.'
+    tags:
+    - Resource Group
+    source: openapi/extend-shipping-offers-openapi.yml

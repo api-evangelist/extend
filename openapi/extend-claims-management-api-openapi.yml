@@ -1,0 +1,475 @@
+openapi: 3.0.1
+info:
+  title: Claims Management API
+  version: 1.0.0
+servers:
+- url: https://api.helloextend.com
+paths:
+  /claims-management/claims/{claimId}/photos:
+    get:
+      summary: Get Claim Photos by Claim ID
+      description: "<html>\n  <p>\n    This endpoint returns the current set of photos required or uploaded for a\n    given claim. Each call generates fresh presigned URLs for the photos so they\n    can be downloaded directly from Extend's storage.\n  </p>\n  <h2>Important:</h2>\n  <ul>\n    <li>\n      Presigned URLs returned by this endpoint are short-lived. Fetch the\n      response and use the URLs immediately — do not cache them.\n    </li>\n    <li>\n      Requests are scoped to the calling merchant. A claim that does not belong\n      to the caller's store will return <b>403: Forbidden</b>.\n    </li>\n    <li>\n      If the claim exists but has no photos, the endpoint returns\n      <b>200</b> with an empty <code>photoDetails</code> array (not a 404).\n    </li>\n  </ul>\n</html>\n"
+      operationId: claimPhotosList
+      tags:
+      - Claims Management
+      parameters:
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend Shared Access Token given to external partners used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: claimId
+        in: path
+        required: true
+        description: Unique identifier for a claim
+        schema:
+          type: string
+          format: uuid
+          example: c57ed096-24ef-49a4-a20a-d1b8bf770980
+      - name: X-Extend-Api-Version
+        in: header
+        required: true
+        description: Api Version to use in the request.
+        schema:
+          type: string
+          enum:
+          - '2022-02-01'
+      responses:
+        '200':
+          description: Successfully retrieved claim photos
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - photoDetails
+                properties:
+                  photoDetails:
+                    type: array
+                    items:
+                      type: object
+                      required:
+                      - id
+                      - status
+                      - source
+                      - createdAt
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Unique identifier for the claim photo
+                        name:
+                          type: string
+                          description: File name of the photo
+                        description:
+                          type: string
+                          description: Description of the photo
+                        url:
+                          type: string
+                          format: uri
+                          description: Short-lived presigned URL to download the photo. Fetch and use immediately; expires shortly after issuance.
+                        source:
+                          type: string
+                          enum:
+                          - chatbot
+                          - ops_admin
+                          - merchant_ops_admin
+                          description: Source through which the photo was uploaded
+                        createdBy:
+                          type: string
+                          description: Identifier of the user or system that uploaded the photo (typically an email)
+                        createdAt:
+                          type: number
+                          description: Unix timestamp (ms) when the photo was created
+                        status:
+                          type: string
+                          enum:
+                          - upload_started
+                          - saved
+                          - deleted
+                          - photo_processing_started
+                          - rejected
+                          - upload_failed
+                          description: Current status of the photo
+                        requirement:
+                          type: object
+                          description: Photo requirement this upload satisfies
+                          additionalProperties: true
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '503':
+          description: Service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /webhooks/claims:
+    post:
+      summary: Claim Status Webhook
+      description: Webhook endpoint documentation for claim status change notifications. This endpoint represents the structure of webhook payloads sent to your configured webhook URL when claim statuses change.
+      operationId: claimWebhookNotification
+      tags:
+      - Webhooks
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              description: Webhook payload sent when claim status changes
+              required:
+              - claimId
+              - claimType
+              - claimStatus
+              - transactionId
+              - customer
+              - products
+              - incident
+              - reportedAt
+              - sendDate
+              - type
+              - url
+              - kid
+              properties:
+                contractId:
+                  type: string
+                  description: Contract identifier
+                orderId:
+                  type: string
+                  description: Order identifier
+                claimId:
+                  type: string
+                  description: Unique claim identifier
+                claimType:
+                  type: string
+                  enum:
+                  - extended_warranty
+                  - shipping_protection
+                  - category
+                  - shipping_resolution
+                  - return_resolution
+                  - exchange_resolution
+                  description: Type of claim
+                claimStatus:
+                  type: string
+                  enum:
+                  - approved
+                  - denied
+                  - review
+                  - pending_adjudication
+                  - fulfilled
+                  - closed
+                  description: Status of a claim
+                transactionId:
+                  type: string
+                  description: Transaction identifier
+                remainingLimitOfLiability:
+                  type: number
+                  description: Remaining limit of liability on the entitlement
+                validationReason:
+                  type: string
+                  description: Reason for validation if claim is in review
+                coverageTerm:
+                  type: object
+                  description: Coverage period details
+                  properties:
+                    startDate:
+                      type: integer
+                      description: Coverage start date (Unix timestamp)
+                    endDate:
+                      type: integer
+                      description: Coverage end date (Unix timestamp)
+                  required:
+                  - startDate
+                  - endDate
+                customer:
+                  type: object
+                  required:
+                  - name
+                  - email
+                  properties:
+                    name:
+                      type: string
+                      description: Customer's full name
+                    phone:
+                      type: string
+                      description: Customer's phone number
+                    email:
+                      type: string
+                      format: email
+                      description: Customer's email address
+                    shippingAddress:
+                      type: object
+                      required:
+                      - address1
+                      - city
+                      - countryCode
+                      - postalCode
+                      - provinceCode
+                      properties:
+                        address1:
+                          type: string
+                          description: Primary address line
+                        address2:
+                          type: string
+                          description: Secondary address line
+                        city:
+                          type: string
+                          description: City name
+                        countryCode:
+                          type: string
+                          description: ISO country code
+                        postalCode:
+                          type: string
+                          description: Postal/ZIP code
+                        provinceCode:
+                          type: string
+                          description: Province/state code
+                products:
+                  type: array
+                  items:
+                    type: object
+                    required:
+                    - referenceId
+                    - limitOfLiability
+                    - title
+                    properties:
+                      referenceId:
+                        type: string
+                        description: Product reference identifier
+                      lineItemId:
+                        type: string
+                        description: Line item identifier
+                      limitOfLiability:
+                        type: object
+                        required:
+                        - amount
+                        - currencyCode
+                        properties:
+                          amount:
+                            type: number
+                            description: Monetary amount
+                          currencyCode:
+                            type: string
+                            description: ISO 4217 currency code
+                            example: USD
+                      title:
+                        type: string
+                        description: Product title
+                      components:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                          - referenceId
+                          - productReferenceId
+                          - value
+                          - title
+                          properties:
+                            referenceId:
+                              type: string
+                              description: Component reference identifier
+                            productReferenceId:
+                              type: string
+                              description: Parent product reference identifier
+                            value:
+                              type: object
+                              required:
+                              - amount
+                              - currencyCode
+                              properties:
+                                amount:
+                                  type: number
+                                  description: Monetary amount
+                                currencyCode:
+                                  type: string
+                                  description: ISO 4217 currency code
+                                  example: USD
+                            title:
+                              type: string
+                              description: Component title
+                        description: Product components
+                      serialNumber:
+                        type: string
+                        description: Product serial number
+                      selectedVariant:
+                        type: object
+                        properties:
+                          referenceId:
+                            type: string
+                            description: Variant reference identifier
+                          title:
+                            type: string
+                            description: Variant title
+                          imageUrl:
+                            type: string
+                            format: uri
+                            description: Variant image URL
+                      imageUrl:
+                        type: string
+                        format: uri
+                        description: Product image URL
+                      type:
+                        type: string
+                        description: Entitlement type
+                  description: Products associated with the claim
+                incident:
+                  type: object
+                  description: Incident details describing the failure
+                  additionalProperties: true
+                  properties:
+                    FailureReasons:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          lineItemId:
+                            type: string
+                          failureType:
+                            type: string
+                          failureCause:
+                            type: string
+                        required:
+                        - lineItemId
+                        - failureType
+                        - failureCause
+                reportedAt:
+                  type: integer
+                  description: When the claim was reported (Unix timestamp)
+                sendDate:
+                  type: integer
+                  description: When the webhook was sent (Unix timestamp)
+                type:
+                  type: string
+                  enum:
+                  - claim_approved
+                  - claim_denied
+                  - claim_in_review
+                  - claim_closed
+                  description: Type of webhook event
+                url:
+                  type: string
+                  format: uri
+                  description: Webhook URL where this payload was sent
+                kid:
+                  type: string
+                  description: Key ID used for webhook signature verification
+                denialReason:
+                  type: string
+                  enum:
+                  - occurred_outside_coverage
+                  - failure_not_covered
+                  - police_report_not_provided
+                  - images_not_provided
+                  - under_manufacturer_warranty
+                  - fraud_risk
+                  - identity_verification_failed
+                  description: Reason for claim denial
+                closedMetaData:
+                  allOf:
+                  - type: object
+                    properties:
+                      closedAt:
+                        type: number
+                        description: Timestamp of when the claim was closed. NOTE - This field is formatted as a 13 digit Epoch timestamp.
+                      resolution:
+                        type: string
+                        enum:
+                        - no_service
+                        - service_change
+                        - defective_product_not_shipped
+                        - no_images_submitted
+                        - identity_not_verified
+                        - shipment_received
+                        - no_service_required
+                        - failure_not_covered
+                        - resolved_with_alternative_method
+                        - address_not_verified
+                  - description: Why and when the claim closed. Sent only on the claim_closed event.
+                closureMethod:
+                  allOf:
+                  - type: string
+                    enum:
+                    - automated
+                    - system_auto_close
+                    - extend_agent
+                    - merchant_agent
+                    description: How a claim decision was reached. 'automated' is Extend's adjudication engine, 'system_auto_close' an unattended close timer, and the two agent values a person acting in the Extend or merchant portal.
+                  - description: Whether the closure was automatic or driven by an Extend or merchant agent. Sent only on the claim_closed event.
+      responses:
+        '200':
+          description: Webhook received and processed successfully
+        '400':
+          description: Invalid webhook payload
+        '401':
+          description: Webhook signature verification failed
+x-provenance:
+  method: searched
+  source: https://docs.extend.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.extend.com/reference/claimphotoslist.md
+  - https://docs.extend.com/reference/claimwebhooknotification.md
+  merge:
+    pages: 2
+    deduped: 0
+    conflicts_kept_first: 0

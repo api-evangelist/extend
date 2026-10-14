@@ -1,0 +1,83 @@
+generated: '2026-10-14'
+method: probed
+source: pre-flight dossier (docs platform, portal detections) + CNAME chains and response headers of the hosts apis.yml names
+registry: all/0-working/vendors.yml
+areas_vocabulary:
+- documentation
+- developer-portal
+- api-gateway
+- cdn
+- hosting
+- sdk-generation
+- api-collections
+- status-page
+- support
+- community
+- identity
+- mcp-hosting
+vendors:
+- vendor: aws-api-gateway
+  name: Amazon API Gateway
+  area: api-gateway
+  host: api.helloextend.com
+  evidence: header:x-amz-apigw-id
+  signal: header
+  confidence: high
+  kin_score: []
+- vendor: cloudflare
+  name: Cloudflare
+  area: cdn
+  host: www.extend.com
+  evidence: header:cf-ray
+  signal: header
+  confidence: high
+  kin_score:
+  - https_enforced
+  - hsts
+- vendor: cloudfront
+  name: Amazon CloudFront
+  area: cdn
+  host: merchants.extend.com
+  evidence: cname:cloudfront.net
+  signal: cname
+  confidence: high
+  kin_score: []
+- vendor: vercel
+  name: Vercel
+  area: hosting
+  host: status.extend.com
+  evidence: cname:vercel-dns.com
+  signal: cname
+  confidence: high
+  kin_score: []
+- vendor: incident-io
+  name: incident.io
+  area: status-page
+  host: status.extend.com
+  evidence: cname:incident.io
+  signal: cname
+  confidence: high
+  kin_score:
+  - status_page
+reliance:
+  areas_vendor_served:
+  - api-gateway
+  - cdn
+  - hosting
+  - status-page
+  vendor_count: 5
+  areas_observed: 12
+  share_of_observable_areas: 0.333
+  note: areas where a third party was DETECTED serving this provider; an area absent here was either self-run or not observed, and this script
+    cannot tell those apart
+checked:
+- 'docs-platform: not probed'
+- www.extend.com (Website)
+- docs.extend.com (DeveloperPortal)
+- docs.extend.com (Documentation)
+- docs.extend.com (APIReference)
+- docs.extend.com (GettingStarted)
+- www.extend.com (Support)
+- merchants.extend.com (Login)
+- status.extend.com (StatusPage)
+- api.helloextend.com (baseURL)

@@ -1,0 +1,2549 @@
+openapi: 3.0.1
+info:
+  version: 7.0.0
+  title: Leads Api
+  description: <p>In order to sell a post-purchase extended warranty, you must first create a lead. A lead is the combination of a customer's information and transactional details that would provide enough detail to offer an extended warranty plan.</p><p>When you create a lead, you will receive back a unique token associated with it, which can be embedded in a link to be used in an email campaign to get offer information and eventually create a warranty contract. See below for more details!</p>
+servers:
+- url: https://api.helloextend.com
+paths:
+  /leads:
+    post:
+      summary: Create a lead
+      tags:
+      - Leads
+      operationId: createLead
+      description: Creates a lead
+      parameters:
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=2022-02-01
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+              - product
+              - sellerId
+              properties:
+                customer:
+                  type: object
+                  description: Details about the customer to create the lead for. This information is important so we can create the lead and get it to the customer
+                  properties:
+                    email:
+                      type: string
+                product:
+                  type: object
+                  description: Details about the product for the lead.
+                  required:
+                  - listPrice
+                  - manufacturerWarrantyLengthLabor
+                  - manufacturerWarrantyLengthParts
+                  - purchasePrice
+                  - referenceId
+                  - title
+                  - transactionDate
+                  - transactionId
+                  properties:
+                    brand:
+                      type: string
+                    imageUrl:
+                      type: string
+                    listPrice:
+                      type: object
+                      required:
+                      - amount
+                      properties:
+                        amount:
+                          type: number
+                          multipleOf: 1
+                          minimum: 1
+                        currencyCode:
+                          type: string
+                          enum:
+                          - AUD
+                          - CAD
+                          - EUR
+                          - GBP
+                          - NZD
+                          - USD
+                        formattedAmount:
+                          type: string
+                    manufacturerWarrantyLengthLabor:
+                      type: number
+                      multipleOf: 1
+                    manufacturerWarrantyLengthParts:
+                      type: number
+                      multipleOf: 1
+                    purchasePrice:
+                      type: object
+                      required:
+                      - amount
+                      properties:
+                        amount:
+                          type: number
+                          multipleOf: 1
+                          minimum: 0
+                          description: "Amount, expressed in terms of the smallest currency unit:\n\n <ul><li>$19.99 would be 1999</li> <li>1.234,56 € would be 123456</li> <li>£ 1,999.99 would be 199999</li></ul>"
+                        currencyCode:
+                          description: This is an ISO-4217 currency code. See https://en.wikipedia.org/wiki/ISO_4217 for more information
+                          type: string
+                          enum:
+                          - AUD
+                          - CAD
+                          - EUR
+                          - GBP
+                          - NZD
+                          - USD
+                        formattedAmount:
+                          type: string
+                    referenceId:
+                      type: string
+                    serialNumber:
+                      type: string
+                    title:
+                      type: string
+                    transactionDate:
+                      type: number
+                    transactionId:
+                      type: string
+                    fulfillmentDate:
+                      type: number
+                      description: The date when the product was fulfilled/shipped. If provided, this will be used instead of transactionDate for calculating lead expiration.
+                quantity:
+                  type: number
+                  description: The amount of line items purchased
+                  multipleOf: 1
+                  minimum: 1
+                sellerId:
+                  type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                - createdAt
+                - leadToken
+                - product
+                - quantity
+                - quantityConsumed
+                - sellerId
+                - updatedAt
+                - status
+                properties:
+                  createdAt:
+                    type: number
+                  customer:
+                    type: object
+                    description: Details about the customer to create the lead for. This information is important so we can create the lead and get it to the customer
+                    properties:
+                      email:
+                        type: string
+                  leadToken:
+                    type: string
+                  product:
+                    type: object
+                    description: Details about the product for the lead.
+                    required:
+                    - listPrice
+                    - manufacturerWarrantyLengthLabor
+                    - manufacturerWarrantyLengthParts
+                    - purchasePrice
+                    - referenceId
+                    - title
+                    - transactionDate
+                    - transactionId
+                    properties:
+                      brand:
+                        type: string
+                      imageUrl:
+                        type: string
+                      listPrice:
+                        type: object
+                        required:
+                        - amount
+                        properties:
+                          amount:
+                            type: number
+                            multipleOf: 1
+                            minimum: 1
+                          currencyCode:
+                            type: string
+                            enum:
+                            - AUD
+                            - CAD
+                            - EUR
+                            - GBP
+                            - NZD
+                            - USD
+                          formattedAmount:
+                            type: string
+                      manufacturerWarrantyLengthLabor:
+                        type: number
+                        multipleOf: 1
+                      manufacturerWarrantyLengthParts:
+                        type: number
+                        multipleOf: 1
+                      purchasePrice:
+                        type: object
+                        required:
+                        - amount
+                        properties:
+                          amount:
+                            type: number
+                            multipleOf: 1
+                            minimum: 0
+                            description: "Amount, expressed in terms of the smallest currency unit:\n\n <ul><li>$19.99 would be 1999</li> <li>1.234,56 € would be 123456</li> <li>£ 1,999.99 would be 199999</li></ul>"
+                          currencyCode:
+                            description: This is an ISO-4217 currency code. See https://en.wikipedia.org/wiki/ISO_4217 for more information
+                            type: string
+                            enum:
+                            - AUD
+                            - CAD
+                            - EUR
+                            - GBP
+                            - NZD
+                            - USD
+                          formattedAmount:
+                            type: string
+                      referenceId:
+                        type: string
+                      serialNumber:
+                        type: string
+                      title:
+                        type: string
+                      transactionDate:
+                        type: number
+                      transactionId:
+                        type: string
+                      fulfillmentDate:
+                        type: number
+                        description: The date when the product was fulfilled/shipped. If provided, this will be used instead of transactionDate for calculating lead expiration.
+                  quantity:
+                    type: number
+                    description: The amount of line items purchased
+                    multipleOf: 1
+                    minimum: 1
+                  quantityConsumed:
+                    type: number
+                  sellerId:
+                    type: string
+                  updatedAt:
+                    type: number
+                  status:
+                    type: string
+                    enum:
+                    - live
+                    - consumed
+                    - expired
+                  expirationDate:
+                    type: number
+        '400':
+          description: The request to the endpoint was invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '404':
+          description: Could not find an offer for the given product
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /leads/offers:
+    get:
+      summary: Get Lead Offers
+      description: Returns protection plan offers for all leads associated with a given store and transaction. Each lead in the response includes the available plans and enriched product details. Results are paginated with a default page size of 25.
+      tags:
+      - Leads
+      operationId: contractLeadsOffersBatchGet
+      parameters:
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=2022-02-01
+      - name: storeId
+        in: query
+        required: true
+        description: Unique identifier for a store on Extend
+        schema:
+          type: string
+          format: uuid
+          example: c57ed096-24ef-49a4-a20a-d1b8bf770980
+      - name: transactionId
+        in: query
+        required: true
+        description: The transaction ID to fetch leads for
+        schema:
+          type: string
+          example: 123EY1
+      - name: limit
+        in: query
+        required: false
+        description: Maximum number of offers to return per page. Default and max is 25.
+        schema:
+          type: integer
+          example: 25
+          maximum: 25
+          default: 25
+      - name: cursor
+        in: query
+        required: false
+        description: Pagination cursor for fetching the next page of results
+        schema:
+          type: string
+      - name: locale
+        in: query
+        description: 'The locale of the customer. Locale is used to determine the language for display and communication. Locale is formatted as xx-XX: the first two letters denote language (ISO 639-1 standards), and the last two letters denote region (ISO 3166 standards).'
+        schema:
+          type: string
+          example: en-US
+      - name: removeMarketing
+        in: query
+        required: false
+        description: When set to 'true', strips marketing content from the response
+        schema:
+          type: string
+          enum:
+          - 'true'
+          - 'false'
+          default: 'false'
+      - name: region
+        in: query
+        required: false
+        description: Your customer's location is used to determine what offer is presented to the customer in your store. Customers in some locations may not be qualified to purchase contracts. Region is used to filter offers by the region where the customer is located (an ISO 3166-1 region code). If this value is not passed in, then we leverage the caller's IP address to determine the customer's region.
+        schema:
+          type: string
+          format: ISO 3166-1
+          example: US
+      - name: userLocation
+        in: query
+        required: false
+        description: The user's location in ISO 3166 format. Overrides CloudFront-derived location.
+        schema:
+          type: string
+          example: US-CA
+      responses:
+        '200':
+          description: Returns lead offers with available protection plans
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Batch lead offers response
+                properties:
+                  offers:
+                    type: array
+                    items:
+                      type: object
+                      allOf:
+                      - type: object
+                        properties:
+                          plans:
+                            type: object
+                            properties:
+                              recommended:
+                                type: string
+                                enum:
+                                - adh
+                                - base
+                                - roadhazard
+                                example: adh
+                                description: The protection plan type that Extend recommends the merchant displays to the user. Possible values include `base` (for mechanical and electrical failures/defects), or `adh` (for accidents such as drop or liquid damage). The recommended protection plan type will be accessible in this response as a key on this plans object.
+                              adh:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                      description: Unique identifier for a warranty Plan
+                                      example: AmazingAppliancePlan
+                                    price:
+                                      type: number
+                                      example: 199
+                                      description: The offer price, in base units
+                                    currencyCode:
+                                      type: string
+                                      enum:
+                                      - AUD
+                                      - CAD
+                                      - EUR
+                                      - GBP
+                                      - NZD
+                                      - USD
+                                    contract:
+                                      type: object
+                                      description: Additional information about this extended warranty contract
+                                      properties:
+                                        coverage_starts:
+                                          type: string
+                                          example: immediate
+                                          description: Describes when the contract term begins, relative to the manufacturer’s warranty length.  For example, “immediate” means coverage starts immediately on the purchase date, and “after” means coverage starts after the manufacturer’s warranty has expired
+                                        coverage_includes:
+                                          type: string
+                                          example: adh
+                                          description: Possible values include “base”, which means the extended warranty is a base plan covering mechanical and electrical failures through normal use, or “adh”, which means the plan includes coverage for accidental damage (i.e. “Accidental Damage in Handling”)
+                                        service_type:
+                                          type: string
+                                          example: replace
+                                          description: This is the claims resolution service the plan includes.  Responses include “replacement” (the damaged item is replaced by a new or refurbished equivalent), “repair_depot” (the customer mails the damaged item to a repair facility), or “repair_onsite” (a repair technician goes out to the customer’s home to repair the item)
+                                        replacement_type:
+                                          type: string
+                                          example: new
+                                          description: Indicates whether the damaged item will be replaced by a “new” or “refurbished” item
+                                        deductible:
+                                          type: number
+                                          example: 0
+                                          description: The amount of the deductible charged to the customer during a claim, if there is one.  For most Extend protection plans, there is no deductible
+                                        term_length:
+                                          type: number
+                                          example: 36
+                                          description: The length of the extended warranty coverage, in months
+                                        category:
+                                          type: string
+                                          example: consumer_electronics
+                                          description: An item mapped to the Extend SDK is placed in a specific category, such as, consumer_electronics, misc, computer, tire, etc
+                                    imageUrl:
+                                      type: string
+                                      format: uri
+                                      example: https://sdk.helloextend.com/extend_icon.png
+                                      description: The imageUrl for the warranty plan. Use this as the product image for the warranty plan SKU(s) in your store
+                                    title:
+                                      type: string
+                                      example: Extend Protection Plan - AV Receiver
+                                      description: The name of the warranty plan
+                                    url:
+                                      type: string
+                                      description: A link to the extended warranty plan terms and information.  Any offer display must include a “Learn More” or “See Plan Details” call-to-action that enables the customer to see exactly what the warranty plan covers
+                                example:
+                                - id: 10001-misc-elec-adh-replace-1y
+                                  price: 499
+                                  currencyCode: USD
+                                  contract:
+                                    coverage_starts: immediate
+                                    coverage_includes: adh
+                                    service_type: replace
+                                    replacement_type: new
+                                    deductible: 0
+                                    term_length: 12
+                                    category: consumer_electronics
+                                  title: Extend Protection Plan - 1 Year
+                                  url: https://www.extend.com/warranty-plans
+                                  imageUrl: https://sdk.helloextend.com/extend_icon.png
+                                - id: 10001-misc-elec-adh-replace-2y
+                                  price: 799
+                                  currencyCode: USD
+                                  contract:
+                                    coverage_starts: immediate
+                                    coverage_includes: adh
+                                    service_type: replace
+                                    replacement_type: new
+                                    deductible: 0
+                                    term_length: 24
+                                    category: consumer_electronics
+                                  title: Extend Protection Plan - 2 Years
+                                  url: https://www.extend.com/warranty-plans
+                                  imageUrl: https://sdk.helloextend.com/extend_icon.png
+                                - id: 10001-misc-elec-adh-replace-3y
+                                  price: 999
+                                  currencyCode: USD
+                                  contract:
+                                    coverage_starts: immediate
+                                    coverage_includes: adh
+                                    service_type: replace
+                                    replacement_type: new
+                                    deductible: 0
+                                    term_length: 36
+                                    category: consumer_electronics
+                                  title: Extend Protection Plan - 3 Years
+                                  url: https://www.extend.com/warranty-plans
+                                  imageUrl: https://sdk.helloextend.com/extend_icon.png
+                              base:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                      description: Unique identifier for a warranty Plan
+                                      example: AmazingAppliancePlan
+                                    price:
+                                      type: number
+                                      example: 199
+                                      description: The offer price, in base units
+                                    currencyCode:
+                                      type: string
+                                      enum:
+                                      - AUD
+                                      - CAD
+                                      - EUR
+                                      - GBP
+                                      - NZD
+                                      - USD
+                                    contract:
+                                      type: object
+                                      description: Additional information about this extended warranty contract
+                                      properties:
+                                        coverage_starts:
+                                          type: string
+                                          example: immediate
+                                          description: Describes when the contract term begins, relative to the manufacturer’s warranty length.  For example, “immediate” means coverage starts immediately on the purchase date, and “after” means coverage starts after the manufacturer’s warranty has expired
+                                        coverage_includes:
+                                          type: string
+                                          example: adh
+                                          description: Possible values include “base”, which means the extended warranty is a base plan covering mechanical and electrical failures through normal use, or “adh”, which means the plan includes coverage for accidental damage (i.e. “Accidental Damage in Handling”)
+                                        service_type:
+                                          type: string
+                                          example: replace
+                                          description: This is the claims resolution service the plan includes.  Responses include “replacement” (the damaged item is replaced by a new or refurbished equivalent), “repair_depot” (the customer mails the damaged item to a repair facility), or “repair_onsite” (a repair technician goes out to the customer’s home to repair the item)
+                                        replacement_type:
+                                          type: string
+                                          example: new
+                                          description: Indicates whether the damaged item will be replaced by a “new” or “refurbished” item
+                                        deductible:
+                                          type: number
+                                          example: 0
+                                          description: The amount of the deductible charged to the customer during a claim, if there is one.  For most Extend protection plans, there is no deductible
+                                        term_length:
+                                          type: number
+                                          example: 36
+                                          description: The length of the extended warranty coverage, in months
+                                        category:
+                                          type: string
+                                          example: consumer_electronics
+                                          description: An item mapped to the Extend SDK is placed in a specific category, such as, consumer_electronics, misc, computer, tire, etc
+                                    imageUrl:
+                                      type: string
+                                      format: uri
+                                      example: https://sdk.helloextend.com/extend_icon.png
+                                      description: The imageUrl for the warranty plan. Use this as the product image for the warranty plan SKU(s) in your store
+                                    title:
+                                      type: string
+                                      example: Extend Protection Plan - AV Receiver
+                                      description: The name of the warranty plan
+                                    url:
+                                      type: string
+                                      description: A link to the extended warranty plan terms and information.  Any offer display must include a “Learn More” or “See Plan Details” call-to-action that enables the customer to see exactly what the warranty plan covers
+                                example: []
+                              roadhazard:
+                                type: array
+                                items:
+                                  type: object
+                                  properties:
+                                    id:
+                                      type: string
+                                      description: Unique identifier for a warranty Plan
+                                      example: AmazingAppliancePlan
+                                    price:
+                                      type: number
+                                      example: 199
+                                      description: The offer price, in base units
+                                    currencyCode:
+                                      type: string
+                                      enum:
+                                      - AUD
+                                      - CAD
+                                      - EUR
+                                      - GBP
+                                      - NZD
+                                      - USD
+                                    contract:
+                                      type: object
+                                      description: Additional information about this extended warranty contract
+                                      properties:
+                                        coverage_starts:
+                                          type: string
+                                          example: immediate
+                                          description: Describes when the contract term begins, relative to the manufacturer’s warranty length.  For example, “immediate” means coverage starts immediately on the purchase date, and “after” means coverage starts after the manufacturer’s warranty has expired
+                                        coverage_includes:
+                                          type: string
+                                          example: adh
+                                          description: Possible values include “base”, which means the extended warranty is a base plan covering mechanical and electrical failures through normal use, or “adh”, which means the plan includes coverage for accidental damage (i.e. “Accidental Damage in Handling”)
+                                        service_type:
+                                          type: string
+                                          example: replace
+                                          description: This is the claims resolution service the plan includes.  Responses include “replacement” (the damaged item is replaced by a new or refurbished equivalent), “repair_depot” (the customer mails the damaged item to a repair facility), or “repair_onsite” (a repair technician goes out to the customer’s home to repair the item)
+                                        replacement_type:
+                                          type: string
+                                          example: new
+                                          description: Indicates whether the damaged item will be replaced by a “new” or “refurbished” item
+                                        deductible:
+                                          type: number
+                                          example: 0
+                                          description: The amount of the deductible charged to the customer during a claim, if there is one.  For most Extend protection plans, there is no deductible
+                                        term_length:
+                                          type: number
+                                          example: 36
+                                          description: The length of the extended warranty coverage, in months
+                                        category:
+                                          type: string
+                                          example: consumer_electronics
+                                          description: An item mapped to the Extend SDK is placed in a specific category, such as, consumer_electronics, misc, computer, tire, etc
+                                    imageUrl:
+                                      type: string
+                                      format: uri
+                                      example: https://sdk.helloextend.com/extend_icon.png
+                                      description: The imageUrl for the warranty plan. Use this as the product image for the warranty plan SKU(s) in your store
+                                    title:
+                                      type: string
+                                      example: Extend Protection Plan - AV Receiver
+                                      description: The name of the warranty plan
+                                    url:
+                                      type: string
+                                      description: A link to the extended warranty plan terms and information.  Any offer display must include a “Learn More” or “See Plan Details” call-to-action that enables the customer to see exactly what the warranty plan covers
+                                example: []
+                          product:
+                            type: object
+                            required:
+                            - listPrice
+                            properties:
+                              listPrice:
+                                type: number
+                                description: The base retail price of the product (in cents)
+                                example: 4999
+                              title:
+                                type: string
+                                description: Product name
+                                example: Wireless Bluetooth Headphones
+                              imageUrl:
+                                type: string
+                                format: uri
+                                description: A url pointing to the primary image for the product
+                                example: https://example.com/products/headphones.jpg
+                          marketing:
+                            type: object
+                            properties:
+                              adh:
+                                type: object
+                                properties:
+                                  planId:
+                                    type: string
+                                    description: ''
+                                    example: 10001-misc-elec-adh-replace-1y
+                                  locale:
+                                    type: string
+                                    description: ''
+                                    example: en
+                                  offerTypeButtons:
+                                    type: object
+                                    properties:
+                                      buttonTermLengthYears:
+                                        type: string
+                                        description: ''
+                                        example: Years
+                                      headlineCTA:
+                                        type: string
+                                        description: ''
+                                        example: Add accident protection offered by
+                                      learnMoreButtonText:
+                                        type: string
+                                        description: ''
+                                        example: What's covered?
+                                  offerTypeModal:
+                                    type: object
+                                    properties:
+                                      learnMoreButtonText:
+                                        type: string
+                                        description: ''
+                                        example: What's covered?
+                                      acceptButton:
+                                        type: string
+                                        description: ''
+                                        example: Protect my purchase
+                                      benefit1:
+                                        type: string
+                                        description: ''
+                                        example: Repairs or replacements
+                                      benefit1Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon1_clock_base_replace.svg
+                                      benefit2:
+                                        type: string
+                                        description: ''
+                                        example: Simple claims process
+                                      benefit2Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon2_shield_base_replace.svg
+                                      benefit3:
+                                        type: string
+                                        description: ''
+                                        example: Accident protection
+                                      benefit3Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon3_glass_adh_replace.svg
+                                      buttonLiteralProtectionPlan:
+                                        type: string
+                                        description: ''
+                                        example: Protection Plan
+                                      buttonTermLengthYears:
+                                        type: string
+                                        description: ''
+                                        example: Years
+                                      declineButton:
+                                        type: string
+                                        description: ''
+                                        example: I don't want protection
+                                      footerLegal:
+                                        type: string
+                                        description: ''
+                                        example: Offered by Extend
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                      headlineMobile:
+                                        type: string
+                                        description: ''
+                                        example: Get protection from accidents with Extend
+                                      planBannerBestSeller:
+                                        type: string
+                                        description: ''
+                                        example: Best Seller!
+                                      planBannerBestValue:
+                                        type: string
+                                        description: ''
+                                        example: Best Value!
+                                      planDetailsLinkText:
+                                        type: string
+                                        description: ''
+                                        example: Plan details & FAQ
+                                  offerTypeCTA:
+                                    type: object
+                                    properties:
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Add accident protection for
+                                  learnMoreModal:
+                                    type: object
+                                    properties:
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Add accident protection for
+                                      backgroundImageUrl:
+                                        type: string
+                                        description: ''
+                                        example: https://s3.amazonaws.com/ccspersistenceprod-contentstaticassets04b201d4-1apqb8dyegznm/offers/learnMoreModal-default-1654273334107-learnMoreModal.backgroundImageUrl_Generic_WomanwithBox2.jpg
+                                      coverageBullet1:
+                                        type: string
+                                        description: ''
+                                        example: Repairs or replacements at no additional cost
+                                      coverageBullet2:
+                                        type: string
+                                        description: ''
+                                        example: Accidental damage such as breaks and drops
+                                      coverageBullet2Mobile:
+                                        type: string
+                                        description: ''
+                                        example: Accidental damage such as breaks and drops
+                                      coverageBullet3:
+                                        type: string
+                                        description: ''
+                                        example: Extended failure protection
+                                      coverageBullet3Mobile:
+                                        type: string
+                                        description: ''
+                                        example: Extended failure protection
+                                      coverageBulletsHeading:
+                                        type: string
+                                        description: ''
+                                        example: 'This plan covers:'
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: Life happens, so we've got you covered. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                      headlineMobile:
+                                        type: string
+                                        description: ''
+                                        example: Life happens. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                      planDetailsLinkText:
+                                        type: string
+                                        description: ''
+                                        example: Plan details & FAQs
+                                      whyExtend1:
+                                        type: string
+                                        description: ''
+                                        example: Simple online claims process
+                                      whyExtend1Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_heart_base_replace.svg
+                                      whyExtend2:
+                                        type: string
+                                        description: ''
+                                        example: No deductibles
+                                      whyExtend2Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_0_base_replace.svg
+                                      whyExtendHeading:
+                                        type: string
+                                        description: ''
+                                        example: Why choose Extend?
+                                  aftermarketModal:
+                                    type: object
+                                    properties:
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                      purchaseInfo1:
+                                        type: string
+                                        description: ''
+                                        example: 'Protecting your:'
+                                      purchaseInfo2:
+                                        type: string
+                                        description: ''
+                                        example: 'Date of purchase:'
+                                      purchaseInfo3:
+                                        type: string
+                                        description: ''
+                                        example: 'Product Value:'
+                                      purchaseInfo4:
+                                        type: string
+                                        description: ''
+                                        example: 'Quantity purchased:'
+                                  aftermarketModalConsumed:
+                                    type: object
+                                    properties:
+                                      bullet1:
+                                        type: string
+                                        description: ''
+                                        example: Looks like you already purchased an Extend protection plan for this product!
+                                      bullet2:
+                                        type: string
+                                        description: ''
+                                        example: In the meantime, why not check out more eligible products from this store?
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Continue to store
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: This product is already protected. Nice!
+                                  aftermarketModalExpired:
+                                    type: object
+                                    properties:
+                                      bullet1:
+                                        type: string
+                                        description: ''
+                                        example: Uh oh, we cannot offer a protection plan for this product because the manufacturer's warranty is expired or about to expire
+                                      bullet2:
+                                        type: string
+                                        description: ''
+                                        example: However, you can add an Extend protection plan on any eligible product you purchase today at checkout from this store!
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Continue to store
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: We can no longer offer a plan on this product :-(
+                              base:
+                                type: object
+                                properties:
+                                  planId:
+                                    type: string
+                                    description: ''
+                                    example: 10001-misc-elec-adh-replace-1y
+                                  locale:
+                                    type: string
+                                    description: ''
+                                    example: en
+                                  offerTypeButtons:
+                                    type: object
+                                    properties:
+                                      buttonTermLengthYears:
+                                        type: string
+                                        description: ''
+                                        example: Years
+                                      headlineCTA:
+                                        type: string
+                                        description: ''
+                                        example: Add accident protection offered by
+                                      learnMoreButtonText:
+                                        type: string
+                                        description: ''
+                                        example: What's covered?
+                                  offerTypeModal:
+                                    type: object
+                                    properties:
+                                      learnMoreButtonText:
+                                        type: string
+                                        description: ''
+                                        example: What's covered?
+                                      acceptButton:
+                                        type: string
+                                        description: ''
+                                        example: Protect my purchase
+                                      benefit1:
+                                        type: string
+                                        description: ''
+                                        example: Repairs or replacements
+                                      benefit1Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon1_clock_base_replace.svg
+                                      benefit2:
+                                        type: string
+                                        description: ''
+                                        example: Simple claims process
+                                      benefit2Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon2_shield_base_replace.svg
+                                      benefit3:
+                                        type: string
+                                        description: ''
+                                        example: Accident protection
+                                      benefit3Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon3_glass_adh_replace.svg
+                                      buttonLiteralProtectionPlan:
+                                        type: string
+                                        description: ''
+                                        example: Protection Plan
+                                      buttonTermLengthYears:
+                                        type: string
+                                        description: ''
+                                        example: Years
+                                      declineButton:
+                                        type: string
+                                        description: ''
+                                        example: I don't want protection
+                                      footerLegal:
+                                        type: string
+                                        description: ''
+                                        example: Offered by Extend
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                      headlineMobile:
+                                        type: string
+                                        description: ''
+                                        example: Get protection from accidents with Extend
+                                      planBannerBestSeller:
+                                        type: string
+                                        description: ''
+                                        example: Best Seller!
+                                      planBannerBestValue:
+                                        type: string
+                                        description: ''
+                                        example: Best Value!
+                                      planDetailsLinkText:
+                                        type: string
+                                        description: ''
+                                        example: Plan details & FAQ
+                                  offerTypeCTA:
+                                    type: object
+                                    properties:
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Add accident protection for
+                                  learnMoreModal:
+                                    type: object
+                                    properties:
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Add accident protection for
+                                      backgroundImageUrl:
+                                        type: string
+                                        description: ''
+                                        example: https://s3.amazonaws.com/ccspersistenceprod-contentstaticassets04b201d4-1apqb8dyegznm/offers/learnMoreModal-default-1654273334107-learnMoreModal.backgroundImageUrl_Generic_WomanwithBox2.jpg
+                                      coverageBullet1:
+                                        type: string
+                                        description: ''
+                                        example: Repairs or replacements at no additional cost
+                                      coverageBullet2:
+                                        type: string
+                                        description: ''
+                                        example: Accidental damage such as breaks and drops
+                                      coverageBullet2Mobile:
+                                        type: string
+                                        description: ''
+                                        example: Accidental damage such as breaks and drops
+                                      coverageBullet3:
+                                        type: string
+                                        description: ''
+                                        example: Extended failure protection
+                                      coverageBullet3Mobile:
+                                        type: string
+                                        description: ''
+                                        example: Extended failure protection
+                                      coverageBulletsHeading:
+                                        type: string
+                                        description: ''
+                                        example: 'This plan covers:'
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: Life happens, so we've got you covered. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                      headlineMobile:
+                                        type: string
+                                        description: ''
+                                        example: Life happens. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                      planDetailsLinkText:
+                                        type: string
+                                        description: ''
+                                        example: Plan details & FAQs
+                                      whyExtend1:
+                                        type: string
+                                        description: ''
+                                        example: Simple online claims process
+                                      whyExtend1Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_heart_base_replace.svg
+                                      whyExtend2:
+                                        type: string
+                                        description: ''
+                                        example: No deductibles
+                                      whyExtend2Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_0_base_replace.svg
+                                      whyExtendHeading:
+                                        type: string
+                                        description: ''
+                                        example: Why choose Extend?
+                                  aftermarketModal:
+                                    type: object
+                                    properties:
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                      purchaseInfo1:
+                                        type: string
+                                        description: ''
+                                        example: 'Protecting your:'
+                                      purchaseInfo2:
+                                        type: string
+                                        description: ''
+                                        example: 'Date of purchase:'
+                                      purchaseInfo3:
+                                        type: string
+                                        description: ''
+                                        example: 'Product Value:'
+                                      purchaseInfo4:
+                                        type: string
+                                        description: ''
+                                        example: 'Quantity purchased:'
+                                  aftermarketModalConsumed:
+                                    type: object
+                                    properties:
+                                      bullet1:
+                                        type: string
+                                        description: ''
+                                        example: Looks like you already purchased an Extend protection plan for this product!
+                                      bullet2:
+                                        type: string
+                                        description: ''
+                                        example: In the meantime, why not check out more eligible products from this store?
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Continue to store
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: This product is already protected. Nice!
+                                  aftermarketModalExpired:
+                                    type: object
+                                    properties:
+                                      bullet1:
+                                        type: string
+                                        description: ''
+                                        example: Uh oh, we cannot offer a protection plan for this product because the manufacturer's warranty is expired or about to expire
+                                      bullet2:
+                                        type: string
+                                        description: ''
+                                        example: However, you can add an Extend protection plan on any eligible product you purchase today at checkout from this store!
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Continue to store
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: We can no longer offer a plan on this product :-(
+                              roadhazard:
+                                type: object
+                                properties:
+                                  planId:
+                                    type: string
+                                    description: ''
+                                    example: 10001-misc-elec-adh-replace-1y
+                                  locale:
+                                    type: string
+                                    description: ''
+                                    example: en
+                                  offerTypeButtons:
+                                    type: object
+                                    properties:
+                                      buttonTermLengthYears:
+                                        type: string
+                                        description: ''
+                                        example: Years
+                                      headlineCTA:
+                                        type: string
+                                        description: ''
+                                        example: Add accident protection offered by
+                                      learnMoreButtonText:
+                                        type: string
+                                        description: ''
+                                        example: What's covered?
+                                  offerTypeModal:
+                                    type: object
+                                    properties:
+                                      learnMoreButtonText:
+                                        type: string
+                                        description: ''
+                                        example: What's covered?
+                                      acceptButton:
+                                        type: string
+                                        description: ''
+                                        example: Protect my purchase
+                                      benefit1:
+                                        type: string
+                                        description: ''
+                                        example: Repairs or replacements
+                                      benefit1Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon1_clock_base_replace.svg
+                                      benefit2:
+                                        type: string
+                                        description: ''
+                                        example: Simple claims process
+                                      benefit2Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon2_shield_base_replace.svg
+                                      benefit3:
+                                        type: string
+                                        description: ''
+                                        example: Accident protection
+                                      benefit3Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon3_glass_adh_replace.svg
+                                      buttonLiteralProtectionPlan:
+                                        type: string
+                                        description: ''
+                                        example: Protection Plan
+                                      buttonTermLengthYears:
+                                        type: string
+                                        description: ''
+                                        example: Years
+                                      declineButton:
+                                        type: string
+                                        description: ''
+                                        example: I don't want protection
+                                      footerLegal:
+                                        type: string
+                                        description: ''
+                                        example: Offered by Extend
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                      headlineMobile:
+                                        type: string
+                                        description: ''
+                                        example: Get protection from accidents with Extend
+                                      planBannerBestSeller:
+                                        type: string
+                                        description: ''
+                                        example: Best Seller!
+                                      planBannerBestValue:
+                                        type: string
+                                        description: ''
+                                        example: Best Value!
+                                      planDetailsLinkText:
+                                        type: string
+                                        description: ''
+                                        example: Plan details & FAQ
+                                  offerTypeCTA:
+                                    type: object
+                                    properties:
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Add accident protection for
+                                  learnMoreModal:
+                                    type: object
+                                    properties:
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Add accident protection for
+                                      backgroundImageUrl:
+                                        type: string
+                                        description: ''
+                                        example: https://s3.amazonaws.com/ccspersistenceprod-contentstaticassets04b201d4-1apqb8dyegznm/offers/learnMoreModal-default-1654273334107-learnMoreModal.backgroundImageUrl_Generic_WomanwithBox2.jpg
+                                      coverageBullet1:
+                                        type: string
+                                        description: ''
+                                        example: Repairs or replacements at no additional cost
+                                      coverageBullet2:
+                                        type: string
+                                        description: ''
+                                        example: Accidental damage such as breaks and drops
+                                      coverageBullet2Mobile:
+                                        type: string
+                                        description: ''
+                                        example: Accidental damage such as breaks and drops
+                                      coverageBullet3:
+                                        type: string
+                                        description: ''
+                                        example: Extended failure protection
+                                      coverageBullet3Mobile:
+                                        type: string
+                                        description: ''
+                                        example: Extended failure protection
+                                      coverageBulletsHeading:
+                                        type: string
+                                        description: ''
+                                        example: 'This plan covers:'
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: Life happens, so we've got you covered. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                      headlineMobile:
+                                        type: string
+                                        description: ''
+                                        example: Life happens. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                      planDetailsLinkText:
+                                        type: string
+                                        description: ''
+                                        example: Plan details & FAQs
+                                      whyExtend1:
+                                        type: string
+                                        description: ''
+                                        example: Simple online claims process
+                                      whyExtend1Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_heart_base_replace.svg
+                                      whyExtend2:
+                                        type: string
+                                        description: ''
+                                        example: No deductibles
+                                      whyExtend2Icon:
+                                        type: string
+                                        description: ''
+                                        example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_0_base_replace.svg
+                                      whyExtendHeading:
+                                        type: string
+                                        description: ''
+                                        example: Why choose Extend?
+                                  aftermarketModal:
+                                    type: object
+                                    properties:
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                      purchaseInfo1:
+                                        type: string
+                                        description: ''
+                                        example: 'Protecting your:'
+                                      purchaseInfo2:
+                                        type: string
+                                        description: ''
+                                        example: 'Date of purchase:'
+                                      purchaseInfo3:
+                                        type: string
+                                        description: ''
+                                        example: 'Product Value:'
+                                      purchaseInfo4:
+                                        type: string
+                                        description: ''
+                                        example: 'Quantity purchased:'
+                                  aftermarketModalConsumed:
+                                    type: object
+                                    properties:
+                                      bullet1:
+                                        type: string
+                                        description: ''
+                                        example: Looks like you already purchased an Extend protection plan for this product!
+                                      bullet2:
+                                        type: string
+                                        description: ''
+                                        example: In the meantime, why not check out more eligible products from this store?
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Continue to store
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: This product is already protected. Nice!
+                                  aftermarketModalExpired:
+                                    type: object
+                                    properties:
+                                      bullet1:
+                                        type: string
+                                        description: ''
+                                        example: Uh oh, we cannot offer a protection plan for this product because the manufacturer's warranty is expired or about to expire
+                                      bullet2:
+                                        type: string
+                                        description: ''
+                                        example: However, you can add an Extend protection plan on any eligible product you purchase today at checkout from this store!
+                                      button:
+                                        type: string
+                                        description: ''
+                                        example: Continue to store
+                                      headline:
+                                        type: string
+                                        description: ''
+                                        example: We can no longer offer a plan on this product :-(
+                      - properties:
+                          lead:
+                            type: object
+                            description: Enriched lead object returned in batch lead offers response
+                            properties:
+                              leadToken:
+                                type: string
+                                description: Unique identifier for the lead
+                                example: a16dc041-e03a-4c74-b77a-37cbb065e6e7
+                              purchasePrice:
+                                type: number
+                                description: The purchase price amount in base units
+                                example: 2999
+                              formattedPurchasePrice:
+                                type: string
+                                description: The formatted purchase price
+                                example: $29.99
+                              listPrice:
+                                type: number
+                                description: The list price amount in base units
+                                example: 3999
+                              offerPriceType:
+                                type: string
+                                description: The offer price type configured for the store
+                                example: product_list_price
+                              quantity:
+                                type: number
+                                description: The amount of line items purchased
+                                example: 1
+                              quantityConsumed:
+                                type: number
+                                description: The number of units that have been used to create contracts
+                                example: 0
+                              status:
+                                type: string
+                                description: The current status of the lead
+                                enum:
+                                - live
+                                - consumed
+                                - expired
+                              referenceId:
+                                type: string
+                                description: The merchant's product reference ID
+                                example: SKU-12345
+                              productTitle:
+                                type: string
+                                description: The name of the product
+                                example: Wireless Bluetooth Headphones
+                              transactionDate:
+                                type: number
+                                description: The date of the transaction in milliseconds since epoch
+                                example: 1647470325503
+                              transactionId:
+                                type: string
+                                description: The merchant's transaction or order ID
+                                example: 123EY1
+                              formattedListPrice:
+                                type: string
+                                description: The formatted list price with currency symbol
+                                example: $39.99
+                              imageUrl:
+                                type: string
+                                description: URL of the product image
+                                example: https://example.com/images/product-12345.jpg
+                              category:
+                                type: string
+                                description: The product category
+                                example: Electronics
+                  limit:
+                    type: number
+                    description: The page size limit
+                    example: 25
+                  nextPageCursor:
+                    type: string
+                    description: Cursor for fetching the next page of results
+                    example: eyJpdGVtSWQiOiJMRUFEOjphOTE2YmNjYS0yYjVhLTQ4NTgtOThhYS04OGZmODQxZTdhOTgiLCJzb3J0S2V5IjoiTEVBRDo6YTkxNmJjY2EtMmI1YS00ODU4LTk4YWEtODhmZjg0MWU3YTk4IiwicHJvZHVjdFRyYW5zYWN0aW9uSWQiOiJhNGQ3YTNmOS1mMzJmLTRkNDctOTVhZS0wZWMwNjkxYmM1ZjMiLCJzZWxsZXJJZCI6IjJkNDc4ZWE0LWU1MzMtNDU0YS1hOWExLWRiNTQ1ODE3Njg5YSJ9
+        '400':
+          description: The request to the endpoint was invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+  /leads/{leadToken}/offers:
+    get:
+      summary: Get Offer Information for a Lead
+      description: ' If you are choosing to build your own after-market offer UI, you will need to fetch from Extend the product information and the offers for a lead.
+
+
+        The lead-offers endpoint takes a lead token in the request body and responds with all of the product and plan information for that lead.<div class=''wrapper important''><h2>Important:</h2>
+
+
+        The lead status parameter should be used to help inform the shopper if the product they are purchasing an extended warranty for is still eligible. You should only allow the shopper to purchase a warranty if the status is live.</div>'
+      tags:
+      - Leads
+      operationId: contractLeadsOfferGet
+      parameters:
+      - name: Content-Type
+        in: header
+        required: true
+        description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+        schema:
+          type: string
+          example: application/json
+      - name: X-Extend-Access-Token
+        in: header
+        required: true
+        description: An Extend private API key used to authenticate requests.
+        schema:
+          type: string
+          example: ExtendAccessToken
+      - name: Accept
+        in: header
+        required: true
+        description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+        schema:
+          type: string
+          example: application/json; version=2022-02-01
+      - name: leadToken
+        in: path
+        required: true
+        description: Unique identifier for a lead
+        schema:
+          type: string
+          example: 17457d13c36f7e2be277603a9d1232de
+      responses:
+        '200':
+          description: Returns the information
+          content:
+            application/json:
+              schema:
+                type: object
+                allOf:
+                - type: object
+                  properties:
+                    plans:
+                      type: object
+                      properties:
+                        recommended:
+                          type: string
+                          enum:
+                          - adh
+                          - base
+                          - roadhazard
+                          example: adh
+                          description: The protection plan type that Extend recommends the merchant displays to the user. Possible values include `base` (for mechanical and electrical failures/defects), or `adh` (for accidents such as drop or liquid damage). The recommended protection plan type will be accessible in this response as a key on this plans object.
+                        adh:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                description: Unique identifier for a warranty Plan
+                                example: AmazingAppliancePlan
+                              price:
+                                type: number
+                                example: 199
+                                description: The offer price, in base units
+                              currencyCode:
+                                type: string
+                                enum:
+                                - AUD
+                                - CAD
+                                - EUR
+                                - GBP
+                                - NZD
+                                - USD
+                              contract:
+                                type: object
+                                description: Additional information about this extended warranty contract
+                                properties:
+                                  coverage_starts:
+                                    type: string
+                                    example: immediate
+                                    description: Describes when the contract term begins, relative to the manufacturer’s warranty length.  For example, “immediate” means coverage starts immediately on the purchase date, and “after” means coverage starts after the manufacturer’s warranty has expired
+                                  coverage_includes:
+                                    type: string
+                                    example: adh
+                                    description: Possible values include “base”, which means the extended warranty is a base plan covering mechanical and electrical failures through normal use, or “adh”, which means the plan includes coverage for accidental damage (i.e. “Accidental Damage in Handling”)
+                                  service_type:
+                                    type: string
+                                    example: replace
+                                    description: This is the claims resolution service the plan includes.  Responses include “replacement” (the damaged item is replaced by a new or refurbished equivalent), “repair_depot” (the customer mails the damaged item to a repair facility), or “repair_onsite” (a repair technician goes out to the customer’s home to repair the item)
+                                  replacement_type:
+                                    type: string
+                                    example: new
+                                    description: Indicates whether the damaged item will be replaced by a “new” or “refurbished” item
+                                  deductible:
+                                    type: number
+                                    example: 0
+                                    description: The amount of the deductible charged to the customer during a claim, if there is one.  For most Extend protection plans, there is no deductible
+                                  term_length:
+                                    type: number
+                                    example: 36
+                                    description: The length of the extended warranty coverage, in months
+                                  category:
+                                    type: string
+                                    example: consumer_electronics
+                                    description: An item mapped to the Extend SDK is placed in a specific category, such as, consumer_electronics, misc, computer, tire, etc
+                              imageUrl:
+                                type: string
+                                format: uri
+                                example: https://sdk.helloextend.com/extend_icon.png
+                                description: The imageUrl for the warranty plan. Use this as the product image for the warranty plan SKU(s) in your store
+                              title:
+                                type: string
+                                example: Extend Protection Plan - AV Receiver
+                                description: The name of the warranty plan
+                              url:
+                                type: string
+                                description: A link to the extended warranty plan terms and information.  Any offer display must include a “Learn More” or “See Plan Details” call-to-action that enables the customer to see exactly what the warranty plan covers
+                          example:
+                          - id: 10001-misc-elec-adh-replace-1y
+                            price: 499
+                            currencyCode: USD
+                            contract:
+                              coverage_starts: immediate
+                              coverage_includes: adh
+                              service_type: replace
+                              replacement_type: new
+                              deductible: 0
+                              term_length: 12
+                              category: consumer_electronics
+                            title: Extend Protection Plan - 1 Year
+                            url: https://www.extend.com/warranty-plans
+                            imageUrl: https://sdk.helloextend.com/extend_icon.png
+                          - id: 10001-misc-elec-adh-replace-2y
+                            price: 799
+                            currencyCode: USD
+                            contract:
+                              coverage_starts: immediate
+                              coverage_includes: adh
+                              service_type: replace
+                              replacement_type: new
+                              deductible: 0
+                              term_length: 24
+                              category: consumer_electronics
+                            title: Extend Protection Plan - 2 Years
+                            url: https://www.extend.com/warranty-plans
+                            imageUrl: https://sdk.helloextend.com/extend_icon.png
+                          - id: 10001-misc-elec-adh-replace-3y
+                            price: 999
+                            currencyCode: USD
+                            contract:
+                              coverage_starts: immediate
+                              coverage_includes: adh
+                              service_type: replace
+                              replacement_type: new
+                              deductible: 0
+                              term_length: 36
+                              category: consumer_electronics
+                            title: Extend Protection Plan - 3 Years
+                            url: https://www.extend.com/warranty-plans
+                            imageUrl: https://sdk.helloextend.com/extend_icon.png
+                        base:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                description: Unique identifier for a warranty Plan
+                                example: AmazingAppliancePlan
+                              price:
+                                type: number
+                                example: 199
+                                description: The offer price, in base units
+                              currencyCode:
+                                type: string
+                                enum:
+                                - AUD
+                                - CAD
+                                - EUR
+                                - GBP
+                                - NZD
+                                - USD
+                              contract:
+                                type: object
+                                description: Additional information about this extended warranty contract
+                                properties:
+                                  coverage_starts:
+                                    type: string
+                                    example: immediate
+                                    description: Describes when the contract term begins, relative to the manufacturer’s warranty length.  For example, “immediate” means coverage starts immediately on the purchase date, and “after” means coverage starts after the manufacturer’s warranty has expired
+                                  coverage_includes:
+                                    type: string
+                                    example: adh
+                                    description: Possible values include “base”, which means the extended warranty is a base plan covering mechanical and electrical failures through normal use, or “adh”, which means the plan includes coverage for accidental damage (i.e. “Accidental Damage in Handling”)
+                                  service_type:
+                                    type: string
+                                    example: replace
+                                    description: This is the claims resolution service the plan includes.  Responses include “replacement” (the damaged item is replaced by a new or refurbished equivalent), “repair_depot” (the customer mails the damaged item to a repair facility), or “repair_onsite” (a repair technician goes out to the customer’s home to repair the item)
+                                  replacement_type:
+                                    type: string
+                                    example: new
+                                    description: Indicates whether the damaged item will be replaced by a “new” or “refurbished” item
+                                  deductible:
+                                    type: number
+                                    example: 0
+                                    description: The amount of the deductible charged to the customer during a claim, if there is one.  For most Extend protection plans, there is no deductible
+                                  term_length:
+                                    type: number
+                                    example: 36
+                                    description: The length of the extended warranty coverage, in months
+                                  category:
+                                    type: string
+                                    example: consumer_electronics
+                                    description: An item mapped to the Extend SDK is placed in a specific category, such as, consumer_electronics, misc, computer, tire, etc
+                              imageUrl:
+                                type: string
+                                format: uri
+                                example: https://sdk.helloextend.com/extend_icon.png
+                                description: The imageUrl for the warranty plan. Use this as the product image for the warranty plan SKU(s) in your store
+                              title:
+                                type: string
+                                example: Extend Protection Plan - AV Receiver
+                                description: The name of the warranty plan
+                              url:
+                                type: string
+                                description: A link to the extended warranty plan terms and information.  Any offer display must include a “Learn More” or “See Plan Details” call-to-action that enables the customer to see exactly what the warranty plan covers
+                          example: []
+                        roadhazard:
+                          type: array
+                          items:
+                            type: object
+                            properties:
+                              id:
+                                type: string
+                                description: Unique identifier for a warranty Plan
+                                example: AmazingAppliancePlan
+                              price:
+                                type: number
+                                example: 199
+                                description: The offer price, in base units
+                              currencyCode:
+                                type: string
+                                enum:
+                                - AUD
+                                - CAD
+                                - EUR
+                                - GBP
+                                - NZD
+                                - USD
+                              contract:
+                                type: object
+                                description: Additional information about this extended warranty contract
+                                properties:
+                                  coverage_starts:
+                                    type: string
+                                    example: immediate
+                                    description: Describes when the contract term begins, relative to the manufacturer’s warranty length.  For example, “immediate” means coverage starts immediately on the purchase date, and “after” means coverage starts after the manufacturer’s warranty has expired
+                                  coverage_includes:
+                                    type: string
+                                    example: adh
+                                    description: Possible values include “base”, which means the extended warranty is a base plan covering mechanical and electrical failures through normal use, or “adh”, which means the plan includes coverage for accidental damage (i.e. “Accidental Damage in Handling”)
+                                  service_type:
+                                    type: string
+                                    example: replace
+                                    description: This is the claims resolution service the plan includes.  Responses include “replacement” (the damaged item is replaced by a new or refurbished equivalent), “repair_depot” (the customer mails the damaged item to a repair facility), or “repair_onsite” (a repair technician goes out to the customer’s home to repair the item)
+                                  replacement_type:
+                                    type: string
+                                    example: new
+                                    description: Indicates whether the damaged item will be replaced by a “new” or “refurbished” item
+                                  deductible:
+                                    type: number
+                                    example: 0
+                                    description: The amount of the deductible charged to the customer during a claim, if there is one.  For most Extend protection plans, there is no deductible
+                                  term_length:
+                                    type: number
+                                    example: 36
+                                    description: The length of the extended warranty coverage, in months
+                                  category:
+                                    type: string
+                                    example: consumer_electronics
+                                    description: An item mapped to the Extend SDK is placed in a specific category, such as, consumer_electronics, misc, computer, tire, etc
+                              imageUrl:
+                                type: string
+                                format: uri
+                                example: https://sdk.helloextend.com/extend_icon.png
+                                description: The imageUrl for the warranty plan. Use this as the product image for the warranty plan SKU(s) in your store
+                              title:
+                                type: string
+                                example: Extend Protection Plan - AV Receiver
+                                description: The name of the warranty plan
+                              url:
+                                type: string
+                                description: A link to the extended warranty plan terms and information.  Any offer display must include a “Learn More” or “See Plan Details” call-to-action that enables the customer to see exactly what the warranty plan covers
+                          example: []
+                    product:
+                      type: object
+                      required:
+                      - listPrice
+                      properties:
+                        listPrice:
+                          type: number
+                          description: The base retail price of the product (in cents)
+                          example: 4999
+                        title:
+                          type: string
+                          description: Product name
+                          example: Wireless Bluetooth Headphones
+                        imageUrl:
+                          type: string
+                          format: uri
+                          description: A url pointing to the primary image for the product
+                          example: https://example.com/products/headphones.jpg
+                    marketing:
+                      type: object
+                      properties:
+                        adh:
+                          type: object
+                          properties:
+                            planId:
+                              type: string
+                              description: ''
+                              example: 10001-misc-elec-adh-replace-1y
+                            locale:
+                              type: string
+                              description: ''
+                              example: en
+                            offerTypeButtons:
+                              type: object
+                              properties:
+                                buttonTermLengthYears:
+                                  type: string
+                                  description: ''
+                                  example: Years
+                                headlineCTA:
+                                  type: string
+                                  description: ''
+                                  example: Add accident protection offered by
+                                learnMoreButtonText:
+                                  type: string
+                                  description: ''
+                                  example: What's covered?
+                            offerTypeModal:
+                              type: object
+                              properties:
+                                learnMoreButtonText:
+                                  type: string
+                                  description: ''
+                                  example: What's covered?
+                                acceptButton:
+                                  type: string
+                                  description: ''
+                                  example: Protect my purchase
+                                benefit1:
+                                  type: string
+                                  description: ''
+                                  example: Repairs or replacements
+                                benefit1Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon1_clock_base_replace.svg
+                                benefit2:
+                                  type: string
+                                  description: ''
+                                  example: Simple claims process
+                                benefit2Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon2_shield_base_replace.svg
+                                benefit3:
+                                  type: string
+                                  description: ''
+                                  example: Accident protection
+                                benefit3Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon3_glass_adh_replace.svg
+                                buttonLiteralProtectionPlan:
+                                  type: string
+                                  description: ''
+                                  example: Protection Plan
+                                buttonTermLengthYears:
+                                  type: string
+                                  description: ''
+                                  example: Years
+                                declineButton:
+                                  type: string
+                                  description: ''
+                                  example: I don't want protection
+                                footerLegal:
+                                  type: string
+                                  description: ''
+                                  example: Offered by Extend
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                headlineMobile:
+                                  type: string
+                                  description: ''
+                                  example: Get protection from accidents with Extend
+                                planBannerBestSeller:
+                                  type: string
+                                  description: ''
+                                  example: Best Seller!
+                                planBannerBestValue:
+                                  type: string
+                                  description: ''
+                                  example: Best Value!
+                                planDetailsLinkText:
+                                  type: string
+                                  description: ''
+                                  example: Plan details & FAQ
+                            offerTypeCTA:
+                              type: object
+                              properties:
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Add accident protection for
+                            learnMoreModal:
+                              type: object
+                              properties:
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Add accident protection for
+                                backgroundImageUrl:
+                                  type: string
+                                  description: ''
+                                  example: https://s3.amazonaws.com/ccspersistenceprod-contentstaticassets04b201d4-1apqb8dyegznm/offers/learnMoreModal-default-1654273334107-learnMoreModal.backgroundImageUrl_Generic_WomanwithBox2.jpg
+                                coverageBullet1:
+                                  type: string
+                                  description: ''
+                                  example: Repairs or replacements at no additional cost
+                                coverageBullet2:
+                                  type: string
+                                  description: ''
+                                  example: Accidental damage such as breaks and drops
+                                coverageBullet2Mobile:
+                                  type: string
+                                  description: ''
+                                  example: Accidental damage such as breaks and drops
+                                coverageBullet3:
+                                  type: string
+                                  description: ''
+                                  example: Extended failure protection
+                                coverageBullet3Mobile:
+                                  type: string
+                                  description: ''
+                                  example: Extended failure protection
+                                coverageBulletsHeading:
+                                  type: string
+                                  description: ''
+                                  example: 'This plan covers:'
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: Life happens, so we've got you covered. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                headlineMobile:
+                                  type: string
+                                  description: ''
+                                  example: Life happens. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                planDetailsLinkText:
+                                  type: string
+                                  description: ''
+                                  example: Plan details & FAQs
+                                whyExtend1:
+                                  type: string
+                                  description: ''
+                                  example: Simple online claims process
+                                whyExtend1Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_heart_base_replace.svg
+                                whyExtend2:
+                                  type: string
+                                  description: ''
+                                  example: No deductibles
+                                whyExtend2Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_0_base_replace.svg
+                                whyExtendHeading:
+                                  type: string
+                                  description: ''
+                                  example: Why choose Extend?
+                            aftermarketModal:
+                              type: object
+                              properties:
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                purchaseInfo1:
+                                  type: string
+                                  description: ''
+                                  example: 'Protecting your:'
+                                purchaseInfo2:
+                                  type: string
+                                  description: ''
+                                  example: 'Date of purchase:'
+                                purchaseInfo3:
+                                  type: string
+                                  description: ''
+                                  example: 'Product Value:'
+                                purchaseInfo4:
+                                  type: string
+                                  description: ''
+                                  example: 'Quantity purchased:'
+                            aftermarketModalConsumed:
+                              type: object
+                              properties:
+                                bullet1:
+                                  type: string
+                                  description: ''
+                                  example: Looks like you already purchased an Extend protection plan for this product!
+                                bullet2:
+                                  type: string
+                                  description: ''
+                                  example: In the meantime, why not check out more eligible products from this store?
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Continue to store
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: This product is already protected. Nice!
+                            aftermarketModalExpired:
+                              type: object
+                              properties:
+                                bullet1:
+                                  type: string
+                                  description: ''
+                                  example: Uh oh, we cannot offer a protection plan for this product because the manufacturer's warranty is expired or about to expire
+                                bullet2:
+                                  type: string
+                                  description: ''
+                                  example: However, you can add an Extend protection plan on any eligible product you purchase today at checkout from this store!
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Continue to store
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: We can no longer offer a plan on this product :-(
+                        base:
+                          type: object
+                          properties:
+                            planId:
+                              type: string
+                              description: ''
+                              example: 10001-misc-elec-adh-replace-1y
+                            locale:
+                              type: string
+                              description: ''
+                              example: en
+                            offerTypeButtons:
+                              type: object
+                              properties:
+                                buttonTermLengthYears:
+                                  type: string
+                                  description: ''
+                                  example: Years
+                                headlineCTA:
+                                  type: string
+                                  description: ''
+                                  example: Add accident protection offered by
+                                learnMoreButtonText:
+                                  type: string
+                                  description: ''
+                                  example: What's covered?
+                            offerTypeModal:
+                              type: object
+                              properties:
+                                learnMoreButtonText:
+                                  type: string
+                                  description: ''
+                                  example: What's covered?
+                                acceptButton:
+                                  type: string
+                                  description: ''
+                                  example: Protect my purchase
+                                benefit1:
+                                  type: string
+                                  description: ''
+                                  example: Repairs or replacements
+                                benefit1Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon1_clock_base_replace.svg
+                                benefit2:
+                                  type: string
+                                  description: ''
+                                  example: Simple claims process
+                                benefit2Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon2_shield_base_replace.svg
+                                benefit3:
+                                  type: string
+                                  description: ''
+                                  example: Accident protection
+                                benefit3Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon3_glass_adh_replace.svg
+                                buttonLiteralProtectionPlan:
+                                  type: string
+                                  description: ''
+                                  example: Protection Plan
+                                buttonTermLengthYears:
+                                  type: string
+                                  description: ''
+                                  example: Years
+                                declineButton:
+                                  type: string
+                                  description: ''
+                                  example: I don't want protection
+                                footerLegal:
+                                  type: string
+                                  description: ''
+                                  example: Offered by Extend
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                headlineMobile:
+                                  type: string
+                                  description: ''
+                                  example: Get protection from accidents with Extend
+                                planBannerBestSeller:
+                                  type: string
+                                  description: ''
+                                  example: Best Seller!
+                                planBannerBestValue:
+                                  type: string
+                                  description: ''
+                                  example: Best Value!
+                                planDetailsLinkText:
+                                  type: string
+                                  description: ''
+                                  example: Plan details & FAQ
+                            offerTypeCTA:
+                              type: object
+                              properties:
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Add accident protection for
+                            learnMoreModal:
+                              type: object
+                              properties:
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Add accident protection for
+                                backgroundImageUrl:
+                                  type: string
+                                  description: ''
+                                  example: https://s3.amazonaws.com/ccspersistenceprod-contentstaticassets04b201d4-1apqb8dyegznm/offers/learnMoreModal-default-1654273334107-learnMoreModal.backgroundImageUrl_Generic_WomanwithBox2.jpg
+                                coverageBullet1:
+                                  type: string
+                                  description: ''
+                                  example: Repairs or replacements at no additional cost
+                                coverageBullet2:
+                                  type: string
+                                  description: ''
+                                  example: Accidental damage such as breaks and drops
+                                coverageBullet2Mobile:
+                                  type: string
+                                  description: ''
+                                  example: Accidental damage such as breaks and drops
+                                coverageBullet3:
+                                  type: string
+                                  description: ''
+                                  example: Extended failure protection
+                                coverageBullet3Mobile:
+                                  type: string
+                                  description: ''
+                                  example: Extended failure protection
+                                coverageBulletsHeading:
+                                  type: string
+                                  description: ''
+                                  example: 'This plan covers:'
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: Life happens, so we've got you covered. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                headlineMobile:
+                                  type: string
+                                  description: ''
+                                  example: Life happens. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                planDetailsLinkText:
+                                  type: string
+                                  description: ''
+                                  example: Plan details & FAQs
+                                whyExtend1:
+                                  type: string
+                                  description: ''
+                                  example: Simple online claims process
+                                whyExtend1Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_heart_base_replace.svg
+                                whyExtend2:
+                                  type: string
+                                  description: ''
+                                  example: No deductibles
+                                whyExtend2Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_0_base_replace.svg
+                                whyExtendHeading:
+                                  type: string
+                                  description: ''
+                                  example: Why choose Extend?
+                            aftermarketModal:
+                              type: object
+                              properties:
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                purchaseInfo1:
+                                  type: string
+                                  description: ''
+                                  example: 'Protecting your:'
+                                purchaseInfo2:
+                                  type: string
+                                  description: ''
+                                  example: 'Date of purchase:'
+                                purchaseInfo3:
+                                  type: string
+                                  description: ''
+                                  example: 'Product Value:'
+                                purchaseInfo4:
+                                  type: string
+                                  description: ''
+                                  example: 'Quantity purchased:'
+                            aftermarketModalConsumed:
+                              type: object
+                              properties:
+                                bullet1:
+                                  type: string
+                                  description: ''
+                                  example: Looks like you already purchased an Extend protection plan for this product!
+                                bullet2:
+                                  type: string
+                                  description: ''
+                                  example: In the meantime, why not check out more eligible products from this store?
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Continue to store
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: This product is already protected. Nice!
+                            aftermarketModalExpired:
+                              type: object
+                              properties:
+                                bullet1:
+                                  type: string
+                                  description: ''
+                                  example: Uh oh, we cannot offer a protection plan for this product because the manufacturer's warranty is expired or about to expire
+                                bullet2:
+                                  type: string
+                                  description: ''
+                                  example: However, you can add an Extend protection plan on any eligible product you purchase today at checkout from this store!
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Continue to store
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: We can no longer offer a plan on this product :-(
+                        roadhazard:
+                          type: object
+                          properties:
+                            planId:
+                              type: string
+                              description: ''
+                              example: 10001-misc-elec-adh-replace-1y
+                            locale:
+                              type: string
+                              description: ''
+                              example: en
+                            offerTypeButtons:
+                              type: object
+                              properties:
+                                buttonTermLengthYears:
+                                  type: string
+                                  description: ''
+                                  example: Years
+                                headlineCTA:
+                                  type: string
+                                  description: ''
+                                  example: Add accident protection offered by
+                                learnMoreButtonText:
+                                  type: string
+                                  description: ''
+                                  example: What's covered?
+                            offerTypeModal:
+                              type: object
+                              properties:
+                                learnMoreButtonText:
+                                  type: string
+                                  description: ''
+                                  example: What's covered?
+                                acceptButton:
+                                  type: string
+                                  description: ''
+                                  example: Protect my purchase
+                                benefit1:
+                                  type: string
+                                  description: ''
+                                  example: Repairs or replacements
+                                benefit1Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon1_clock_base_replace.svg
+                                benefit2:
+                                  type: string
+                                  description: ''
+                                  example: Simple claims process
+                                benefit2Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon2_shield_base_replace.svg
+                                benefit3:
+                                  type: string
+                                  description: ''
+                                  example: Accident protection
+                                benefit3Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/offerModal.bulletIcon3_glass_adh_replace.svg
+                                buttonLiteralProtectionPlan:
+                                  type: string
+                                  description: ''
+                                  example: Protection Plan
+                                buttonTermLengthYears:
+                                  type: string
+                                  description: ''
+                                  example: Years
+                                declineButton:
+                                  type: string
+                                  description: ''
+                                  example: I don't want protection
+                                footerLegal:
+                                  type: string
+                                  description: ''
+                                  example: Offered by Extend
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                headlineMobile:
+                                  type: string
+                                  description: ''
+                                  example: Get protection from accidents with Extend
+                                planBannerBestSeller:
+                                  type: string
+                                  description: ''
+                                  example: Best Seller!
+                                planBannerBestValue:
+                                  type: string
+                                  description: ''
+                                  example: Best Value!
+                                planDetailsLinkText:
+                                  type: string
+                                  description: ''
+                                  example: Plan details & FAQ
+                            offerTypeCTA:
+                              type: object
+                              properties:
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Add accident protection for
+                            learnMoreModal:
+                              type: object
+                              properties:
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Add accident protection for
+                                backgroundImageUrl:
+                                  type: string
+                                  description: ''
+                                  example: https://s3.amazonaws.com/ccspersistenceprod-contentstaticassets04b201d4-1apqb8dyegznm/offers/learnMoreModal-default-1654273334107-learnMoreModal.backgroundImageUrl_Generic_WomanwithBox2.jpg
+                                coverageBullet1:
+                                  type: string
+                                  description: ''
+                                  example: Repairs or replacements at no additional cost
+                                coverageBullet2:
+                                  type: string
+                                  description: ''
+                                  example: Accidental damage such as breaks and drops
+                                coverageBullet2Mobile:
+                                  type: string
+                                  description: ''
+                                  example: Accidental damage such as breaks and drops
+                                coverageBullet3:
+                                  type: string
+                                  description: ''
+                                  example: Extended failure protection
+                                coverageBullet3Mobile:
+                                  type: string
+                                  description: ''
+                                  example: Extended failure protection
+                                coverageBulletsHeading:
+                                  type: string
+                                  description: ''
+                                  example: 'This plan covers:'
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: Life happens, so we've got you covered. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                headlineMobile:
+                                  type: string
+                                  description: ''
+                                  example: Life happens. Protect your purchase from accidental damage from day one through your chosen coverage term.
+                                planDetailsLinkText:
+                                  type: string
+                                  description: ''
+                                  example: Plan details & FAQs
+                                whyExtend1:
+                                  type: string
+                                  description: ''
+                                  example: Simple online claims process
+                                whyExtend1Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_heart_base_replace.svg
+                                whyExtend2:
+                                  type: string
+                                  description: ''
+                                  example: No deductibles
+                                whyExtend2Icon:
+                                  type: string
+                                  description: ''
+                                  example: https://helloextend-static-assets.s3.amazonaws.com/offers-dynamic-messaging/learnMoreModal.icon_0_base_replace.svg
+                                whyExtendHeading:
+                                  type: string
+                                  description: ''
+                                  example: Why choose Extend?
+                            aftermarketModal:
+                              type: object
+                              properties:
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: Protect your purchase from drops, breaks, spills and defects with Extend
+                                purchaseInfo1:
+                                  type: string
+                                  description: ''
+                                  example: 'Protecting your:'
+                                purchaseInfo2:
+                                  type: string
+                                  description: ''
+                                  example: 'Date of purchase:'
+                                purchaseInfo3:
+                                  type: string
+                                  description: ''
+                                  example: 'Product Value:'
+                                purchaseInfo4:
+                                  type: string
+                                  description: ''
+                                  example: 'Quantity purchased:'
+                            aftermarketModalConsumed:
+                              type: object
+                              properties:
+                                bullet1:
+                                  type: string
+                                  description: ''
+                                  example: Looks like you already purchased an Extend protection plan for this product!
+                                bullet2:
+                                  type: string
+                                  description: ''
+                                  example: In the meantime, why not check out more eligible products from this store?
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Continue to store
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: This product is already protected. Nice!
+                            aftermarketModalExpired:
+                              type: object
+                              properties:
+                                bullet1:
+                                  type: string
+                                  description: ''
+                                  example: Uh oh, we cannot offer a protection plan for this product because the manufacturer's warranty is expired or about to expire
+                                bullet2:
+                                  type: string
+                                  description: ''
+                                  example: However, you can add an Extend protection plan on any eligible product you purchase today at checkout from this store!
+                                button:
+                                  type: string
+                                  description: ''
+                                  example: Continue to store
+                                headline:
+                                  type: string
+                                  description: ''
+                                  example: We can no longer offer a plan on this product :-(
+                - properties:
+                    lead:
+                      type: object
+                      properties:
+                        quantity:
+                          type: number
+                          description: The amount of line items purchased
+                          example: 1
+                        status:
+                          type: string
+                          enum:
+                          - live
+                          - consumed
+                          - expired
+                        referenceId:
+                          type: string
+                        productTitle:
+                          type: string
+                        transactionDate:
+                          type: number
+                          example: 1647470325503
+                        formattedListPrice:
+                          type: string
+                          example: $39.99
+                        quantityConsumed:
+                          type: number
+                          example: 0
+        '400':
+          description: The request to the endpoint was invalid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+x-provenance:
+  method: searched
+  source: https://docs.extend.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.extend.com/reference/contractleadsofferget.md
+  - https://docs.extend.com/reference/contractleadsoffersbatchget.md
+  - https://docs.extend.com/reference/createlead.md
+  merge:
+    pages: 3
+    deduped: 0
+    conflicts_kept_first: 0

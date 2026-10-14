@@ -1,0 +1,461 @@
+openapi: 3.0.1
+info:
+  title: Refunds Api
+  description: 'The Refunds API is a real-time method to determine whether your customer is eligible for a refund on their Extend contract, preview the amount that you should refund the customer, and report to Extend that you have refunded the customer so that you are credited at the end of the month.<div class=''wrapper important''><h2>Important:</h2>
+
+
+    Please note that <strong>calling the Report a Refund as Paid endpoint does NOT result in Extend refunding your end customer.</strong> You as the merchant are responsible for refunding the appropriate amount back to the end customer. When you report a refund as paid using Extend''s API, <strong>the customer’s warranty contract is immediately canceled </strong>and Extend knows to credit the appropriate amount to you, the merchant, at the end of the month.</div>'
+  version: 1.0.0
+servers:
+- url: https://api.helloextend.com
+paths:
+  /refunds:
+    parameters:
+    - name: Accept
+      in: header
+      required: true
+      description: Indicates which content types, expressed as MIME types, the client is able to understand, as well as identifies which API version to use in the request.
+      schema:
+        type: string
+        example: application/json; version=2022-02-01
+    - name: Content-Type
+      in: header
+      required: true
+      description: Used to indicate the original media type of the resource (prior to any content encoding applied for sending).
+      schema:
+        type: string
+        example: application/json
+    - name: X-Extend-Access-Token
+      in: header
+      required: true
+      description: An Extend private API key used to authenticate requests.
+      schema:
+        type: string
+        example: ExtendAccessToken
+    post:
+      summary: Report a Refund as Paid
+      description: <p>This endpoint allows merchants to report a contract refund as paid to the customer using the Extend Line Item ID, Extend Contract ID, Extend Refund ID, or Line Item Transaction ID (the merchant’s unique identifier for the order line item). When requesting a contract refund, there are three statuses that can occur:</p><ul><li><strong>Refund_quoted</strong><ul><li>A refund quote has been requested.</li><li> Attempt to report the refund as paid to the customer has not been made.</li></ul></li><li><strong>Refund_paid</strong><ul><li>A refund has been successfully approved for the Extend contract.<li>A refund has successfully been paid from the merchant to the customer.</li></li></ul></li><li><strong>refund_denied</strong><ul><li>A refund request has been denied for the Extend contract.</li><li>This is typically due to an approved claim on the customer’s contract or the contract is in a status which is not eligible for a refund.</li></ul></li></ul><p>With shipping protection
+        contracts, reporting refunds as paid will be rejected if at least one covered product on the contract has shipped.</p><p>Contract refunds must be reported to Extend successfully to ensure a credit is received by the merchant in the normal monthly invoicing cycle. If an attempt to report a refund leads to an unexpected result or status, please reach out to your merchant success manager to resolve the discrepancy.</p><p>Refund quotes can also be requested by using the quote query parameter set as true. In scenarios where the customer is not eligible for a refund, the quote will return $0, causes/use cases/ reasons:</p><ul><li>The contract has already been refunded</li><li>There is an approved claim on the customer’s contract</li><li>The shipping protection contract contains at least one product that has shipped</li></ul><p>If an attempt to retrieve a refund quote leads to an unexpected result or amount, please reach out to your merchant success manager to resolve the discrepancy.</p>
+      operationId: refundsCreate
+      tags:
+      - Refunds
+      parameters:
+      - name: quote
+        in: query
+        description: Indicates requesting a quote instead of posting a refund
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+              - type: object
+                properties:
+                  productsRemoved:
+                    type: array
+                    description: 'Array of product reference IDs and quantities that will be removed from contract coverage. This should be used if a contract was created covering products that will no longer be shipped or covered by the contract and the premium must be adjusted to reflect the remaining products that will be covered. '
+                    items:
+                      type: object
+                      properties:
+                        referenceId:
+                          type: string
+                          description: This is the unique identifier for the product in the merchant’s Extend product catalog. Note - When partially refunding contract covering a custom bundle product, the product reference ID for the components of the bundle should be used.
+                          minLength: 1
+                        quantity:
+                          type: number
+                          description: The quantity of the product reference ID that should be removed from contract coverage. Note - When partially refunding contract covering a custom bundle product, the quantity for the components of the bundle should be used.
+                      required:
+                      - referenceId
+                      - quantity
+                  reason:
+                    type: string
+                  newContractId:
+                    type: string
+                    description: We can provide our own contract ID for partial refunds instead of creating a new one.
+                  deletedAt:
+                    type: number
+              - oneOf:
+                - title: Refund with Extend Contract ID
+                  type: object
+                  properties:
+                    contractId:
+                      type: string
+                  required:
+                  - contractId
+                - title: Refund with Extend Refund ID
+                  type: object
+                  properties:
+                    refundId:
+                      type: string
+                  required:
+                  - refundId
+                - title: Refund with Extend Line Item ID
+                  type: object
+                  properties:
+                    lineItemId:
+                      type: string
+                  required:
+                  - lineItemId
+                - title: Refund with Extend Order ID
+                  type: object
+                  properties:
+                    orderId:
+                      type: string
+                  required:
+                  - orderId
+                - title: Refund with Order Transaction ID
+                  type: object
+                  properties:
+                    orderTransactionId:
+                      type: string
+                  required:
+                  - orderTransactionId
+                - title: Refund with Line Item Transaction ID
+                  type: object
+                  properties:
+                    lineItemTransactionId:
+                      type: string
+                  required:
+                  - lineItemTransactionId
+      responses:
+        '200':
+          description: Returns refund information including refund paid timestamp
+          content:
+            application/json:
+              schema:
+                oneOf:
+                - type: object
+                  required:
+                  - createdAt
+                  - contractId
+                  - id
+                  - sellerId
+                  - status
+                  - refundAmounts
+                  properties:
+                    createdAt:
+                      type: number
+                      format: int64
+                      example: 1557267465
+                      description: The timestamp for when the Refund object was created (generated by Extend)
+                    contractCoverageStartDate:
+                      type: number
+                      format: int64
+                      example: 1557267465
+                      description: Start date of coverage for the Extend contract
+                    contractCoverageEndDate:
+                      type: number
+                      format: int64
+                      example: 1557267465
+                      description: End date of coverage for the Extend contract
+                    contractId:
+                      type: string
+                      example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                      description: The ID of the Contract (generated by Extend)
+                    contractPurchaseDate:
+                      type: number
+                      format: int64
+                      example: 1557267465
+                      description: Date provided by merchant that is associated to the transaction where the Extend contract was sold
+                    contractCurrency:
+                      type: string
+                      example: USD
+                      description: The ISO 4217 currency code for the contract (e.g., USD, EUR, GBP)
+                    id:
+                      type: string
+                      example: c57ed096-24ef-49a4-a20a-d1b8bf770980
+                      description: The unique Extend ID for the Refund (generated by Extend)
+                    expiresAt:
+                      type: number
+                      format: int64
+                      example: 1557267465
+                      description: The timestamp for when the Refund object will expire (generated by Extend). Refund objects live for 20 minutes, after which a new Refund object will be created the next time you request a Refund Quote or report a Refund as Paid
+                    newContractId:
+                      type: string
+                      example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                      description: The new ID of the Contract (generated by Extend) in the case of a partial refund.
+                    newPremium:
+                      type: number
+                      example: 130
+                      description: The new premium of the contract (generated by Extend) in the case of a partial refund.
+                    lineItemId:
+                      type: string
+                      example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                      description: Unique line item ID associated with the Contract (generated by Extend)
+                    productsRemoved:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          referenceId:
+                            type: string
+                            example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                          quantity:
+                            example: '1'
+                    sellerId:
+                      type: string
+                      example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                      description: Unique ID representing the seller provided by Extend
+                    status:
+                      type: string
+                      enum:
+                      - refund_quoted
+                      - refund_paid
+                      - refund_denied
+                      example: refund_quoted
+                      description: 'Represents the current status of the Refund <ul> <li><b>refund_quoted</b>: Refund amounts have been previewed via Get a Refund Quote at least once, but you have not reported that you have refunded the customer yet</li> <li><b>refund_paid</b>: You have reported the Refund as paid and the associated Contract has been canceled. Extend will credit you in the next invoicing period</li> <li><b>refund_denied</b>: The end customer is not eligible for a Refund because they have consumed all entitlements associated with the Contract.</li> </ul>'
+                    spQuoteId:
+                      type: string
+                      example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                      description: Quote id when a valid shipping protection quote is created.
+                    originalPremium:
+                      type: number
+                      example: 4000
+                      description: The original premium of the contract before a partial refund adjustment due to shipped products.
+                    shippedProductsQuoteId:
+                      type: string
+                      example: 7a0e0b3b-f695-4332-8ef1-efd773e27d9d
+                      description: Quote id for the shipped or delivered products when partially refunding a shipping protection contract.
+                    nonRefundableProducts:
+                      type: array
+                      description: Products that are not eligible for refund because they have already been shipped or delivered.
+                      items:
+                        type: object
+                        required:
+                        - referenceId
+                        - quantity
+                        - status
+                        properties:
+                          referenceId:
+                            type: string
+                            description: The unique identifier for the product.
+                          quantity:
+                            type: number
+                            description: The quantity of the product that has been shipped.
+                          status:
+                            type: string
+                            description: The shipping status of the product.
+                            enum:
+                            - shipped
+                            - delivered
+                    reason:
+                      type: string
+                      example: Customer requested refund
+                      description: Reason for refund, defined when refund is created.
+                    refundAmounts:
+                      type: object
+                      required:
+                      - customer
+                      properties:
+                        customer:
+                          description: The amount that you should refund your end customer, equal to amount the customer paid for the plan.
+                          type: number
+                          example: '1299'
+                        merchant:
+                          description: The amount refunded to merchant.
+                          type: number
+                          example: '1299'
+                        obligor:
+                          description: The amount refunded to obligor.
+                          type: number
+                          example: '1299'
+                    note:
+                      type: string
+                      enum:
+                      - coverage_expired
+                      - claim_active
+                      - claim_applied
+                      - claim_cost_exceeded
+                      - refund_amount_not_owed
+                      - unknown_error
+                      example: coverage_expired
+                      description: 'Captures additional notes about the refund <ul> <li><b>coverage_expired</b>: contract coverage date expired</li> <li><b>claim_active</b>: one or more claim(s) are active</li> <li><b>claim_applied</b>: at least one claim was applied against the contract</li><li><b>claim_cost_exceeded</b>: claim cost exceeded contract limit of liability</li><li><b>refund_amount_not_owed</b>: refund amount zero</li> </ul>'
+                - type: array
+                  items:
+                    type: object
+                    required:
+                    - createdAt
+                    - contractId
+                    - id
+                    - sellerId
+                    - status
+                    - refundAmounts
+                    properties:
+                      createdAt:
+                        type: number
+                        format: int64
+                        example: 1557267465
+                        description: The timestamp for when the Refund object was created (generated by Extend)
+                      contractCoverageStartDate:
+                        type: number
+                        format: int64
+                        example: 1557267465
+                        description: Start date of coverage for the Extend contract
+                      contractCoverageEndDate:
+                        type: number
+                        format: int64
+                        example: 1557267465
+                        description: End date of coverage for the Extend contract
+                      contractId:
+                        type: string
+                        example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                        description: The ID of the Contract (generated by Extend)
+                      contractPurchaseDate:
+                        type: number
+                        format: int64
+                        example: 1557267465
+                        description: Date provided by merchant that is associated to the transaction where the Extend contract was sold
+                      contractCurrency:
+                        type: string
+                        example: USD
+                        description: The ISO 4217 currency code for the contract (e.g., USD, EUR, GBP)
+                      id:
+                        type: string
+                        example: c57ed096-24ef-49a4-a20a-d1b8bf770980
+                        description: The unique Extend ID for the Refund (generated by Extend)
+                      expiresAt:
+                        type: number
+                        format: int64
+                        example: 1557267465
+                        description: The timestamp for when the Refund object will expire (generated by Extend). Refund objects live for 20 minutes, after which a new Refund object will be created the next time you request a Refund Quote or report a Refund as Paid
+                      newContractId:
+                        type: string
+                        example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                        description: The new ID of the Contract (generated by Extend) in the case of a partial refund.
+                      newPremium:
+                        type: number
+                        example: 130
+                        description: The new premium of the contract (generated by Extend) in the case of a partial refund.
+                      lineItemId:
+                        type: string
+                        example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                        description: Unique line item ID associated with the Contract (generated by Extend)
+                      productsRemoved:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            referenceId:
+                              type: string
+                              example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                            quantity:
+                              example: '1'
+                      sellerId:
+                        type: string
+                        example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                        description: Unique ID representing the seller provided by Extend
+                      status:
+                        type: string
+                        enum:
+                        - refund_quoted
+                        - refund_paid
+                        - refund_denied
+                        example: refund_quoted
+                        description: 'Represents the current status of the Refund <ul> <li><b>refund_quoted</b>: Refund amounts have been previewed via Get a Refund Quote at least once, but you have not reported that you have refunded the customer yet</li> <li><b>refund_paid</b>: You have reported the Refund as paid and the associated Contract has been canceled. Extend will credit you in the next invoicing period</li> <li><b>refund_denied</b>: The end customer is not eligible for a Refund because they have consumed all entitlements associated with the Contract.</li> </ul>'
+                      spQuoteId:
+                        type: string
+                        example: 81f75af3-b92b-4de8-b56a-6c36d75b4fa1
+                        description: Quote id when a valid shipping protection quote is created.
+                      originalPremium:
+                        type: number
+                        example: 4000
+                        description: The original premium of the contract before a partial refund adjustment due to shipped products.
+                      shippedProductsQuoteId:
+                        type: string
+                        example: 7a0e0b3b-f695-4332-8ef1-efd773e27d9d
+                        description: Quote id for the shipped or delivered products when partially refunding a shipping protection contract.
+                      nonRefundableProducts:
+                        type: array
+                        description: Products that are not eligible for refund because they have already been shipped or delivered.
+                        items:
+                          type: object
+                          required:
+                          - referenceId
+                          - quantity
+                          - status
+                          properties:
+                            referenceId:
+                              type: string
+                              description: The unique identifier for the product.
+                            quantity:
+                              type: number
+                              description: The quantity of the product that has been shipped.
+                            status:
+                              type: string
+                              description: The shipping status of the product.
+                              enum:
+                              - shipped
+                              - delivered
+                      reason:
+                        type: string
+                        example: Customer requested refund
+                        description: Reason for refund, defined when refund is created.
+                      refundAmounts:
+                        type: object
+                        required:
+                        - customer
+                        properties:
+                          customer:
+                            description: The amount that you should refund your end customer, equal to amount the customer paid for the plan.
+                            type: number
+                            example: '1299'
+                          merchant:
+                            description: The amount refunded to merchant.
+                            type: number
+                            example: '1299'
+                          obligor:
+                            description: The amount refunded to obligor.
+                            type: number
+                            example: '1299'
+                      note:
+                        type: string
+                        enum:
+                        - coverage_expired
+                        - claim_active
+                        - claim_applied
+                        - claim_cost_exceeded
+                        - refund_amount_not_owed
+                        - unknown_error
+                        example: coverage_expired
+                        description: 'Captures additional notes about the refund <ul> <li><b>coverage_expired</b>: contract coverage date expired</li> <li><b>claim_active</b>: one or more claim(s) are active</li> <li><b>claim_applied</b>: at least one claim was applied against the contract</li><li><b>claim_cost_exceeded</b>: claim cost exceeded contract limit of liability</li><li><b>refund_amount_not_owed</b>: refund amount zero</li> </ul>'
+        '404':
+          description: The specified resource was not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  code:
+                    type: string
+                  message:
+                    type: string
+                required:
+                - code
+                - message
+x-provenance:
+  method: searched
+  source: https://docs.extend.com/reference
+  harvested: '2026-10-14'
+  tool: harvest-readme-openapi.py
+  note: Assembled verbatim from the OpenAPI definition ReadMe embeds in each operation page of the provider's developer portal; paths and components merged by API title, nothing authored.
+  assembled_from:
+  - https://docs.extend.com/reference/refundscreate.md
+  merge:
+    pages: 1
+    deduped: 0
+    conflicts_kept_first: 0

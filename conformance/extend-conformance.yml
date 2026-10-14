@@ -4,9 +4,8 @@ source: https://docs.extend.com/reference/authentication
 standards:
 - id: oauth2
   conforms: true
-  evidence: >-
-    Documented OAuth2 client-credentials flow; openid-configuration advertises token,
-    authorization, introspection, and jwks endpoints (grant_types client_credentials).
+  evidence: Documented OAuth2 client-credentials flow; openid-configuration advertises token, authorization, introspection, and jwks endpoints
+    (grant_types client_credentials).
 - id: oauth2-client-credentials
   conforms: true
   evidence: grant_type=client_credentials against /auth/oauth/token
@@ -24,9 +23,16 @@ standards:
   evidence: outbound claim-status and service-order webhooks documented
 - id: openid-connect
   conforms: false
-  evidence: >-
-    Exposes an openid-configuration document but only client_credentials machine-to-machine
-    grants; not a user-facing OIDC login provider.
+  evidence: Exposes an openid-configuration document but only client_credentials machine-to-machine grants; not a user-facing OIDC login provider.
 - id: rfc9457-problem-details
   conforms: false
   evidence: no application/problem+json error envelope documented
+- id: openapi-3.0
+  conforms: true
+  evidence: the document declares 3.0.1
+- id: openapi-3.1
+  conforms: true
+  evidence: the document declares 3.1.0
+- id: rfc9457
+  conforms: false
+  evidence: no response declares application/problem+json

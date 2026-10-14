@@ -14,26 +14,25 @@ idempotency:
   header: X-Idempotency-Key
   scope: per logical create/update operation (e.g. creating orders)
   value: unique key per operation (UUID example published)
-  behavior: >-
-    Prevents duplicate processing when a request is retried. Required by Extend on idempotent
-    create/update calls such as order creation.
+  behavior: Prevents duplicate processing when a request is retried. Required by Extend on idempotent create/update calls such as order creation.
   source: https://docs.extend.com/docs/getting-started-with-extends-api
+  coverage: partial
+  mechanism: request header / body token declared in the OpenAPI
+  evidence: X-Idempotency-Key on 5 of 27 mutating operations
+  verified: derived
 pagination:
   style: page-based
   default_page_size: 25
-  detail: >-
-    List/search endpoints (e.g. Get Lead Offers, Search Line Items) return paginated results with
-    a default page size of 25.
+  detail: List/search endpoints (e.g. Get Lead Offers, Search Line Items) return paginated results with a default page size of 25.
 versioning:
   style: header-based-date
   header: Accept
   format: application/json;version=YYYY-MM-DD
   current: '2022-02-01'
-  legacy: ['2021-04-01']
-  note: >-
-    The API version is negotiated via the Accept header. Some legacy endpoints (e.g. Products)
-    still require version 2021-04-01; the required version is shown per endpoint in the API
-    Reference.
+  legacy:
+  - '2021-04-01'
+  note: The API version is negotiated via the Accept header. Some legacy endpoints (e.g. Products) still require version 2021-04-01; the required
+    version is shown per endpoint in the API Reference.
   detail: lifecycle/extend-lifecycle.yml
 required_headers:
 - name: Accept
@@ -48,9 +47,8 @@ required_headers:
 transport:
   https_required: true
 error_semantics:
-  detail: >-
-    Endpoints use standard HTTP status codes (e.g. 200 with empty arrays for no-content cases,
-    403 Forbidden for cross-merchant access). See errors/ if/when an error reference is captured.
+  detail: Endpoints use standard HTTP status codes (e.g. 200 with empty arrays for no-content cases, 403 Forbidden for cross-merchant access).
+    See errors/ if/when an error reference is captured.
 webhooks:
   supported: true
   detail: asyncapi/extend-webhooks.yml
