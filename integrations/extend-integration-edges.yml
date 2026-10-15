@@ -1,5 +1,5 @@
 generated: '2026-10-14'
-method: none
+method: searched
 source:
 - https://zapier.com/apps/extend/integrations
 - https://n8n.io/integrations/extend/
@@ -10,7 +10,26 @@ checked:
 - https://monid.ai/tools/extend
 - https://n8n.io/integrations/extend/
 - https://zapier.com/apps/extend/integrations
+- shopify/integrations/shopify-integration-edges.yml
 summary: null
 marketplace_apps: []
-edges: []
+edges:
+- partner_name: Shopify (own)
+  partner: shopify
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://apps.shopify.com/extend-protection
+  mirror_of: shopify/integrations/shopify-integration-edges.yml
+  apps:
+  - Extend Shopper Operations
+  listing_count: 1
+  detected: '2026-10-15'
+  detected_by: mirror-platform-listings.py
+  publisher_verified:
+  - Built for Shopify
 templates: []
