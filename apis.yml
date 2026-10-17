@@ -172,9 +172,10 @@ common:
 
 apis:
 - name: Extend API
-  description: 'Extend''s REST API for product and shipping protection: manage offers, contracts, orders and line items, refunds, claims, service
-    orders, and leads. Header-based date versioning; OAuth2 client-credentials auth via the X-Extend-Access-Token header; idempotent writes via
-    X-Idempotency-Key.'
+  description: >-
+    Extend's REST API for product and shipping protection: manage offers, contracts, orders and line items,
+    refunds, claims, service orders, and leads. Header-based date versioning; OAuth2 client-credentials
+    auth via the X-Extend-Access-Token header; idempotent writes via X-Idempotency-Key.
   humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
   baseURL: https://api.helloextend.com
   tags:
@@ -213,16 +214,6 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/extend-contracts-api-openapi.yml
-- aid: extend:extend-entitlements-api
-  name: Extend Entitlements API
-  description: The Entitlements API from Extend — 1 operation(s) for entitlements.
-  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
-  baseURL: https://api.helloextend.com
-  tags:
-  - Entitlements
-  properties:
-  - type: OpenAPI
-    url: openapi/extend-entitlements-api-openapi.yml
 - aid: extend:extend-leads-api
   name: Extend Leads API
   description: The Leads API from Extend — 3 operation(s) for leads.
@@ -283,17 +274,46 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/extend-service-orders-api-openapi.yml
-- aid: extend:extend-shipping-offers
-  name: Extend Shipping Offers Openapi.Yml API
-  description: The Shipping Offers Openapi.Yml API from Extend — 3 operation(s) for shipping offers openapi.yml.
+- aid: extend:extend-dynamic-return-policy-api
+  name: Extend Dynamic Return Policy API
+  description: The Dynamic Return Policy API from Extend — 1 operation(s) for dynamic return policy.
   humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
   baseURL: https://api.helloextend.com
   tags:
-  - Shipping Offers Openapi.Yml
+  - Dynamic Return Policy
   properties:
   - type: OpenAPI
-    url: openapi/extend-shipping-offers-openapi.yml
-
+    url: openapi/extend-dynamic-return-policy-api-openapi.yml
+- aid: extend:extend-line-items-api
+  name: Extend Line Items API
+  description: The Line Items API from Extend — 7 operation(s) for line items.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Line Items
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-line-items-api-openapi.yml
+- aid: extend:extend-shippingoffers-api
+  name: Extend Shipping Offers API
+  description: The ShippingOffers API from Extend — 3 operation(s) for shippingoffers.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - ShippingOffers
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-shippingoffers-api-openapi.yml
+- aid: extend:extend-webhooks-api
+  name: Extend Webhooks API
+  description: The Webhooks API from Extend — 1 operation(s) for webhooks.
+  humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
+  baseURL: https://api.helloextend.com
+  tags:
+  - Webhooks
+  properties:
+  - type: OpenAPI
+    url: openapi/extend-webhooks-api-openapi.yml
 x-enrichment:
   date: '2026-07-19'
   status: backfilled

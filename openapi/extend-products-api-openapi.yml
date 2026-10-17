@@ -1,13 +1,15 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Products Api
-  description: '<p>A Product object represents an item available for sale in your store. In order for us to assign warranty plans to your products, you first need to sync your store''s products to Extend through a POST request via REST API.
+  title: Api Products API
+  description: 'A Product object represents an item available for sale in your store. In order for us to assign warranty plans to your products, you first need to sync your store''s products to Extend through a POST request via REST API.
 
 
-    Please be sure to keep your products in sync! We can only match warranty plans to the products you sync to the Extend platform, and can only match plans as accurately as the product data we receive from you.<p>'
+    Please be sure to keep your products in sync! We can only match warranty plans to the products you sync to the Extend platform, and can only match plans as accurately as the product data we receive from you.'
   version: '2022-02-01'
 servers:
 - url: https://api.helloextend.com
+tags:
+- name: Products
 paths:
   /stores/{storeId}/products:
     post:

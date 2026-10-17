@@ -1,18 +1,52 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
   version: 7.0.0
-  title: Contracts Api
-  description: '<p>When a customer buys an extended warranty or protection plan for their product, they are purchasing a warranty Contract. Your store needs to record all new warranty plan purchases with Extend so we can create a new contract and deliver it to the customer. You will also need to record any warranty returns / refunds so we can cancel the contract and account for the refunded amount.</p><p>You can record the warranty plan purchase by creating a new warranty contract. For returns, you issue a request for a warranty contract refund. See below for more details!</p><div class=''wrapper important''><h2>Important:</h2>
-
-
-    If you are selling a warranty contract <b>after</b> the purchase of a product, you need to include a lead token in the request. To learn more about post-purchase warranties and leads, please see the Leads API section.</div>'
+  title: Api Contracts API
+  description: When a customer buys an extended warranty or protection plan for their product, they are purchasing a warranty Contract.
 servers:
 - url: https://api.helloextend.com
+tags:
+- name: Contracts
 paths:
   /contracts/search:
     get:
       summary: Search Contracts
-      description: This endpoint allows search via querystring params. <p>The search queries include:</p><ul><li>typeFilter</li><li>contractId</li><li>customerEmail</li><li>customerPhone</li><li>productSerialNumber</li><li>productTransactionId</li><li>sellerId</li><li>status</li><li>transactionId</li></ul><p>The search term `sellerId` can be paired with any of the other terms to limit contracts by seller.</p><p>`sellerId` is a required querystring parameter.</p>
+      description: 'This endpoint allows search via querystring params.
+
+        The search queries include:
+
+
+        typeFilter
+
+
+        contractId
+
+
+        customerEmail
+
+
+        customerPhone
+
+
+        productSerialNumber
+
+
+        productTransactionId
+
+
+        sellerId
+
+
+        status
+
+
+        transactionId
+
+
+        The search term `sellerId` can be paired with any of the other terms to limit contracts by seller.
+
+
+        `sellerId` is a required querystring parameter.'
       operationId: contractsSearch
       tags:
       - Contracts
@@ -1029,7 +1063,10 @@ paths:
   /contracts/{contractId}:
     get:
       summary: Get Contract by ID
-      description: <p>This endpoint retrieves a contract using the Contract ID. Information that can be retrieved for a contract includes coverage, customer, plan, and product details associated to the contract.</p><p>Given the new contract type of shipping protection, there are two different response bodies that can be returned. When a shipping protection contract is retrieved, the response body will also include tracking/shipment information and a list of products covered under the shipping protection plan instead of the one product that would be returned with extended warranty contracts. Additional details on the different response bodies is outlined in the successful response examples below.</p>
+      description: 'This endpoint retrieves a contract using the Contract ID. Information that can be retrieved for a contract includes coverage, customer, plan, and product details associated to the contract.
+
+
+        Given the new contract type of shipping protection, there are two different response bodies that can be returned. When a shipping protection contract is retrieved, the response body will also include tracking/shipment information and a list of products covered under the shipping protection plan instead of the one product that would be returned with extended warranty contracts. Additional details on the different response bodies is outlined in the successful response examples below.'
       operationId: contractsGet
       tags:
       - Contracts
@@ -5654,7 +5691,10 @@ paths:
                 - message
     put:
       summary: Update Contract
-      description: <p>This endpoint updates a contract using the Contract ID. Information that can be updated for a contract includes coverage, customer, plan, and product details associated with the contract.</p><p>Given the new contract type of shipping protection, there are two different bodies that can be used to perform the contract update. When a shipping protection contract needs to be updated, the body will include tracking/shipment information and a list of products covered under the shipping protection plan instead of the one product that would be applicable with extended warranty contracts. Additional details on the various fields that can be updated are outlined in the options below.</p>
+      description: 'This endpoint updates a contract using the Contract ID. Information that can be updated for a contract includes coverage, customer, plan, and product details associated with the contract.
+
+
+        Given the new contract type of shipping protection, there are two different bodies that can be used to perform the contract update. When a shipping protection contract needs to be updated, the body will include tracking/shipment information and a list of products covered under the shipping protection plan instead of the one product that would be applicable with extended warranty contracts. Additional details on the various fields that can be updated are outlined in the options below.'
       operationId: contractsUpdate
       tags:
       - Contracts

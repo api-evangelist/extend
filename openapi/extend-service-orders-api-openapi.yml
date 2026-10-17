@@ -1,13 +1,15 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Service Orders Api
+  title: Api Service Orders API
   version: 1.0.0
 servers:
 - url: https://api.helloextend.com
+tags:
+- name: service-orders
 paths:
   /service-orders/search:
     get:
-      summary: Find service orders associated with a given claim ID or Service Order Id. Must include claimId or serviceOrderId for searching. Cannot search by both claimId and serviceOrderId
+      summary: Find service orders associated with a given claim ID or Service Order Id.
       tags:
       - service-orders
       parameters:
@@ -686,6 +688,8 @@ paths:
                 required:
                 - code
                 - message
+      operationId: getServiceOrdersSearch
+      x-operation-id-source: derived
   /service-orders/service-claim:
     post:
       summary: Submit logistics decisions to continue processing an approved claim
@@ -950,6 +954,8 @@ paths:
                 required:
                 - code
                 - message
+      operationId: postServiceOrdersServiceClaim
+      x-operation-id-source: derived
   /service-orders/{serviceOrderId}:
     get:
       summary: Get a service order
@@ -1770,6 +1776,8 @@ paths:
                 required:
                 - code
                 - message
+      operationId: getServiceOrdersByServiceOrderId
+      x-operation-id-source: derived
   /service-orders/{serviceOrderId}/accept-repair:
     post:
       summary: Accept/Decline a service order
@@ -1914,6 +1922,8 @@ paths:
                 required:
                 - code
                 - message
+      operationId: postServiceOrdersByServiceOrderIdAcceptRepair
+      x-operation-id-source: derived
   /service-orders/{serviceOrderId}/expenses:
     get:
       summary: Get expenses for a service order
@@ -2292,6 +2302,8 @@ paths:
                 required:
                 - code
                 - message
+      operationId: getServiceOrdersByServiceOrderIdExpenses
+      x-operation-id-source: derived
     post:
       summary: Add an expense to the service order
       tags:
@@ -2965,6 +2977,8 @@ paths:
                 required:
                 - code
                 - message
+      operationId: postServiceOrdersByServiceOrderIdExpenses
+      x-operation-id-source: derived
   /service-orders/{serviceOrderId}/expenses/{expenseId}/void:
     post:
       summary: Delete/Void an expense
@@ -3053,6 +3067,8 @@ paths:
                 required:
                 - code
                 - message
+      operationId: postServiceOrdersByServiceOrderIdExpensesByExpenseIdVoid
+      x-operation-id-source: derived
   /service-orders/{serviceOrderId}/fulfill:
     post:
       summary: Fulfill a service order
@@ -3462,6 +3478,8 @@ paths:
                 required:
                 - code
                 - message
+      operationId: postServiceOrdersByServiceOrderIdFulfill
+      x-operation-id-source: derived
   /service-orders/{serviceOrderId}/generate-repair-label:
     post:
       summary: Generate repair label for a service order
@@ -3593,6 +3611,8 @@ paths:
                 required:
                 - code
                 - message
+      operationId: postServiceOrdersByServiceOrderIdGenerateRepairLabel
+      x-operation-id-source: derived
   /service-orders/{serviceOrderId}/request-payment:
     post:
       summary: Request payment after a service order is fulfilled
@@ -4005,6 +4025,8 @@ paths:
                 required:
                 - code
                 - message
+      operationId: postServiceOrdersByServiceOrderIdRequestPayment
+      x-operation-id-source: derived
   /service-orders/{serviceOrderId}/update-repair:
     post:
       summary: Update a service order
@@ -4259,6 +4281,8 @@ paths:
                 required:
                 - code
                 - message
+      operationId: postServiceOrdersByServiceOrderIdUpdateRepair
+      x-operation-id-source: derived
 x-provenance:
   method: searched
   source: https://docs.extend.com/reference

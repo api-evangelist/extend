@@ -1,9 +1,11 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Shipping Offers
+  title: Shipping Offers API
   version: '2022-02-01'
 servers:
 - url: https://api.helloextend.com
+tags:
+- name: ShippingOffers
 paths:
   /shipping-offers/config:
     get:
@@ -286,7 +288,7 @@ paths:
   /shipping-offers/config/marketing:
     get:
       summary: Get shipping offer marketing text
-      description: 'This endpoint dictates how shipping protection offer display units should display marketing and compliance text, and includes styling configuration based on the attach behavior, or offer type.  There are three main offer types: Extend Choice Opt-Out, where shipping protection is selected by default until the customer de-selects it, Extend Choice Opt-In, where the customer must select shipping protection to include it in the order, and Extend Complete, where shipping protection is automatically included by the merchant in every order.'
+      description: 'This endpoint dictates how shipping protection offer display units should display marketing and compliance text, and includes styling configuration based on the attach behavior, or offer type. There are three main offer types: Extend Choice Opt-Out, where shipping protection is selected by default until the customer de-selects it, Extend Choice Opt-In, where the customer must select shipping protection to include it in the order, and Extend Complete, where shipping protection is automatically included by the merchant in every order.'
       operationId: shippingOffersMarketingGet
       tags:
       - ShippingOffers
@@ -906,7 +908,9 @@ paths:
   /shipping-offers/quotes:
     post:
       summary: Create a shipping protection quote
-      description: This endpoint calculates the shipping protection premium, i.e. the price you will charge the customer for shipping protection, for eligible products in the specified cart.<p>The response will include the premium and a quote id which must be used to create a valid Order with Extend including shipping protection. An optional array "excluded_products" may contain a list of products that were excluded from the premium calculation if the cart contained products that are not eligible for shipping protection.
+      description: 'This endpoint calculates the shipping protection premium, i.e. the price you will charge the customer for shipping protection, for eligible products in the specified cart.
+
+        The response will include the premium and a quote id which must be used to create a valid Order with Extend including shipping protection. An optional array "excluded_products" may contain a list of products that were excluded from the premium calculation if the cart contained products that are not eligible for shipping protection.'
       operationId: shippingOffersQuoteCreate
       tags:
       - ShippingOffers

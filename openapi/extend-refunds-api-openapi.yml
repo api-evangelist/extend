@@ -1,13 +1,12 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
-  title: Refunds Api
-  description: 'The Refunds API is a real-time method to determine whether your customer is eligible for a refund on their Extend contract, preview the amount that you should refund the customer, and report to Extend that you have refunded the customer so that you are credited at the end of the month.<div class=''wrapper important''><h2>Important:</h2>
-
-
-    Please note that <strong>calling the Report a Refund as Paid endpoint does NOT result in Extend refunding your end customer.</strong> You as the merchant are responsible for refunding the appropriate amount back to the end customer. When you report a refund as paid using Extend''s API, <strong>the customer’s warranty contract is immediately canceled </strong>and Extend knows to credit the appropriate amount to you, the merchant, at the end of the month.</div>'
+  title: Api Refunds API
+  description: The Refunds API is a real-time method to determine whether your customer is eligible for a refund on their Extend contract, preview the amount that you should refund the customer, and report to Extend that you have refunded the customer so that you are credited at the end of the month.
   version: 1.0.0
 servers:
 - url: https://api.helloextend.com
+tags:
+- name: Refunds
 paths:
   /refunds:
     parameters:
@@ -34,8 +33,54 @@ paths:
         example: ExtendAccessToken
     post:
       summary: Report a Refund as Paid
-      description: <p>This endpoint allows merchants to report a contract refund as paid to the customer using the Extend Line Item ID, Extend Contract ID, Extend Refund ID, or Line Item Transaction ID (the merchant’s unique identifier for the order line item). When requesting a contract refund, there are three statuses that can occur:</p><ul><li><strong>Refund_quoted</strong><ul><li>A refund quote has been requested.</li><li> Attempt to report the refund as paid to the customer has not been made.</li></ul></li><li><strong>Refund_paid</strong><ul><li>A refund has been successfully approved for the Extend contract.<li>A refund has successfully been paid from the merchant to the customer.</li></li></ul></li><li><strong>refund_denied</strong><ul><li>A refund request has been denied for the Extend contract.</li><li>This is typically due to an approved claim on the customer’s contract or the contract is in a status which is not eligible for a refund.</li></ul></li></ul><p>With shipping protection
-        contracts, reporting refunds as paid will be rejected if at least one covered product on the contract has shipped.</p><p>Contract refunds must be reported to Extend successfully to ensure a credit is received by the merchant in the normal monthly invoicing cycle. If an attempt to report a refund leads to an unexpected result or status, please reach out to your merchant success manager to resolve the discrepancy.</p><p>Refund quotes can also be requested by using the quote query parameter set as true. In scenarios where the customer is not eligible for a refund, the quote will return $0, causes/use cases/ reasons:</p><ul><li>The contract has already been refunded</li><li>There is an approved claim on the customer’s contract</li><li>The shipping protection contract contains at least one product that has shipped</li></ul><p>If an attempt to retrieve a refund quote leads to an unexpected result or amount, please reach out to your merchant success manager to resolve the discrepancy.</p>
+      description: 'This endpoint allows merchants to report a contract refund as paid to the customer using the Extend Line Item ID, Extend Contract ID, Extend Refund ID, or Line Item Transaction ID (the merchant’s unique identifier for the order line item). When requesting a contract refund, there are three statuses that can occur:
+
+
+        Refund_quoted
+
+
+        A refund quote has been requested.
+
+
+        Attempt to report the refund as paid to the customer has not been made.
+
+
+        Refund_paid
+
+
+        A refund has been successfully approved for the Extend contract.
+
+        A refund has successfully been paid from the merchant to the customer.
+
+
+        refund_denied
+
+
+        A refund request has been denied for the Extend contract.
+
+
+        This is typically due to an approved claim on the customer’s contract or the contract is in a status which is not eligible for a refund.
+
+
+        With shipping protection contracts, reporting refunds as paid will be rejected if at least one covered product on the contract has shipped.
+
+
+        Contract refunds must be reported to Extend successfully to ensure a credit is received by the merchant in the normal monthly invoicing cycle. If an attempt to report a refund leads to an unexpected result or status, please reach out to your merchant success manager to resolve the discrepancy.
+
+
+        Refund quotes can also be requested by using the quote query parameter set as true. In scenarios where the customer is not eligible for a refund, the quote will return $0, causes/use cases/ reasons:
+
+
+        The contract has already been refunded
+
+
+        There is an approved claim on the customer’s contract
+
+
+        The shipping protection contract contains at least one product that has shipped
+
+
+        If an attempt to retrieve a refund quote leads to an unexpected result or amount, please reach out to your merchant success manager to resolve the discrepancy.'
       operationId: refundsCreate
       tags:
       - Refunds

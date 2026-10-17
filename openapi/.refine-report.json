@@ -1,0 +1,73 @@
+{
+  "provider": "extend",
+  "sources": [
+    "extend-shipping-offers-openapi.yml",
+    "extend-claims-management-api-openapi.yml",
+    "extend-contracts-api-openapi.yml",
+    "extend-entitlements-api-openapi.yml",
+    "extend-leads-api-openapi.yml",
+    "extend-offers-api-openapi.yml",
+    "extend-orders-api-openapi.yml",
+    "extend-products-api-openapi.yml",
+    "extend-refunds-api-openapi.yml",
+    "extend-service-orders-api-openapi.yml"
+  ],
+  "outputs": [
+    "extend-shippingoffers-api-openapi.yml",
+    "extend-claims-management-api-openapi.yml",
+    "extend-webhooks-api-openapi.yml",
+    "extend-contracts-api-openapi.yml",
+    "extend-dynamic-return-policy-api-openapi.yml",
+    "extend-leads-api-openapi.yml",
+    "extend-offers-api-openapi.yml",
+    "extend-line-items-api-openapi.yml",
+    "extend-orders-api-openapi.yml",
+    "extend-products-api-openapi.yml",
+    "extend-refunds-api-openapi.yml",
+    "extend-service-orders-api-openapi.yml"
+  ],
+  "archived": [
+    "deleted 1 superseded output(s) from the previous generation",
+    "archived openapi/extend-shipping-offers-openapi.yml"
+  ],
+  "errors": [],
+  "warnings": [
+    "extend-claims-management-api-openapi.yml: previously refined output kept for 2 operation(s) no archived document covers (e.g. /claims-management/claims/{claimId}/photos get, /webhooks/claims post); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "extend-contracts-api-openapi.yml: previously refined output kept for 3 operation(s) no archived document covers (e.g. /contracts/search get, /contracts/{contractId} get, /contracts/{contractId} put); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "extend-entitlements-api-openapi.yml: previously refined output kept for 1 operation(s) no archived document covers (e.g. /entitlements-management/dynamic-return-policy-content post); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "extend-leads-api-openapi.yml: previously refined output kept for 3 operation(s) no archived document covers (e.g. /leads post, /leads/offers get, /leads/{leadToken}/offers get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "extend-offers-api-openapi.yml: previously refined output kept for 1 operation(s) no archived document covers (e.g. /offers get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "extend-orders-api-openapi.yml: previously refined output kept for 15 operation(s) no archived document covers (e.g. /line-items/fulfill post, /line-items/search get, /line-items/shipments post); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "extend-products-api-openapi.yml: previously refined output kept for 3 operation(s) no archived document covers (e.g. /stores/{storeId}/products post, /stores/{storeId}/products/{productId} delete, /stores/{storeId}/products/{productId} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "extend-refunds-api-openapi.yml: previously refined output kept for 1 operation(s) no archived document covers (e.g. /refunds post); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth.",
+    "extend-service-orders-api-openapi.yml: previously refined output kept for 11 operation(s) no archived document covers (e.g. /service-orders/search get, /service-orders/service-claim post, /service-orders/{serviceOrderId} get); its other 0 operation(s) came from the archive and were dropped from it. The archive is incomplete for this provider \u2014 re-harvest to restore _original/ as the full source of truth."
+  ],
+  "notes": [
+    "sourced from openapi/_original/ (0 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "extend-shipping-offers-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "extend-shipping-offers-openapi.yml: declared missing tag: ShippingOffers",
+    "extend-claims-management-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "extend-claims-management-api-openapi.yml: declared missing tag: Claims Management",
+    "extend-claims-management-api-openapi.yml: declared missing tag: Webhooks",
+    "extend-contracts-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "extend-contracts-api-openapi.yml: declared missing tag: Contracts",
+    "extend-entitlements-api-openapi.yml: upgraded openapi 3.1.0 -> OpenAPI 3.2.0",
+    "extend-entitlements-api-openapi.yml: declared missing tag: Dynamic Return Policy",
+    "extend-leads-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "extend-leads-api-openapi.yml: declared missing tag: Leads",
+    "extend-offers-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "extend-offers-api-openapi.yml: declared missing tag: Offers",
+    "extend-orders-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "extend-orders-api-openapi.yml: declared missing tag: Line Items",
+    "extend-orders-api-openapi.yml: declared missing tag: Orders",
+    "extend-products-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "extend-products-api-openapi.yml: declared missing tag: Products",
+    "extend-refunds-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "extend-refunds-api-openapi.yml: declared missing tag: Refunds",
+    "extend-service-orders-api-openapi.yml: upgraded openapi 3.0.1 -> OpenAPI 3.2.0",
+    "extend-service-orders-api-openapi.yml: declared missing tag: service-orders",
+    "superseded outputs removed: extend-entitlements-api-openapi.yml",
+    "apis.yml register: written (+4 apis, 13 total)"
+  ],
+  "skipped": []
+}

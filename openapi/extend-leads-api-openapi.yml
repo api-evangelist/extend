@@ -1,10 +1,15 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
   version: 7.0.0
-  title: Leads Api
-  description: <p>In order to sell a post-purchase extended warranty, you must first create a lead. A lead is the combination of a customer's information and transactional details that would provide enough detail to offer an extended warranty plan.</p><p>When you create a lead, you will receive back a unique token associated with it, which can be embedded in a link to be used in an email campaign to get offer information and eventually create a warranty contract. See below for more details!</p>
+  title: Api Leads API
+  description: 'In order to sell a post-purchase extended warranty, you must first create a lead. A lead is the combination of a customer''s information and transactional details that would provide enough detail to offer an extended warranty plan.
+
+
+    When you create a lead, you will receive back a unique token associated with it, which can be embedded in a link to be used in an email campaign to get offer information and eventually create a warranty contract. See below for more details!'
 servers:
 - url: https://api.helloextend.com
+tags:
+- name: Leads
 paths:
   /leads:
     post:
@@ -1458,13 +1463,16 @@ paths:
   /leads/{leadToken}/offers:
     get:
       summary: Get Offer Information for a Lead
-      description: ' If you are choosing to build your own after-market offer UI, you will need to fetch from Extend the product information and the offers for a lead.
+      description: 'If you are choosing to build your own after-market offer UI, you will need to fetch from Extend the product information and the offers for a lead.
 
 
-        The lead-offers endpoint takes a lead token in the request body and responds with all of the product and plan information for that lead.<div class=''wrapper important''><h2>Important:</h2>
+        The lead-offers endpoint takes a lead token in the request body and responds with all of the product and plan information for that lead.
 
 
-        The lead status parameter should be used to help inform the shopper if the product they are purchasing an extended warranty for is still eligible. You should only allow the shopper to purchase a warranty if the status is live.</div>'
+        Important:
+
+
+        The lead status parameter should be used to help inform the shopper if the product they are purchasing an extended warranty for is still eligible. You should only allow the shopper to purchase a warranty if the status is live.'
       tags:
       - Leads
       operationId: contractLeadsOfferGet

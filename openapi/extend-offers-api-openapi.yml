@@ -1,18 +1,17 @@
-openapi: 3.0.1
+openapi: 3.2.0
 info:
   version: '2022-02-01'
-  title: Offers Api
-  description: 'The Offers API is a real-time method to know which warranty offers, if any, to display when a customer is viewing a product in your store.  If you are using the Offers SDK, you do not need to use Offers API, as the SDK will retrieve and help display the offers directly.  If, however, you are managing the display of the offers yourself in your store’s front end, you should use the Offers API to make sure you are displaying the correct offers with the correct prices.
-
-
-    The Offers API will return which plan offers to display for a particular product (usually between one and three plan options), the price of each option, and some details and marketing text about the extended warranty contract that you can use to provide more information to the customer.'
+  title: Api Offers API
+  description: The Offers API is a real-time method to know which warranty offers, if any, to display when a customer is viewing a product in your store.
 servers:
 - url: https://api.helloextend.com
+tags:
+- name: Offers
 paths:
   /offers:
     get:
       summary: Get Offer information
-      description: 'Returns warranty plans and pricing for a specific product. '
+      description: Returns warranty plans and pricing for a specific product.
       operationId: getOffer
       tags:
       - Offers
