@@ -240,6 +240,8 @@ apis:
   humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
   baseURL: https://api.helloextend.com
   tags:
+  - Order
+  tags_raw:
   - Orders
   properties:
   - type: OpenAPI
@@ -250,6 +252,8 @@ apis:
   humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
   baseURL: https://api.helloextend.com
   tags:
+  - Product
+  tags_raw:
   - Products
   properties:
   - type: OpenAPI
@@ -310,6 +314,8 @@ apis:
   humanURL: https://docs.extend.com/docs/getting-started-with-extends-api
   baseURL: https://api.helloextend.com
   tags:
+  - Webhook
+  tags_raw:
   - Webhooks
   properties:
   - type: OpenAPI
