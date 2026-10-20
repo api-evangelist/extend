@@ -6,15 +6,33 @@ source:
 - https://composio.dev/toolkits/extend
 - https://monid.ai/tools/extend
 checked:
+- gorgias/integrations/gorgias-integration-edges.yml
 - https://composio.dev/toolkits/extend
 - https://monid.ai/tools/extend
 - https://n8n.io/integrations/extend/
 - https://zapier.com/apps/extend/integrations
 - shopify/integrations/shopify-integration-edges.yml
 - wordpress/integrations/wordpress-integration-edges.yml
+- zendesk/integrations/zendesk-integration-edges.yml
 summary: null
 marketplace_apps: []
 edges:
+- partner_name: Gorgias (own)
+  partner: gorgias
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.gorgias.com/apps/extend
+  mirror_of: gorgias/integrations/gorgias-integration-edges.yml
+  apps:
+  - Extend
+  listing_count: 1
+  detected: '2026-10-20'
+  detected_by: mirror-platform-listings.py
 - partner_name: Shopify (own)
   partner: shopify
   partner_match: mirror
@@ -50,4 +68,21 @@ edges:
   detected: '2026-10-15'
   detected_by: mirror-platform-listings.py
   category: WordPress plugin
+- partner_name: Zendesk (own)
+  partner: zendesk
+  partner_match: mirror
+  mirror_match: domain
+  type: marketplace
+  relationship: platform-app
+  direction: third-party
+  channel: partner-built
+  marketplace: own
+  evidence: https://www.zendesk.com/marketplace/apps/support/1244542/extend-support/
+  mirror_of: zendesk/integrations/zendesk-integration-edges.yml
+  apps:
+  - Extend Support
+  listing_count: 1
+  detected: '2026-10-20'
+  detected_by: mirror-platform-listings.py
+  category: eComm and Payments
 templates: []
