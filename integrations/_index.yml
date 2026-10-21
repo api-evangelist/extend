@@ -53,3 +53,29 @@
   relationship: platform-app
   status: not-a-workflow
   arazzo: null
+- slug: extend-bigcommerce-own
+  label: BigCommerce (own)
+  partner: bigcommerce
+  partner_name: BigCommerce (own)
+  category: Product & Shipping Protection, Product Protection
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://www.bigcommerce.com/apps/extend/
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
+- slug: extend-salesforce-commerce-cloud-own
+  label: Salesforce Commerce Cloud (own)
+  partner: salesforce-commerce-cloud
+  partner_name: Salesforce Commerce Cloud (own)
+  category: sales, eCommerce, customerService, integration
+  type: marketplace
+  marketplace: own
+  channel: partner-built
+  evidence: https://appexchange.salesforce.com/appxListingDetail?listingId=a6f21eef-75d4-4d81-9521-0bb5f55adeae
+  source: edge
+  relationship: platform-app
+  status: not-a-workflow
+  arazzo: null
